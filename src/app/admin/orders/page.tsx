@@ -1,0 +1,231 @@
+"use client";
+
+import { Suspense, useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/utils";
+
+interface Order {
+  id: string;
+  items: { name: string; quantity: number; price: number }[];
+  subtotal: number;
+  discount: number;
+  total: number;
+  coupon: string;
+  customer: { name: string; phone: string; address: string; notes: string };
+  status: string;
+  createdAt: string;
+}
+
+const statuses = [
+  { key: "قيد التجهيز", label: "قيد التجهيز", icon: "⏳", color: "text-yellow-600", bg: "bg-yellow-50", border: "border-yellow-300", cardBg: "bg-yellow-50", bar: "#EAB308" },
+  { key: "تم الشحن", label: "تم الشحن", icon: "📦", color: "text-blue-600", bg: "bg-blue-50", border: "border-blue-300", cardBg: "bg-blue-50", bar: "#3B82F6" },
+  { key: "تم التوصيل", label: "تم التوصيل", icon: "✅", color: "text-green-600", bg: "bg-green-50", border: "border-green-300", cardBg: "bg-green-50", bar: "#22C55E" },
+  { key: "لا رد", label: "لا رد", icon: "📵", color: "text-orange-600", bg: "bg-orange-50", border: "border-orange-300", cardBg: "bg-orange-50", bar: "#F97316" },
+  { key: "لم يستلم الطلبية", label: "لم يستلم", icon: "❌", color: "text-red-600", bg: "bg-red-50", border: "border-red-300", cardBg: "bg-red-50", bar: "#EF4444" },
+  { key: "تم الارجاع", label: "تم الإرجاع", icon: "↩️", color: "text-purple-600", bg: "bg-purple-50", border: "border-purple-300", cardBg: "bg-purple-50", bar: "#A855F7" },
+  { key: "تم الإلغاء", label: "تم الإلغاء", icon: "🚫", color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300", cardBg: "bg-gray-50", bar: "#6B7280" },
+];
+
+export default function OrdersPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-12 text-gray-500">جاري التحميل...</div>}>
+      <OrdersContent />
+    </Suspense>
+  );
+}
+
+function OrdersContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const activeStatus = searchParams.get("status") || "";
+  const [orders, setOrders] = useState<Order[]>([]);
+
+  const refresh = useCallback(async () => {
+    try {
+      const res = await fetch("/api/orders");
+      if (res.ok) {
+        const data = await res.json();
+        setOrders(data);
+        localStorage.setItem("elzavia-orders", JSON.stringify(data));
+        return;
+      }
+    } catch {
+    }
+    const saved = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
+    setOrders(saved);
+  }, []);
+
+  useEffect(() => {
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, [refresh]);
+
+  const updateStatus = async (orderId: string, newStatus: string) => {
+    const updated = orders.map((o) =>
+      o.id === orderId ? { ...o, status: newStatus } : o
+    );
+    setOrders(updated);
+    localStorage.setItem("elzavia-orders", JSON.stringify(updated));
+    try {
+      await fetch("/api/orders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: orderId, status: newStatus }),
+      });
+    } catch {}
+  };
+
+  const counts = statuses.map((s) => ({
+    ...s,
+    count: orders.filter((o) => o.status === s.key).length,
+  }));
+
+  const filtered = activeStatus
+    ? orders.filter((o) => o.status === activeStatus)
+    : [];
+  const activeMeta = statuses.find((s) => s.key === activeStatus);
+
+  if (activeStatus && activeMeta) {
+    return (
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => router.push("/admin/orders")}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+            </button>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+              {activeMeta.icon} {activeMeta.label}
+            </h1>
+            <span className={`px-3 py-0.5 rounded-full text-xs font-bold ${activeMeta.color} ${activeMeta.bg}`}>
+              {filtered.length}
+            </span>
+          </div>
+          <button onClick={refresh} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            تحديث
+          </button>
+        </div>
+
+        {filtered.length === 0 ? (
+          <div className="bg-white rounded-xl md:rounded-2xl p-8 md:p-12 text-center shadow-sm">
+            <p className="text-gray-400 text-base md:text-lg">لا توجد طلبات في هذه الحالة</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {[...filtered].reverse().map((order) => (
+              <div key={order.id} className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4" style={{ borderRightColor: activeMeta.bar }}>
+                <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4 mb-4">
+                  <div>
+                    <span className="text-xs text-gray-500">رقم الطلب</span>
+                    <p className="font-bold text-gray-900 text-sm md:text-base">{order.id}</p>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500">التاريخ</span>
+                    <p className="font-bold text-gray-900 text-sm md:text-base">
+                      {new Date(order.createdAt).toLocaleDateString("ar-MA")}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-xs text-gray-500">الحالة</span>
+                    <select
+                      value={order.status}
+                      onChange={(e) => updateStatus(order.id, e.target.value)}
+                      className={`mr-2 px-2 md:px-3 py-1 rounded-lg font-bold text-xs md:text-sm border ${activeMeta.color} ${activeMeta.bg} ${activeMeta.border}`}
+                    >
+                      {statuses.map((s) => (
+                        <option key={s.key} value={s.key}>{s.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="border-t border-gray-100 pt-4">
+                  <table className="w-full text-xs md:text-sm">
+                    <thead>
+                      <tr className="text-gray-500">
+                        <th className="text-right pb-2">المنتج</th>
+                        <th className="text-center pb-2">الكمية</th>
+                        <th className="text-left pb-2">السعر</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {order.items.map((item, i) => (
+                        <tr key={i} className="border-t border-gray-50">
+                          <td className="py-2 font-medium text-gray-900">{item.name}</td>
+                          <td className="py-2 text-center">{item.quantity}</td>
+                          <td className="py-2 text-left">{formatPrice(item.price)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="border-t border-gray-100 pt-4 mt-4 grid sm:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
+                  <div>
+                    <p className="text-gray-500">العميل: <span className="font-bold text-gray-900">{order.customer.name}</span></p>
+                    <p className="text-gray-500">الهاتف: <span className="font-bold text-gray-900" dir="ltr">{order.customer.phone}</span></p>
+                    <p className="text-gray-500">العنوان: <span className="text-gray-900">{order.customer.address}</span></p>
+                    {order.customer.notes && (
+                      <p className="text-gray-500">ملاحظات: <span className="text-gray-900">{order.customer.notes}</span></p>
+                    )}
+                  </div>
+                  <div className="sm:text-left">
+                    <p className="text-gray-500">المجموع: <span className="font-bold">{formatPrice(order.subtotal)}</span></p>
+                    {order.discount > 0 && (
+                      <p className="text-green-600">الخصم: -{formatPrice(order.discount)} ({order.coupon})</p>
+                    )}
+                    <p className="text-base md:text-lg font-extrabold text-primary-700">الإجمالي: {formatPrice(order.total)}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">إدارة الطلبات</h1>
+        <button onClick={refresh} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          تحديث
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {counts.map((s) => (
+          <button
+            key={s.key}
+            onClick={() => s.count > 0 && router.push(`/admin/orders?status=${encodeURIComponent(s.key)}`)}
+            className={`relative overflow-hidden rounded-2xl p-5 text-right border-2 transition-all hover:shadow-md active:scale-[0.97] ${
+              s.count > 0 ? "cursor-pointer hover:-translate-y-0.5" : "cursor-default opacity-60"
+            } ${s.bg} ${s.border}`}
+          >
+            <div className="text-2xl mb-2">{s.icon}</div>
+            <div className={`text-3xl font-extrabold ${s.color}`}>{s.count}</div>
+            <div className={`text-sm font-bold mt-1 ${s.color}`}>{s.label}</div>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-8 bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+        <p className="text-gray-400 text-base">
+          اضغط على أي تصنيف لعرض الطلبات الخاصة به
+        </p>
+      </div>
+    </div>
+  );
+}

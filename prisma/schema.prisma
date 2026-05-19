@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String
+  price       Float
+  images      String   (stored as JSON string)
+  category    String
+  ingredients String?  (stored as JSON string)
+  usage       String?
+  weight      String?
+  createdAt   DateTime @default(now())
+}
+
+model Order {
+  id         String   @id
+  items      String   (stored as JSON string)
+  subtotal   Float
+  discount   Float    @default(0)
+  total      Float
+  coupon     String?
+  customer   String   (stored as JSON string)
+  status     String   @default("قيد التجهيز")
+  createdAt  DateTime @default(now())
+}
+
+model Coupon {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  type       String   // "percentage" | "fixed"
+  value      Float
+  minAmount  Float    @default(0)
+  maxUses    Int      @default(100)
+  usedCount  Int      @default(0)
+  expiresAt  DateTime
+  active     Boolean  @default(true)
+}
+
+model ContactMessage {
+  id      String   @id @default(cuid())
+  name    String
+  email   String
+  message String
+  date    DateTime @default(now())
+}
