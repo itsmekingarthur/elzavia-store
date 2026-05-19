@@ -34,7 +34,7 @@ export default function Header() {
               }`}
             />
             <span className={`text-lg md:text-xl font-extrabold tracking-tight transition-all duration-500 ${
-              scrolled ? "text-gold-600" : "text-white"
+              scrolled ? "text-primary-700" : "text-white"
             }`}>
               إلزافيا
             </span>
@@ -52,7 +52,7 @@ export default function Header() {
                 href={link.href}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     scrolled
-                      ? "text-surface-600 hover:text-gold-600 hover:bg-gold-50"
+                      ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
                       : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
@@ -66,13 +66,9 @@ export default function Header() {
               href="/cart"
               className={`relative p-2.5 rounded-xl transition-all duration-300 ${
                   scrolled
-                    ? "text-surface-600 hover:text-gold-600 hover:bg-gold-50"
+                    ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
                     : "text-white/80 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-              </svg>
+
               {itemCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg shadow-red-500/30">
                   {itemCount > 99 ? "99+" : itemCount}
@@ -118,7 +114,7 @@ export default function Header() {
                 href={link.href}
                 className={`block px-4 py-3 rounded-xl font-medium transition-all ${
                   scrolled
-                    ? "text-surface-700 hover:text-gold-600 hover:bg-gold-50"
+                    ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
                     : "text-white hover:text-white hover:bg-white/10"
                 }`}
                 onClick={() => setMenuOpen(false)}

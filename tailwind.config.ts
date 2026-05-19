@@ -87,6 +87,7 @@ const config: Config = {
         "branch-sway": "branch-sway 4s ease-in-out infinite",
         "spin-slow": "spin 12s linear infinite",
         "spin-slower": "spin 20s linear infinite",
+        "leaf-fall": "leaf-fall 12s ease-in infinite",
       },
       keyframes: {
         "gradient-x": {
@@ -118,6 +119,12 @@ const config: Config = {
         "branch-sway": {
           "0%, 100%": { transform: "rotate(-1deg)" },
           "50%": { transform: "rotate(1deg)" },
+        },
+        "leaf-fall": {
+          "0%": { transform: "translateY(-10vh) translateX(0px) rotate(0deg)", opacity: "0" },
+          "10%": { opacity: "1" },
+          "90%": { opacity: "1" },
+          "100%": { transform: "translateY(110vh) translateX(var(--drift, 30px)) rotate(var(--rotation, 360deg))", opacity: "0" },
         },
       },
       backgroundSize: {
