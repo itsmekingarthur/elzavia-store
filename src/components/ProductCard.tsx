@@ -13,14 +13,14 @@ interface Product {
 }
 
 const palettes = [
-  { bg: "#d1fae5", text: "#059669", dark: "#047857", light: "#ecfdf5", border: "border-emerald-200/50" },
-  { bg: "#dbeafe", text: "#2563eb", dark: "#1d4ed8", light: "#eff6ff", border: "border-blue-200/50" },
-  { bg: "#ede9fe", text: "#7c3aed", dark: "#6d28d9", light: "#f5f3ff", border: "border-violet-200/50" },
-  { bg: "#fce7f3", text: "#db2777", dark: "#be185d", light: "#fdf2f8", border: "border-pink-200/50" },
-  { bg: "#fef3c7", text: "#d97706", dark: "#b45309", light: "#fffbeb", border: "border-amber-200/50" },
-  { bg: "#cffafe", text: "#0891b2", dark: "#0e7490", light: "#ecfeff", border: "border-cyan-200/50" },
-  { bg: "#ffedd5", text: "#ea580c", dark: "#c2410c", light: "#fff7ed", border: "border-orange-200/50" },
-  { bg: "#fce7f3", text: "#ec4899", dark: "#db2777", light: "#fdf2f8", border: "border-pink-200/50" },
+  { bg: "rgba(209,250,229,0.15)", text: "#6ee7b7", dark: "#34d399", light: "rgba(209,250,229,0.08)", border: "border-emerald-500/20" },
+  { bg: "rgba(219,234,254,0.15)", text: "#93c5fd", dark: "#60a5fa", light: "rgba(219,234,254,0.08)", border: "border-blue-500/20" },
+  { bg: "rgba(237,233,254,0.15)", text: "#c4b5fd", dark: "#a78bfa", light: "rgba(237,233,254,0.08)", border: "border-violet-500/20" },
+  { bg: "rgba(252,231,243,0.15)", text: "#f9a8d4", dark: "#f472b6", light: "rgba(252,231,243,0.08)", border: "border-pink-500/20" },
+  { bg: "rgba(254,243,199,0.15)", text: "#fcd34d", dark: "#fbbf24", light: "rgba(254,243,199,0.08)", border: "border-amber-500/20" },
+  { bg: "rgba(207,250,254,0.15)", text: "#67e8f9", dark: "#22d3ee", light: "rgba(207,250,254,0.08)", border: "border-cyan-500/20" },
+  { bg: "rgba(255,237,213,0.15)", text: "#fdba74", dark: "#fb923c", light: "rgba(255,237,213,0.08)", border: "border-orange-500/20" },
+  { bg: "rgba(252,231,243,0.15)", text: "#f9a8d4", dark: "#f472b6", light: "rgba(252,231,243,0.08)", border: "border-pink-500/20" },
 ];
 
 function hashId(id: string): number {
@@ -37,41 +37,41 @@ export default function ProductCard({ product }: { product: Product }) {
       href={`/shop/${product.slug}`}
       className="group block"
     >
-      <div className="relative bg-white/60 backdrop-blur-md rounded-3xl border border-white/30 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="relative bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 shadow-lg hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <div className="aspect-square overflow-hidden p-8 md:p-10 flex items-center justify-center relative" style={{ backgroundColor: palette.light }}>
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle at 50% 50%, ${palette.bg}, transparent 70%)` }} />
           <img
             src={product.images?.[0] || "/images/placeholder.png"}
             alt={product.name}
-            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 relative z-10"
+            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 relative z-10 drop-shadow-lg"
           />
         </div>
 
         <div className="p-5 md:p-6 relative z-10">
           <div className="flex items-center justify-between mb-3">
             <span
-              className="text-[10px] md:text-xs font-bold px-3 py-1 rounded-full"
-              style={{ backgroundColor: palette.bg, color: palette.text }}
+              className="text-[10px] md:text-xs font-bold px-3 py-1 rounded-full border"
+              style={{ backgroundColor: palette.bg, color: palette.text, borderColor: palette.border }}
             >
               {product.category || "عام"}
             </span>
             {product.weight && (
-              <span className="text-[10px] md:text-xs text-surface-400 font-medium">{product.weight}</span>
+              <span className="text-[10px] md:text-xs text-white/40 font-medium">{product.weight}</span>
             )}
           </div>
 
-          <h3 className="text-base md:text-lg font-extrabold mb-2 transition-colors duration-300" style={{ color: palette.dark }}>
+          <h3 className="text-base md:text-lg font-extrabold mb-2 transition-colors duration-300 text-white group-hover:text-primary-300">
             {product.name}
           </h3>
 
-          <p className="text-xs md:text-sm line-clamp-2 mb-4 leading-relaxed text-gray-900">
+          <p className="text-xs md:text-sm line-clamp-2 mb-4 leading-relaxed text-white/70">
             {product.description}
           </p>
 
-          <div className="flex items-center justify-between pt-3 border-t border-surface-100">
-            <span className="text-xl md:text-2xl font-extrabold" style={{ color: palette.dark }}>
+          <div className="flex items-center justify-between pt-3 border-t border-white/10">
+            <span className="text-xl md:text-2xl font-extrabold text-primary-400">
               {formatPrice(product.price)}
             </span>
             <span

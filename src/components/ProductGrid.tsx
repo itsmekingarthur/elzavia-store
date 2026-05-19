@@ -27,7 +27,7 @@ export default function ProductGrid({ limit }: { limit?: number }) {
 
   if (products.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-400">
+      <div className="text-center py-12 text-white/40">
         لا توجد منتجات متاحة حالياً
       </div>
     );

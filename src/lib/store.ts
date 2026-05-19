@@ -14,6 +14,10 @@ export async function updateOrder(id: string, updates: Partial<any>) {
   await supabase.from("orders").update(updates).eq("id", id);
 }
 
+export async function deleteOrder(id: string) {
+  await supabase.from("orders").delete().eq("id", id);
+}
+
 // ---------- Coupons ----------
 export async function getCoupons(): Promise<any[]> {
   const { data } = await supabase.from("coupons").select("*");
