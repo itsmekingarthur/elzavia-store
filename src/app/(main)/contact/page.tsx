@@ -8,7 +8,8 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
-    const data = { name: form.name.value, email: form.email.value, message: form.message.value, date: new Date().toISOString() };
+    const formData = new FormData(form);
+    const data = { name: formData.get("name") as string, email: formData.get("email") as string, message: formData.get("message") as string, date: new Date().toISOString() };
     try {
       await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       setSent(true);
