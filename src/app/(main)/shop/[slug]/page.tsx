@@ -130,7 +130,7 @@ export default function ProductPage() {
             <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-3 leading-tight">
               {product.name}
             </h1>
-            <p className="text-base md:text-lg leading-relaxed mb-6 whitespace-pre-line" style={{ color: palette.text }}>
+            <p className="text-base md:text-lg leading-relaxed mb-6 whitespace-pre-line text-gray-900">
               {product.description}
             </p>
 

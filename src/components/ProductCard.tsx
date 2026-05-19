@@ -66,7 +66,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
 
-          <p className="text-xs md:text-sm line-clamp-2 mb-4 leading-relaxed" style={{ color: palette.text }}>
+          <p className="text-xs md:text-sm line-clamp-2 mb-4 leading-relaxed text-gray-900">
             {product.description}
           </p>
 
