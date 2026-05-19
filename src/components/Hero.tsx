@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
+    <section className="relative md:min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
 
       <div className="absolute -top-40 -right-40 w-80 md:w-[40rem] h-80 md:h-[40rem] bg-primary-500/15 rounded-full blur-[120px] animate-pulse-soft" />
       <div className="absolute -bottom-40 -left-40 w-80 md:w-[40rem] h-80 md:h-[40rem] bg-emerald-500/10 rounded-full blur-[120px] animate-pulse-soft" style={{ animationDelay: "1.5s" }} />
