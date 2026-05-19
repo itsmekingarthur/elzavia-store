@@ -123,7 +123,7 @@ function BranchRight() {
   );
 }
 
-const FALLING_LEAF_COUNT = 10;
+const FALLING_LEAF_COUNT = 25;
 
 export default function Leaves() {
   return (

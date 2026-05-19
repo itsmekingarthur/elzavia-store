@@ -3,7 +3,6 @@ import Link from "next/link";
 export default function Hero() {
   return (
     <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
-      <div className="absolute inset-0 bg-grid-nature" />
 
       <div className="absolute -top-40 -right-40 w-80 md:w-[40rem] h-80 md:h-[40rem] bg-primary-500/15 rounded-full blur-[120px] animate-pulse-soft" />
       <div className="absolute -bottom-40 -left-40 w-80 md:w-[40rem] h-80 md:h-[40rem] bg-emerald-500/10 rounded-full blur-[120px] animate-pulse-soft" style={{ animationDelay: "1.5s" }} />
@@ -13,8 +12,8 @@ export default function Hero() {
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-primary-950 to-transparent" />
 
       <div className="relative z-10 container mx-auto px-4 py-24 md:py-40">
-        <div className="max-w-4xl">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-6 md:mb-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-4 py-2 mb-6 md:mb-8 mx-auto">
             <span className="w-1.5 h-1.5 bg-primary-400 rounded-full" />
             <span className="text-primary-300/80 text-xs md:text-sm font-medium tracking-wide">مكملات طبيعية 100%</span>
           </div>
@@ -25,34 +24,30 @@ export default function Hero() {
             <span className="gradient-text">طاقة لحياتك</span>
           </h1>
 
-          <p className="text-base md:text-xl text-white/60 leading-relaxed max-w-2xl mb-8 md:mb-10">
+          <p className="text-base md:text-xl text-white/60 leading-relaxed max-w-2xl mb-8 md:mb-10 mx-auto">
             مكملات غذائية طبيعية 100% مصممة بدقة لدعم صحتك ورفع أدائك.
             اكتشف قوة الطبيعة الخام مع إلزافيا.
           </p>
 
-          <div className="flex flex-wrap gap-3 md:gap-4">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
             <Link
               href="/shop"
               className="btn-nature text-base md:text-lg px-8 md:px-10 py-3.5 md:py-4 flex items-center gap-2 group shadow-2xl shadow-primary-500/20"
             >
-              تسوق الآن
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <span>تسوق الآن</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
             <Link
               href="/about"
-              className="bg-white/10 backdrop-blur-md border border-white/10 text-white/80 px-6 md:px-8 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg transition-all duration-300 hover:bg-white/20 hover:text-white hover:shadow-lg flex items-center gap-2"
+              className="text-base md:text-lg px-8 md:px-10 py-3.5 md:py-4 rounded-xl border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-all duration-300 flex items-center gap-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              تعرف علينا
+              <span>من نحن</span>
             </Link>
           </div>
 
-          <div className="flex items-center gap-4 md:gap-5 mt-12 md:mt-16 pt-8 md:pt-12 border-t border-white/10">
+          <div className="flex items-center justify-center gap-4 md:gap-5 mt-12 md:mt-16 pt-8 md:pt-12 border-t border-white/10 mx-auto max-w-xs">
             <img
               src="/images/logo.png"
               alt="Elzavia"

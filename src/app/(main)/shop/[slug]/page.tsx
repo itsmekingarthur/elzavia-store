@@ -19,9 +19,9 @@ interface Product {
 }
 
 const deals = [
-  { label: "عادي", desc: "1 قطعة", priceMultiplier: 1, badge: null, discount: 0 },
-  { label: "رائج", desc: "2 قطعة - وفر 50 درهم", priceMultiplier: 2, badge: "الأكثر طلباً", discount: 50, popular: true },
-  { label: "برو", desc: "3 + 1 مجاناً", priceMultiplier: 3, badge: "أفضل قيمة", discount: 199, pro: true },
+  { label: "عادي", desc: "1 قطعة", priceMultiplier: 1, badge: null, discount: 0, color: "from-surface-400/20 to-white/5", border: "border-white/20", icon: "١" },
+  { label: "رائج", desc: "2 قطعة - وفر 50 درهم", priceMultiplier: 2, badge: "الأكثر طلباً", discount: 50, popular: true, color: "from-primary-500/20 to-emerald-500/10", border: "border-primary-500/40", icon: "★" },
+  { label: "برو", desc: "3 + 1 مجاناً", priceMultiplier: 3, badge: "أفضل قيمة", discount: 199, pro: true, color: "from-gold-500/20 to-amber-500/10", border: "border-gold-500/40", icon: "🔥" },
 ];
 
 export default function ProductDetailPage() {
@@ -30,6 +30,8 @@ export default function ProductDetailPage() {
   const { addWithDeal } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedDeal, setSelectedDeal] = useState("رائج");
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -41,6 +43,18 @@ export default function ProductDetailPage() {
       })
       .catch(() => setLoading(false));
   }, [slug]);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+    const deal = deals.find((d) => d.label === selectedDeal);
+    if (!deal) return;
+    addWithDeal(product.id, deal.priceMultiplier, deal.label, deal.discount);
+    setAdded(true);
+  };
+
+  const handleCheckout = () => {
+    router.push("/cart");
+  };
 
   if (loading) {
     return (
@@ -63,7 +77,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-primary-950 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-nature opacity-30" />
       <div className="absolute inset-0 bg-forest" />
 
       <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
@@ -82,7 +95,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div>
-            <span className="inline-block text-xs font-bold text-primary-300 bg-primary-500/10 border border-primary-500/20 px-3 py-1 rounded-full mb-4">
+            <span className="inline-block text-xs font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full mb-4">
               {product.category}
             </span>
             <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">{product.name}</h1>
@@ -100,57 +113,89 @@ export default function ProductDetailPage() {
             )}
 
             {product.usage && (
-              <p className="text-sm text-white/40 mb-8"><span className="text-primary-400 font-bold">طريقة الاستخدام:</span> {product.usage}</p>
+              <p className="text-sm text-white/40 mb-4"><span className="text-emerald-400 font-bold">طريقة الاستخدام:</span> {product.usage}</p>
             )}
 
-            <div className="space-y-4 mt-8">
+            <div className="space-y-3 mt-6">
               <h3 className="text-sm font-bold text-white/40 mb-3">اختر الباقة</h3>
               {deals.map((deal) => {
                 const dealPrice = product.price * deal.priceMultiplier;
                 const finalPrice = dealPrice - deal.discount;
-                const isPopular = deal.popular;
+                const isSelected = selectedDeal === deal.label;
 
                 return (
                   <button
                     key={deal.label}
-                    onClick={() => addWithDeal(product.id, 1, deal.label, deal.discount)}
-                    className={`w-full text-right p-4 md:p-5 rounded-2xl border-2 transition-all duration-300 hover:shadow-xl active:scale-[0.98] group ${
-                      isPopular
-                        ? "border-primary-500/40 bg-primary-500/5 shadow-lg shadow-primary-500/5"
+                    type="button"
+                    onClick={() => { setSelectedDeal(deal.label); setAdded(false); }}
+                    className={`w-full text-right p-4 md:p-5 rounded-2xl border-2 transition-all duration-300 ${
+                      isSelected
+                        ? `${deal.border} bg-gradient-to-br ${deal.color} shadow-lg`
                         : "border-white/10 bg-white/5 hover:border-white/20"
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                          isPopular ? "bg-primary-500/20 text-primary-400" : "bg-white/10 text-white/60"
-                        } font-extrabold text-sm`}>
-                          {isPopular ? "★" : deal.pro ? "🔥" : "١"}
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm ${
+                          isSelected
+                            ? deal.popular ? "bg-primary-500/20 text-primary-400" : deal.pro ? "bg-gold-500/20 text-gold-400" : "bg-white/20 text-white"
+                            : "bg-white/10 text-white/60"
+                        }`}>
+                          {deal.icon}
                         </div>
                         <div>
-                          <span className={`font-extrabold text-lg ${isPopular ? "text-primary-400" : "text-white"}`}>{deal.label}</span>
+                          <span className={`font-extrabold text-base ${
+                            isSelected
+                              ? deal.popular ? "text-primary-400" : deal.pro ? "text-gold-400" : "text-white"
+                              : "text-white"
+                          }`}>
+                            {deal.label}
+                          </span>
                           <span className="text-white/40 text-xs mr-2">{deal.desc}</span>
                         </div>
                       </div>
                       {deal.badge && (
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          isPopular ? "bg-primary-500/20 text-primary-300" : "bg-gold-500/20 text-gold-400"
+                          deal.popular ? "bg-primary-500/20 text-primary-300" : "bg-gold-500/20 text-gold-400"
                         }`}>{deal.badge}</span>
                       )}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-baseline gap-2">
-                        <span className={`font-extrabold text-xl ${isPopular ? "text-primary-400" : "text-white"}`}>{formatPrice(finalPrice)}</span>
-                        {deal.discount > 0 && <span className="text-white/30 text-sm line-through">{formatPrice(dealPrice)}</span>}
-                      </div>
-                      <span className={`text-xs font-bold px-3 py-1 rounded-lg transition-all ${
-                        isPopular ? "bg-primary-500 text-white" : "bg-white/10 text-white/60 group-hover:bg-white/20"
-                      }`}>أضف للسلة</span>
+                    <div className="flex items-baseline gap-2 mr-12">
+                      <span className={`font-extrabold text-lg ${
+                        isSelected
+                          ? deal.popular ? "text-primary-400" : deal.pro ? "text-gold-400" : "text-white"
+                          : "text-white"
+                      }`}>
+                        {formatPrice(finalPrice)}
+                      </span>
+                      {deal.discount > 0 && (
+                        <span className="text-white/30 text-xs line-through">{formatPrice(dealPrice)}</span>
+                      )}
                     </div>
                   </button>
                 );
               })}
             </div>
+
+            {added ? (
+              <button
+                onClick={handleCheckout}
+                className="w-full mt-6 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-white hover:from-primary-400 hover:to-emerald-400 shadow-primary-500/30"
+              >
+                ✓ تمت الإضافة - إكمال الطلب
+              </button>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                className="w-full mt-6 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-600 to-emerald-600 text-white hover:from-primary-500 hover:to-emerald-500 shadow-primary-500/20 hover:shadow-primary-500/30"
+              >
+                أضف للسلة
+              </button>
+            )}
+
+            <p className="text-center text-white/30 text-xs mt-3">
+              الدفع عند الاستلام - توصيل لجميع المدن المغربية
+            </p>
           </div>
         </div>
       </div>

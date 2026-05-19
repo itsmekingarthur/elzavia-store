@@ -3,7 +3,6 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-surface-900 text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid opacity-[0.03]" />
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
 
       <div className="container mx-auto px-4 py-16 md:py-20 relative z-10">

@@ -3,7 +3,6 @@ import ProductGrid from "@/components/ProductGrid";
 export default function ShopPage() {
   return (
     <div className="relative min-h-screen bg-primary-950 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-nature" />
       <div className="absolute inset-0 bg-forest" />
 
       <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">

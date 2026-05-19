@@ -70,7 +70,6 @@ export default function Home() {
 
       {/* Products */}
       <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
-        <div className="absolute inset-0 bg-grid-nature" />
         <div className="absolute inset-0 bg-forest" />
 
         <Leaves />
@@ -178,7 +177,6 @@ export default function Home() {
 
       {/* Testimonials */}
       <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-emerald-950 via-primary-950 to-primary-950">
-        <div className="absolute inset-0 bg-grid-nature opacity-50" />
         <div className="absolute inset-0 bg-forest-deep" />
 
         <div className="container mx-auto px-4 relative z-10">
@@ -245,8 +243,6 @@ export default function Home() {
       {/* CTA */}
       <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
         <div className="absolute inset-0 bg-forest-deep" />
-        <div className="absolute inset-0 bg-grid-nature opacity-30" />
-
         <div className="absolute -top-40 right-0 w-96 h-96 bg-primary-500/10 rounded-full blur-[150px]" />
         <div className="absolute -bottom-40 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[150px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold-500/8 rounded-full blur-[100px]" />

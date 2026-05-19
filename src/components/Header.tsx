@@ -30,13 +30,13 @@ export default function Header() {
               src="/images/logo.png"
               alt="Elzavia"
               className={`h-14 md:h-16 w-auto transition-all duration-500 ${
-                scrolled ? "drop-shadow-none" : "drop-shadow-lg brightness-0 invert"
+                scrolled ? "drop-shadow-none opacity-90" : "drop-shadow-lg brightness-0 invert opacity-90"
               }`}
             />
-            <span className={`text-lg md:text-xl font-extrabold tracking-tight transition-all duration-500 ${
+            <span className={`text-base md:text-lg font-extrabold tracking-wide transition-all duration-500 ${
               scrolled ? "text-primary-700" : "text-white"
             }`}>
-              إلزافيا
+              elzavia
             </span>
           </Link>
 

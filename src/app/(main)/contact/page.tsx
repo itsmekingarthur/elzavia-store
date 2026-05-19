@@ -19,7 +19,6 @@ export default function ContactPage() {
 
   return (
     <div className="relative min-h-screen bg-primary-950 overflow-hidden">
-      <div className="absolute inset-0 bg-grid-nature opacity-30" />
       <div className="absolute inset-0 bg-forest" />
 
       <section className="relative z-10 py-16 md:py-20">
