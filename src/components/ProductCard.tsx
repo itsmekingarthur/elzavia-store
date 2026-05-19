@@ -29,7 +29,7 @@ function hashId(id: string): number {
 
 function BranchOverlay() {
   return (
-    <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20">
+    <div className="absolute inset-0 pointer-events-none opacity-100 z-20">
       {/* Left branch */}
       <svg className="absolute -left-3 -top-3 w-20 h-20" viewBox="0 0 80 80" fill="none">
         <path d="M80 75 Q60 70 45 55 Q30 40 25 20 Q22 10 20 5" stroke="rgba(52,211,153,0.3)" strokeWidth="3" strokeLinecap="round" fill="none" />

@@ -1,47 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 import ProductGrid from "@/components/ProductGrid";
 import Leaves from "@/components/Leaves";
 import Link from "next/link";
-
-function AnimatedCounter({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const counted = useRef(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || counted.current) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          counted.current = true;
-          let start = 0;
-          const duration = 1500;
-          const step = 16;
-          const totalSteps = duration / step;
-          const inc = to / totalSteps;
-          const timer = setInterval(() => {
-            start += inc;
-            start >= to ? (setCount(to), clearInterval(timer)) : setCount(Math.floor(start));
-          }, step);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [to]);
-
-  return <div ref={ref} className="text-4xl md:text-5xl font-extrabold text-primary-400">{count}{suffix}</div>;
-}
-
-const leafIcons = [
-  "🌿", "🍃", "🌱", "🌳", "🍂", "🌾", "🍀", "🌲",
-];
 
 const defaultTestimonials = [
   { name: "محمد", text: "منتجات رائعة، حسيت بالفرق من أول أسبوع. الطاقة صارت أفضل والتركيز في العمل تطور بشكل ملحوظ.", from: "الدار البيضاء" },
@@ -63,28 +26,8 @@ export default function Home() {
     <>
       <Hero />
 
-      {/* Stats */}
-      <section className="relative py-14 md:py-18 bg-primary-950 border-t border-white/5">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
-            {[
-              { to: 5, suffix: "+", label: "سنوات خبرة", icon: "🌱" },
-              { to: 12, suffix: "", label: "منتج مطور", icon: "⚗️" },
-              { to: 45, suffix: "+", label: "مكون طبيعي", icon: "🌿" },
-              { to: 2000, suffix: "+", label: "طلب تم توصيله", icon: "✅" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl mb-2">{stat.icon}</div>
-                <AnimatedCounter to={stat.to} suffix={stat.suffix} />
-                <p className="text-white/40 text-sm md:text-base font-medium mt-1">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Products */}
-      <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
+      <section className="relative pt-8 md:pt-20 pb-24 md:pb-36 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
         <div className="absolute inset-0 bg-forest" />
 
         <Leaves />
