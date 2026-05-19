@@ -27,7 +27,7 @@ export default function Home() {
       <Hero />
 
       {/* Products */}
-      <section className="relative pt-0 md:pt-0 pb-24 md:pb-36 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
+      <section className="relative pt-6 md:pt-12 pb-24 md:pb-36 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
         <div className="absolute inset-0 bg-forest" />
 
         <Leaves />
