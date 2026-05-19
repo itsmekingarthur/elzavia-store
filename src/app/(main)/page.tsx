@@ -27,7 +27,7 @@ export default function Home() {
       <Hero />
 
       {/* Products */}
-      <section className="relative py-16 md:py-32 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
+      <section className="relative pt-8 md:pt-16 pb-16 md:pb-32 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
         <div className="absolute inset-0 bg-forest" />
 
         <Leaves />

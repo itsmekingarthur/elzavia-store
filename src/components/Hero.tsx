@@ -33,7 +33,7 @@ export default function Hero() {
 
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-primary-950 to-transparent" />
 
-      <div className="relative z-10 container mx-auto px-4 py-16 md:py-44">
+      <div className="relative z-10 container mx-auto px-4 pt-16 md:pt-44 pb-8 md:pb-22">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5 md:px-4 md:py-2 mb-4 md:mb-8 mx-auto">
             <span className="w-1.5 h-1.5 bg-primary-400 rounded-full" />
