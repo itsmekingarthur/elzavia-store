@@ -34,7 +34,7 @@ export default function Header() {
               }`}
             />
             <span className={`text-lg md:text-xl font-extrabold tracking-tight transition-all duration-500 ${
-              scrolled ? "text-primary-700" : "text-white"
+              scrolled ? "text-gold-600" : "text-white"
             }`}>
               إلزافيا
             </span>
@@ -51,9 +51,9 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  scrolled
-                    ? "text-surface-600 hover:text-primary-600 hover:bg-primary-50"
-                    : "text-white/80 hover:text-white hover:bg-white/10"
+                    scrolled
+                      ? "text-surface-600 hover:text-gold-600 hover:bg-gold-50"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
                 {link.label}
@@ -65,9 +65,9 @@ export default function Header() {
             <Link
               href="/cart"
               className={`relative p-2.5 rounded-xl transition-all duration-300 ${
-                scrolled
-                  ? "text-surface-600 hover:text-primary-600 hover:bg-primary-50"
-                  : "text-white/80 hover:text-white hover:bg-white/10"
+                  scrolled
+                    ? "text-surface-600 hover:text-gold-600 hover:bg-gold-50"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,7 +118,7 @@ export default function Header() {
                 href={link.href}
                 className={`block px-4 py-3 rounded-xl font-medium transition-all ${
                   scrolled
-                    ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
+                    ? "text-surface-700 hover:text-gold-600 hover:bg-gold-50"
                     : "text-white hover:text-white hover:bg-white/10"
                 }`}
                 onClick={() => setMenuOpen(false)}

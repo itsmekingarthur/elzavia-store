@@ -85,6 +85,8 @@ const config: Config = {
         "pulse-soft": "pulse-soft 3s ease-in-out infinite",
         "leaf-drift": "leaf-drift 12s ease-in-out infinite",
         "branch-sway": "branch-sway 4s ease-in-out infinite",
+        "spin-slow": "spin 12s linear infinite",
+        "spin-slower": "spin 20s linear infinite",
       },
       keyframes: {
         "gradient-x": {

@@ -1,62 +1,126 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Hero from "@/components/Hero";
 import ProductGrid from "@/components/ProductGrid";
 import Link from "next/link";
+
+function AnimatedCounter({ to, suffix = "" }: { to: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const counted = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || counted.current) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          counted.current = true;
+          let start = 0;
+          const duration = 1500;
+          const step = 16;
+          const totalSteps = duration / step;
+          const inc = to / totalSteps;
+          const timer = setInterval(() => {
+            start += inc;
+            if (start >= to) {
+              setCount(to);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, step);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [to]);
+
+  return (
+    <div ref={ref} className="text-4xl md:text-6xl font-extrabold text-gold-400">
+      {count}{suffix}
+    </div>
+  );
+}
+
+function SectionWave({ color }: { color: string }) {
+  return (
+    <div className="absolute left-0 right-0 h-16 md:h-24 pointer-events-none z-10" style={{ color }}>
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" className="w-full h-full">
+        <path d="M0,50 C320,0 640,100 960,50 C1280,0 1440,50 1440,50 L1440,100 L0,100 Z" fill="currentColor" />
+      </svg>
+    </div>
+  );
+}
+
+function FloatingRing({ className }: { className?: string }) {
+  return <div className={`absolute rounded-full border border-gold-500/10 animate-spin-slow ${className}`} />;
+}
+
+function FloatingDiamond({ className }: { className?: string }) {
+  return <div className={`absolute border border-gold-500/10 rotate-45 ${className}`} />;
+}
 
 export default function Home() {
   return (
     <>
       <Hero />
 
-      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-emerald-950 via-primary-950 to-primary-900">
-        <div className="absolute inset-0 bg-forest-glow" />
-        <div className="absolute inset-0 bg-dots opacity-40" />
-
-        <div className="absolute -bottom-20 -left-10 md:-left-20 w-48 md:w-72 h-96 opacity-30 pointer-events-none z-0">
-          <svg viewBox="0 0 300 600" fill="none" className="w-full h-full">
-            <path d="M 280 580 Q 220 500 180 420 Q 140 340 130 280 Q 120 220 140 160 Q 160 100 200 60" stroke="rgba(120,80,40,0.3)" strokeWidth="12" strokeLinecap="round" fill="none" />
-            <path d="M 200 60 Q 210 40 220 30" stroke="rgba(120,80,40,0.2)" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <path d="M 180 420 Q 150 400 120 410" stroke="rgba(120,80,40,0.2)" strokeWidth="5" strokeLinecap="round" fill="none" />
-            <path d="M 140 280 Q 110 250 90 260" stroke="rgba(120,80,40,0.2)" strokeWidth="4" strokeLinecap="round" fill="none" />
-            <circle cx="220" cy="35" r="6" fill="rgba(52,211,153,0.2)" />
-            <circle cx="120" cy="408" r="5" fill="rgba(34,197,94,0.15)" />
-            <circle cx="90" cy="258" r="4" fill="rgba(16,185,129,0.12)" />
-          </svg>
+      {/* Stats Bar */}
+      <section className="relative py-12 md:py-16 bg-surface-950 border-y border-white/5">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
+            {[
+              { to: 500, suffix: "+", label: "عميل سعيد" },
+              { to: 12, suffix: "", label: "منتج طبيعي" },
+              { to: 30, suffix: "+", label: "مدينة مغربية" },
+              { to: 48, suffix: "h", label: "توصيل سريع" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <AnimatedCounter to={stat.to} suffix={stat.suffix} />
+                <p className="text-white/40 text-sm md:text-base font-medium mt-1">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
+      </section>
 
-        <div className="absolute -top-20 -right-10 md:-right-20 w-48 md:w-72 h-96 opacity-30 pointer-events-none z-0 rotate-180">
-          <svg viewBox="0 0 300 600" fill="none" className="w-full h-full">
-            <path d="M 20 20 Q 80 80 120 160 Q 160 240 170 320 Q 180 400 160 460 Q 140 520 100 580" stroke="rgba(120,80,40,0.3)" strokeWidth="12" strokeLinecap="round" fill="none" />
-            <path d="M 100 580 Q 90 600 85 610" stroke="rgba(120,80,40,0.2)" strokeWidth="6" strokeLinecap="round" fill="none" />
-            <path d="M 120 160 Q 150 140 170 150" stroke="rgba(120,80,40,0.2)" strokeWidth="5" strokeLinecap="round" fill="none" />
-            <path d="M 170 400 Q 200 420 220 410" stroke="rgba(120,80,40,0.2)" strokeWidth="4" strokeLinecap="round" fill="none" />
-            <circle cx="85" cy="605" r="6" fill="rgba(52,211,153,0.2)" />
-            <circle cx="170" cy="148" r="5" fill="rgba(34,197,94,0.15)" />
-            <circle cx="220" cy="412" r="4" fill="rgba(16,185,129,0.12)" />
-          </svg>
-        </div>
+      {/* Products */}
+      <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-surface-950 via-surface-900 to-surface-950">
+        <div className="absolute inset-0 bg-grid-dark" />
+        <div className="absolute inset-0 bg-gold-glow" />
+
+        <FloatingRing className="top-20 -right-20 w-64 h-64 md:w-96 md:h-96 opacity-40" />
+        <FloatingRing className="bottom-40 -left-20 w-48 h-48 md:w-72 md:h-72 opacity-30" />
+        <FloatingDiamond className="top-40 left-[15%] w-8 h-8 md:w-12 md:h-12 opacity-30" />
+        <FloatingDiamond className="bottom-60 right-[10%] w-6 h-6 md:w-8 md:h-8 opacity-20" />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12 md:mb-16">
-            <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
+          <div className="text-center mb-14 md:mb-18">
+            <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 px-4 py-1.5 rounded-full mb-4">
               منتجاتنا
             </span>
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
-              منتجاتنا <span className="gradient-text">المميزة</span>
+              تشكيلتنا <span className="gradient-text">المميزة</span>
             </h2>
             <p className="text-white/50 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
               اختر ما يناسب احتياجاتك من أفضل المكملات الغذائية الطبيعية
             </p>
           </div>
 
-          <div className="relative perspective-1000 preserve-3d">
-            <div className="absolute -inset-4 md:-inset-8 bg-gradient-to-r from-primary-500/5 via-transparent to-primary-500/5 rounded-[3rem] blur-3xl" />
-            <ProductGrid limit={4} />
-          </div>
+          <ProductGrid limit={4} />
 
-          <div className="text-center mt-12 md:mt-16">
-            <Link href="/shop" className="btn-gold text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-gold-500/10">
-              عرض جميع المنتجات
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="text-center mt-14 md:mt-18">
+            <Link
+              href="/shop"
+              className="relative inline-flex items-center gap-2 bg-gradient-to-r from-gold-500 to-amber-400 text-surface-900 px-10 md:px-14 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg group shadow-2xl shadow-gold-500/20 hover:from-gold-400 hover:to-amber-300 transition-all duration-300 active:scale-95"
+            >
+              <span className="relative z-10">عرض جميع المنتجات</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 relative z-10 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
@@ -64,25 +128,19 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-primary-900 via-earth-900 to-amber-950">
-        <div className="absolute inset-0 bg-earth-glow" />
+      {/* Features */}
+      <section className="relative py-24 md:py-36 overflow-hidden bg-surface-950">
+        <div className="absolute inset-0 bg-dots-light" />
 
-        <div className="absolute top-0 left-0 w-64 md:w-96 h-64 md:h-96 opacity-20 pointer-events-none">
-          <svg viewBox="0 0 200 300" fill="none" className="w-full h-full">
-            <path d="M100 280 Q5 200 20 100 Q30 20 100 10 Q170 20 180 100 Q195 200 100 280Z" fill="rgba(251,191,36,0.15)" />
-            <path d="M100 280 L100 20" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-          </svg>
-        </div>
-        <div className="absolute bottom-0 right-0 w-64 md:w-96 h-64 md:h-96 opacity-20 pointer-events-none rotate-180">
-          <svg viewBox="0 0 200 300" fill="none" className="w-full h-full">
-            <path d="M100 280 Q5 200 20 100 Q30 20 100 10 Q170 20 180 100 Q195 200 100 280Z" fill="rgba(245,158,11,0.15)" />
-            <path d="M100 280 L100 20" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-          </svg>
-        </div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gold-500/5 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-amber-500/5 rounded-full blur-[120px]" />
+
+        <FloatingRing className="top-30 right-[25%] w-32 h-32 md:w-40 md:h-40 opacity-20" />
+        <FloatingRing className="bottom-20 left-[20%] w-20 h-20 md:w-28 md:h-28 opacity-15" />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12 md:mb-16">
-            <span className="inline-block text-sm font-bold text-gold-300 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 px-4 py-1.5 rounded-full mb-4">
+          <div className="text-center mb-14 md:mb-18">
+            <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 px-4 py-1.5 rounded-full mb-4">
               لماذا إلزافيا
             </span>
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
@@ -97,70 +155,155 @@ export default function Home() {
             {[
               {
                 icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 ),
                 title: "منتجات طبيعية 100%",
                 desc: "نستخدم أفضل المكونات الطبيعية لضمان أعلى جودة وفعالية",
-                border: "border-emerald-500/20",
-                iconBg: "bg-emerald-500/10",
-                iconColor: "text-emerald-400",
-                glow: "from-emerald-500/5",
+                accent: "text-gold-400",
+                iconBg: "bg-gold-500/10",
               },
               {
                 icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 ),
                 title: "أسعار منافسة",
                 desc: "أفضل قيمة مقابل المال بأسعار تناسب الجميع",
-                border: "border-gold-500/20",
-                iconBg: "bg-gold-500/10",
-                iconColor: "text-gold-400",
-                glow: "from-gold-500/5",
+                accent: "text-amber-400",
+                iconBg: "bg-amber-500/10",
               },
               {
                 icon: (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 ),
                 title: "توصيل سريع",
                 desc: "توصيل إلى جميع مدن المغرب في أسرع وقت ممكن",
-                border: "border-blue-500/20",
-                iconBg: "bg-blue-500/10",
-                iconColor: "text-blue-400",
-                glow: "from-blue-500/5",
+                accent: "text-gold-300",
+                iconBg: "bg-gold-500/10",
               },
             ].map((feature) => (
               <div
                 key={feature.title}
-                className="group relative bg-white/5 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/10 shadow-lg hover:shadow-xl hover:shadow-primary-500/5 transition-all duration-500 hover:-translate-y-1 overflow-hidden"
+                className="group relative bg-white/5 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/10 shadow-lg hover:shadow-xl hover:shadow-gold-500/5 transition-all duration-500 hover:-translate-y-1 overflow-hidden"
               >
-                <div className={`w-14 h-14 rounded-2xl ${feature.iconBg} ${feature.iconColor} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-500 border border-white/5`}>
+                <div className={`w-12 h-12 rounded-xl ${feature.iconBg} ${feature.accent} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-white/50 leading-relaxed">{feature.desc}</p>
-                <div className={`absolute bottom-0 left-6 right-6 h-px rounded-full bg-gradient-to-r from-transparent ${feature.glow} via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <h3 className="text-lg font-extrabold text-white mb-2">{feature.title}</h3>
+                <p className="text-white/50 leading-relaxed text-sm">{feature.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-amber-950 via-primary-950 to-primary-950">
+      {/* Testimonials */}
+      <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-surface-950 via-surface-900 to-surface-950">
+        <div className="absolute inset-0 bg-grid-dark opacity-50" />
+        <div className="absolute inset-0 bg-amber-glow" />
+
+        <FloatingRing className="top-10 right-[10%] w-40 h-40 md:w-56 md:h-56 opacity-20" />
+        <FloatingRing className="bottom-10 left-[10%] w-28 h-28 md:w-40 md:h-40 opacity-15" />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-14 md:mb-18">
+            <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 px-4 py-1.5 rounded-full mb-4">
+              آراء العملاء
+            </span>
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
+              ماذا يقولون <span className="gradient-text">عنّا</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {[
+              {
+                name: "محمد",
+                text: "منتجات رائعة، حسيت بالفرق من أول أسبوع. الطاقة صارت أفضل والتركيز في العمل تطور بشكل ملحوظ.",
+                rating: 5,
+                from: "الدار البيضاء",
+              },
+              {
+                name: "سارة",
+                text: "جودة ممتازة وتوصيل سريع جداً. الطلب وصل في أقل من 24 ساعة. أنصح بالتجربة.",
+                rating: 5,
+                from: "الرباط",
+              },
+              {
+                name: "أحمد",
+                text: "بعد استخدام كبسولات التعافي العضلي، لاحظت فرق كبير في التمرين. منتج طبيعي وآمن.",
+                rating: 5,
+                from: "مراكش",
+              },
+            ].map((t) => (
+              <div key={t.name} className="bg-white/5 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/10 hover:border-gold-500/20 transition-all duration-300">
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: t.rating }).map((_, i) => (
+                    <svg key={i} className="w-4 h-4 text-gold-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-white/70 text-sm leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
+                <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                  <div className="w-10 h-10 rounded-full bg-gold-500/20 flex items-center justify-center text-gold-400 font-extrabold text-sm">
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className="text-white font-bold text-sm">{t.name}</p>
+                    <p className="text-white/40 text-xs">{t.from}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust */}
+      <section className="relative py-16 md:py-20 bg-surface-950 border-t border-white/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h3 className="text-white/40 text-sm font-bold tracking-widest uppercase">طرق الدفع والتوصيل</h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {[
+                { icon: "💵", title: "الدفع عند الاستلام", desc: "تدفع لما تستلم" },
+                { icon: "🚚", title: "توصيل سريع", desc: "48 ساعة كحد أقصى" },
+                { icon: "🛡️", title: "منتجات أصلية", desc: "مضمونة 100%" },
+                { icon: "📞", title: "دعم متواصل", desc: "خدمة عملاء 24/7" },
+              ].map((item) => (
+                <div key={item.title} className="text-center p-4">
+                  <div className="text-3xl mb-3">{item.icon}</div>
+                  <p className="text-white font-bold text-sm mb-1">{item.title}</p>
+                  <p className="text-white/40 text-xs">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative py-24 md:py-36 overflow-hidden bg-surface-950">
         <div className="absolute inset-0 bg-gold-glow" />
-        <div className="absolute inset-0 bg-grid opacity-20" />
+        <div className="absolute inset-0 bg-grid-gold opacity-50" />
+
+        <FloatingRing className="top-10 left-10 w-40 h-40 md:w-56 md:h-56 opacity-20" />
+        <FloatingRing className="bottom-10 right-10 w-32 h-32 md:w-48 md:h-48 opacity-15" />
 
         <div className="absolute -top-40 right-0 w-96 h-96 bg-gold-500/10 rounded-full blur-[150px]" />
-        <div className="absolute -bottom-40 left-0 w-96 h-96 bg-primary-400/10 rounded-full blur-[150px]" />
+        <div className="absolute -bottom-40 left-0 w-96 h-96 bg-amber-500/5 rounded-full blur-[150px]" />
 
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <span className="inline-block text-sm font-bold text-gold-300 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 rounded-full px-4 py-1.5 mb-4">
+          <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 rounded-full px-4 py-1.5 mb-4">
             عرض خاص
           </span>
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
@@ -172,10 +315,10 @@ export default function Home() {
           </p>
           <Link
             href="/shop"
-            className="btn-gold text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-gold-500/30"
+            className="relative inline-flex items-center gap-2 bg-gradient-to-r from-gold-500 to-amber-400 text-surface-900 px-10 md:px-14 py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg group shadow-2xl shadow-gold-500/30 hover:from-gold-400 hover:to-amber-300 transition-all duration-300 active:scale-95"
           >
-            تسوق الآن
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <span className="relative z-10">تسوق الآن</span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 relative z-10 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
