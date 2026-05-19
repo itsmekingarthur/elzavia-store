@@ -19,9 +19,9 @@ interface Product {
 }
 
 const deals = [
-  { label: "عادي", desc: "1 قطعة", priceMultiplier: 1, badge: null, discount: 0, color: "from-surface-400/20 to-white/5", border: "border-white/20", icon: "١" },
-  { label: "رائج", desc: "2 قطعة - وفر 50 درهم", priceMultiplier: 2, badge: "الأكثر طلباً", discount: 50, popular: true, color: "from-primary-500/20 to-emerald-500/10", border: "border-primary-500/40", icon: "★" },
-  { label: "برو", desc: "3 + 1 مجاناً", priceMultiplier: 3, badge: "أفضل قيمة", discount: 199, pro: true, color: "from-gold-500/20 to-amber-500/10", border: "border-gold-500/40", icon: "🔥" },
+  { label: "عادي", desc: "1 قطعة", priceMultiplier: 1, badge: null, fixedPrice: 199, discount: 0, color: "from-surface-400/20 to-white/5", border: "border-white/20", icon: "١" },
+  { label: "رائج", desc: "2 قطعة - وفر 50 درهم", priceMultiplier: 2, badge: "الأكثر طلباً", fixedPrice: 348, discount: 50, popular: true, color: "from-primary-500/20 to-emerald-500/10", border: "border-primary-500/40", icon: "★" },
+  { label: "برو", desc: "3 قطعة - وفر 98 درهم", priceMultiplier: 3, badge: "أفضل قيمة", fixedPrice: 499, discount: 98, pro: true, color: "from-gold-500/20 to-amber-500/10", border: "border-gold-500/40", icon: "🔥" },
 ];
 
 export default function ProductDetailPage() {
@@ -50,6 +50,10 @@ export default function ProductDetailPage() {
     if (!deal) return;
     addWithDeal(product.id, deal.priceMultiplier, deal.label, deal.discount);
     setAdded(true);
+  };
+
+  const formatDealPrice = (price: number) => {
+    return price.toLocaleString("ar-MA") + " درهم";
   };
 
   const handleCheckout = () => {
@@ -119,8 +123,8 @@ export default function ProductDetailPage() {
             <div className="space-y-3 mt-6">
               <h3 className="text-sm font-bold text-white/40 mb-3">اختر الباقة</h3>
               {deals.map((deal) => {
+                const finalPrice = deal.fixedPrice;
                 const dealPrice = product.price * deal.priceMultiplier;
-                const finalPrice = dealPrice - deal.discount;
                 const isSelected = selectedDeal === deal.label;
 
                 return (
@@ -166,10 +170,10 @@ export default function ProductDetailPage() {
                           ? deal.popular ? "text-primary-400" : deal.pro ? "text-gold-400" : "text-white"
                           : "text-white"
                       }`}>
-                        {formatPrice(finalPrice)}
+                        {formatDealPrice(finalPrice)}
                       </span>
                       {deal.discount > 0 && (
-                        <span className="text-white/30 text-xs line-through">{formatPrice(dealPrice)}</span>
+                        <span className="text-white/30 text-xs line-through">{formatDealPrice(dealPrice)}</span>
                       )}
                     </div>
                   </button>

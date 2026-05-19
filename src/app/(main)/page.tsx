@@ -43,7 +43,22 @@ const leafIcons = [
   "🌿", "🍃", "🌱", "🌳", "🍂", "🌾", "🍀", "🌲",
 ];
 
+const defaultTestimonials = [
+  { name: "محمد", text: "منتجات رائعة، حسيت بالفرق من أول أسبوع. الطاقة صارت أفضل والتركيز في العمل تطور بشكل ملحوظ.", from: "الدار البيضاء" },
+  { name: "سارة", text: "جودة ممتازة وتوصيل سريع جداً. الطلب وصل في أقل من 24 ساعة. أنصح بالتجربة.", from: "الرباط" },
+  { name: "أحمد", text: "بعد استخدام كبسولات التعافي العضلي، لاحظت فرق كبير في التمرين. منتج طبيعي وآمن.", from: "مراكش" },
+];
+
 export default function Home() {
+  const [testimonials, setTestimonials] = useState(defaultTestimonials);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("elzavia-testimonials");
+    if (saved) {
+      try { setTestimonials(JSON.parse(saved)); } catch { /* use defaults */ }
+    }
+  }, []);
+
   return (
     <>
       <Hero />
@@ -53,10 +68,10 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
             {[
-              { to: 500, suffix: "+", label: "عميل سعيد", icon: "🌿" },
-              { to: 12, suffix: "", label: "منتج طبيعي", icon: "🍃" },
-              { to: 30, suffix: "+", label: "مدينة مغربية", icon: "🌳" },
-              { to: 48, suffix: "h", label: "توصيل سريع", icon: "🍀" },
+              { to: 5, suffix: "+", label: "سنوات خبرة", icon: "🌱" },
+              { to: 12, suffix: "", label: "منتج مطور", icon: "⚗️" },
+              { to: 45, suffix: "+", label: "مكون طبيعي", icon: "🌿" },
+              { to: 2000, suffix: "+", label: "طلب تم توصيله", icon: "✅" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-2xl mb-2">{stat.icon}</div>
@@ -190,11 +205,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              { name: "محمد", text: "منتجات رائعة، حسيت بالفرق من أول أسبوع. الطاقة صارت أفضل والتركيز في العمل تطور بشكل ملحوظ.", from: "الدار البيضاء" },
-              { name: "سارة", text: "جودة ممتازة وتوصيل سريع جداً. الطلب وصل في أقل من 24 ساعة. أنصح بالتجربة.", from: "الرباط" },
-              { name: "أحمد", text: "بعد استخدام كبسولات التعافي العضلي، لاحظت فرق كبير في التمرين. منتج طبيعي وآمن.", from: "مراكش" },
-            ].map((t) => (
+            {testimonials.map((t) => (
               <div key={t.name} className="glass-nature rounded-2xl p-6 md:p-8 hover:border-primary-500/20 transition-all duration-300">
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
