@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[80vh] md:min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
+    <section className="relative min-h-[90vh] md:min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
 
       <div className="absolute -top-40 -right-40 w-80 md:w-[40rem] h-80 md:h-[40rem] bg-primary-500/15 rounded-full blur-[120px] animate-pulse-soft" />
       <div className="absolute -bottom-40 -left-40 w-80 md:w-[40rem] h-80 md:h-[40rem] bg-emerald-500/10 rounded-full blur-[120px] animate-pulse-soft" style={{ animationDelay: "1.5s" }} />
@@ -33,7 +33,7 @@ export default function Hero() {
 
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-primary-950 to-transparent" />
 
-      <div className="relative z-10 container mx-auto px-4 pt-14 md:pt-44 pb-4 md:pb-12">
+      <div className="relative z-10 container mx-auto px-4 py-16 md:py-44">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5 md:px-4 md:py-2 mb-4 md:mb-8 mx-auto">
             <span className="w-1.5 h-1.5 bg-primary-400 rounded-full" />
