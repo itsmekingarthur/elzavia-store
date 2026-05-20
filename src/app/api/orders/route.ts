@@ -67,18 +67,20 @@ export async function PATCH(request: Request) {
 
     if (updates.status === "تم التوصيل") {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pmvidjjauvosqfuxkrrg.supabase.co";
-      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-      const headers: Record<string, string> = { "Content-Type": "application/json", "Accept": "application/json" };
-      if (serviceRoleKey) headers["apikey"] = serviceRoleKey;
-      else headers["apikey"] = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+      const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        "apikey": key,
+        "Authorization": `Bearer ${key}`,
+        "Accept": "application/json",
+      };
 
       let userId = user_id;
       let orderItems = bodyItems || [];
 
       if (!userId || !orderItems.length) {
         try {
-          const url = `${supabaseUrl}/rest/v1/orders?id=eq.${id}&select=*`;
-          const res = await fetch(url, { headers });
+          const res = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${encodeURIComponent(id)}&select=*`, { headers });
           const rows = await res.json();
           if (rows?.[0]) {
             userId = userId || rows[0].user_id;
@@ -92,12 +94,11 @@ export async function PATCH(request: Request) {
         const earnedPoints = totalQty * 50;
 
         try {
-          const selectUrl = `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}&select=points`;
-          const profileRes = await fetch(selectUrl, { headers });
+          const profileRes = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=points`, { headers });
           const profileRows = await profileRes.json();
           const currentPoints = profileRows?.[0]?.points || 0;
 
-          await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`, {
+          await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}`, {
             method: "PATCH",
             headers,
             body: JSON.stringify({ points: currentPoints + earnedPoints }),
