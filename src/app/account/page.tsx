@@ -15,24 +15,30 @@ const timelineSteps = [
 function OrderTimeline({ status, shippedAt, deliveredAt, createdAt }: any) {
   const statusIndex = timelineSteps.findIndex((s) => s.key === status);
   return (
-    <div className="flex items-start gap-1 mt-3 pt-3 border-t border-white/10">
-      {timelineSteps.map((step, i) => {
-        const done = i <= statusIndex;
-        const current = i === statusIndex;
-        const date = i === 0 ? createdAt : i === 1 ? shippedAt : deliveredAt;
-        return (
-          <div key={step.key} className="flex-1 text-center relative">
-            <div className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center text-sm mb-1 transition-all ${
-              done ? "bg-primary-500/20 text-primary-400" : "bg-white/5 text-white/30"
-            } ${current ? "ring-2 ring-primary-500/40 scale-110" : ""}`}>
-              {step.icon}
+    <div className="mt-3 pt-3 border-t border-white/10">
+      <div className="flex items-center justify-center">
+        {timelineSteps.map((step, i) => {
+          const done = i <= statusIndex;
+          const current = i === statusIndex;
+          const date = i === 0 ? createdAt : i === 1 ? shippedAt : deliveredAt;
+          return (
+            <div key={step.key} className="flex items-center">
+              {i > 0 && (
+                <div className={`w-8 md:w-12 h-0.5 mx-1 ${done ? "bg-primary-500/40" : "bg-white/10"}`} />
+              )}
+              <div className="flex flex-col items-center">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${
+                  done ? "bg-primary-500/20 text-primary-400" : "bg-white/5 text-white/30"
+                } ${current ? "ring-2 ring-primary-500/40 scale-110" : ""}`}>
+                  {step.icon}
+                </div>
+                <p className={`text-[10px] font-bold mt-1 whitespace-nowrap ${done ? "text-primary-300" : "text-white/30"}`}>{step.label}</p>
+                {date && <p className="text-[9px] text-white/30">{new Date(date).toLocaleDateString("ar-MA")}</p>}
+              </div>
             </div>
-            <div className={`h-0.5 absolute top-4 -left-1/2 w-full ${i > 0 && done ? "bg-primary-500/30" : i > 0 ? "bg-white/10" : ""}`} style={{ display: i === 0 ? "none" : undefined }} />
-            <p className={`text-[10px] font-bold ${done ? "text-primary-300" : "text-white/30"}`}>{step.label}</p>
-            {date && <p className="text-[9px] text-white/30 mt-0.5">{new Date(date).toLocaleDateString("ar-MA")}</p>}
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
