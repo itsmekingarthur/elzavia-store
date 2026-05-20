@@ -62,12 +62,20 @@ export default function ContactPage() {
                     <p className="text-gold-400 text-sm md:text-base font-medium group-hover:text-gold-300 transition-colors">@elzavia_shop</p>
                   </div>
                 </a>
+                <div className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary-500/10 flex items-center justify-center flex-shrink-0 text-xl">📍</div>
+                  <div>
+                    <p className="text-white/40 text-xs">المقر</p>
+                    <p className="text-white text-sm md:text-base font-medium">المغرب</p>
+                  </div>
+                </div>
               </div>
             </div>
 
             <div>
               <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 space-y-4">
                 <input type="text" name="name" placeholder="الاسم" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                <input type="email" name="email" placeholder="البريد الإلكتروني" className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
                 <textarea name="message" placeholder="رسالتك" required rows={5} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
                 <button type="submit" className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20">
                   {sent ? "تم الإرسال ✓" : "إرسال"}
