@@ -192,15 +192,13 @@ export default function AccountPage() {
           </button>
         </div>
 
-        {points > 0 && (
-          <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-4 mb-6 flex items-center gap-3">
-            <span className="text-2xl">⭐</span>
-            <div>
-              <p className="text-white font-bold">لديك {points} نقطة</p>
-              <p className="text-white/50 text-xs mt-0.5">اكسب 50 نقطة عن كل طلب يتم توصيله. استخدم النقاط للحصول على خصومات قريباً</p>
-            </div>
+        <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-4 mb-6 flex items-center gap-3">
+          <span className="text-2xl">⭐</span>
+          <div>
+            <p className="text-white font-bold">لديك {points} {points === 0 ? "نقطة — اكسب 50 نقطة عند توصيل طلبك الأول" : "نقطة"}</p>
+            <p className="text-white/50 text-xs mt-0.5">تجمع النقاط مع كل طلب يتم توصيله. استخدمها للحصول على خصومات قريباً</p>
           </div>
-        )}
+        </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
@@ -222,6 +220,14 @@ export default function AccountPage() {
                   )}
                 </button>
               ))}
+              <div className="border-t border-white/10 my-2" />
+              <Link
+                href="/shop"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-white/60 hover:text-white hover:bg-white/5 transition-all"
+              >
+                <span className="text-lg">🏪</span>
+                <span>العودة للقائمة الرئيسية</span>
+              </Link>
             </div>
           </div>
 
