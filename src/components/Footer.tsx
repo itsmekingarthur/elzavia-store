@@ -48,6 +48,7 @@ export default function Footer() {
               {[
                 { href: "/shop", label: "المتجر" },
                 { href: "/about", label: "عن إلزافيا" },
+                { href: "/faq", label: "الأسئلة الشائعة" },
                 { href: "/contact", label: "اتصل بنا" },
                 { href: "/cart", label: "سلة الشراء" },
               ].map((link) => (

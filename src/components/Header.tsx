@@ -45,6 +45,7 @@ export default function Header() {
               { href: "/", label: "الرئيسية" },
               { href: "/shop", label: "المتجر" },
               { href: "/about", label: "عن إلزافيا" },
+              { href: "/faq", label: "الأسئلة الشائعة" },
               { href: "/contact", label: "اتصل بنا" },
             ].map((link) => (
               <Link
@@ -113,6 +114,7 @@ export default function Header() {
               { href: "/", label: "الرئيسية" },
               { href: "/shop", label: "المتجر" },
               { href: "/about", label: "عن إلزافيا" },
+              { href: "/faq", label: "الأسئلة الشائعة" },
               { href: "/contact", label: "اتصل بنا" },
             ].map((link) => (
               <Link
