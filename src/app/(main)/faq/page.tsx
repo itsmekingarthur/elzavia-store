@@ -86,7 +86,7 @@ export default function FAQPage() {
                       <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4" />
                       <div className="flex flex-wrap gap-3">
                         <Link
-                          href="https://wa.me/21267702771"
+                          href="https://wa.me/+21267702771"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-2.5 text-emerald-400 hover:bg-emerald-500/20 transition-all text-sm font-bold"

@@ -52,7 +52,7 @@ export default function ContactPage() {
             <div>
               <div className="space-y-6">
                 <a
-                  href="https://wa.me/21267702771"
+                  href="https://wa.me/+21267702771"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 group"
