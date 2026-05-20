@@ -55,6 +55,11 @@ function FallingLeaf({ index }: { index: number }) {
     const el = elRef.current;
     if (!el) return;
 
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.style.display = "none";
+      return;
+    }
+
     const startX = Math.random() * 100;
     const startDelay = Math.random() * 15;
     const duration = 12 + Math.random() * 10;
@@ -129,14 +134,14 @@ export default function Leaves() {
   return (
     <>
       {/* Floating decorative leaves */}
-      <div className="pointer-events-none select-none fixed inset-0 z-0 overflow-hidden">
+      <div className="pointer-events-none select-none fixed inset-0 z-0 overflow-hidden motion-reduce:hidden">
         {Array.from({ length: FALLING_LEAF_COUNT }).map((_, i) => (
           <FallingLeaf key={i} index={i} />
         ))}
       </div>
 
       {/* Side branches - shown on larger screens */}
-      <div className="hidden md:block pointer-events-none select-none fixed inset-0 z-0">
+      <div className="hidden md:block pointer-events-none select-none fixed inset-0 z-0 motion-reduce:hidden">
         <BranchLeft />
         <BranchRight />
       </div>

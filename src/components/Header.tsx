@@ -64,13 +64,14 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <Link
               href="/cart"
+              aria-label="عربة التسوق"
               className={`relative p-2.5 rounded-xl transition-all duration-300 ${
                 scrolled
                   ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
                   : "text-white/80 hover:text-white hover:bg-white/10"
               }`}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
               </svg>
               {itemCount > 0 && (
@@ -81,6 +82,7 @@ export default function Header() {
             </Link>
 
             <button
+              aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"}
               className={`lg:hidden p-2.5 rounded-xl transition-all duration-300 ${
                 scrolled
                   ? "text-surface-600 hover:bg-surface-100"
@@ -88,7 +90,7 @@ export default function Header() {
               }`}
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 {menuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (

@@ -261,34 +261,54 @@ export default function CartItems() {
 
         <div className="space-y-3 md:space-y-4">
           <h4 className="font-bold text-white text-sm md:text-base">معلومات التوصيل</h4>
-          <input
-            type="text"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="الاسم الكامل"
-            className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
-          />
-          <input
-            type="tel"
-            value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            placeholder="رقم الهاتف"
-            className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
-          />
-          <textarea
-            value={form.address}
-            onChange={(e) => setForm({ ...form, address: e.target.value })}
-            placeholder="العنوان كاملاً"
-            rows={3}
-            className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
-          />
-          <textarea
-            value={form.notes}
-            onChange={(e) => setForm({ ...form, notes: e.target.value })}
-            placeholder="ملاحظات (اختياري)"
-            rows={2}
-            className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
-          />
+          <div>
+            <label htmlFor="order-name" className="sr-only">الاسم الكامل</label>
+            <input
+              id="order-name"
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="الاسم الكامل"
+              autoComplete="name"
+              className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
+            />
+          </div>
+          <div>
+            <label htmlFor="order-phone" className="sr-only">رقم الهاتف</label>
+            <input
+              id="order-phone"
+              type="tel"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              placeholder="رقم الهاتف"
+              autoComplete="tel"
+              inputMode="numeric"
+              className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
+            />
+          </div>
+          <div>
+            <label htmlFor="order-address" className="sr-only">العنوان كاملاً</label>
+            <textarea
+              id="order-address"
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              placeholder="العنوان كاملاً"
+              autoComplete="street-address"
+              rows={3}
+              className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
+            />
+          </div>
+          <div>
+            <label htmlFor="order-notes" className="sr-only">ملاحظات (اختياري)</label>
+            <textarea
+              id="order-notes"
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              placeholder="ملاحظات (اختياري)"
+              rows={2}
+              className="w-full text-sm md:text-base bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/20 transition-all"
+            />
+          </div>
           <button
             onClick={placeOrder}
             disabled={!form.name.trim() || !form.phone.trim() || !form.address.trim() || submitting}

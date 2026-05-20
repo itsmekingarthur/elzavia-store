@@ -34,24 +34,28 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-1.5">اسم المستخدم</label>
+              <label htmlFor="admin-username" className="block text-white/70 text-sm font-medium mb-1.5">اسم المستخدم</label>
               <input
+                id="admin-username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 transition-colors"
                 placeholder="أدخل اسم المستخدم"
+                autoComplete="username"
                 autoFocus
               />
             </div>
             <div>
-              <label className="block text-white/70 text-sm font-medium mb-1.5">كلمة المرور</label>
+              <label htmlFor="admin-password" className="block text-white/70 text-sm font-medium mb-1.5">كلمة المرور</label>
               <input
+                id="admin-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/50 transition-colors"
                 placeholder="أدخل كلمة المرور"
+                autoComplete="current-password"
               />
             </div>
 

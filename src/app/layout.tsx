@@ -9,6 +9,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/logo.png",
   },
+  other: {
+    "color-scheme": "dark",
+  },
 };
 
 export default function RootLayout({
@@ -17,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar">
-      <body className="min-h-screen bg-surface-50 flex flex-col">
+    <html lang="ar" className="dark">
+      <body className="min-h-screen bg-primary-950 flex flex-col">
         <CartProvider>{children}</CartProvider>
       </body>
     </html>
