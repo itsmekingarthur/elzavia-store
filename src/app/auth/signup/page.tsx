@@ -28,16 +28,27 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <div className="bg-white/5 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-8 text-center">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/10 flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <div className="bg-white/5 backdrop-blur-md border border-gold-500/20 rounded-2xl p-8 text-center">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold-500/10 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
-        <h2 className="text-xl font-extrabold text-white mb-2">تم إنشاء حسابك بنجاح!</h2>
-        <p className="text-white/60 text-sm mb-6">يمكنك الآن تسجيل الدخول باستخدام بريدك الإلكتروني وكلمة المرور</p>
+        <h2 className="text-xl font-extrabold text-white mb-2">تم إنشاء حسابك!</h2>
+        <p className="text-white/70 text-sm mb-2 leading-relaxed">
+          لقد أرسلنا رابط تأكيد إلى بريدك الإلكتروني
+        </p>
+        <p className="text-white/50 text-xs mb-6 leading-relaxed">
+          يرجى التحقق من صندوق الوارد (والبريد المزعج) واضغط على رابط التأكيد لتتمكن من تسجيل الدخول
+        </p>
+        <div className="flex items-center justify-center gap-2 mb-6 text-gold-400/60 text-xs">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>إذا لم تصلك الرسالة خلال 5 دقائق، حاول التسجيل مرة أخرى</span>
+        </div>
         <Link href="/auth/login" className="inline-block bg-gradient-to-r from-primary-600 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:from-primary-500 hover:to-emerald-500 transition-all shadow-lg shadow-primary-500/20">
-          تسجيل الدخول
+          الذهاب إلى تسجيل الدخول
         </Link>
       </div>
     );
