@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ContactPage() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [sent, setSent] = useState(false);
   const [animating, setAnimating] = useState(false);
 
@@ -12,7 +12,9 @@ export default function ContactPage() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const data = { name: formData.get("name") as string, message: formData.get("message") as string, date: new Date().toISOString(), email: formData.get("email") as string, user_id: user?.id || null };
+    const name = user ? profile?.username || user.email?.split("@")[0] || "user" : formData.get("name") as string;
+    const email = user ? user.email || "" : formData.get("email") as string;
+    const data = { name, message: formData.get("message") as string, date: new Date().toISOString(), email, user_id: user?.id || null };
 
     const saved = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
     saved.push(data);
@@ -101,11 +103,20 @@ export default function ContactPage() {
               {!sent ? (
                 <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 space-y-4 relative overflow-hidden">
                   <div className={`transition-all duration-500 ${animating ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
-                    <input type="text" name="name" placeholder="الاسم" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                    <div className="mt-4">
-                      <input type="email" name="email" placeholder="البريد الإلكتروني" className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                    </div>
-                    <div className="mt-4">
+                    {!user && (
+                      <>
+                        <input type="text" name="name" placeholder="الاسم" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                        <div className="mt-4">
+                          <input type="email" name="email" placeholder="البريد الإلكتروني" className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                        </div>
+                      </>
+                    )}
+                    {user && (
+                      <div className="text-white/50 text-xs mb-4 px-3 py-2 bg-white/5 rounded-lg">
+                        مرحباً {profile?.username || user.email?.split("@")[0]}، يمكنك إرسال رسالتك مباشرة
+                      </div>
+                    )}
+                    <div className={user ? "" : "mt-4"}>
                       <textarea name="message" placeholder="رسالتك" required rows={5} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
                     </div>
                     <button type="submit" className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20 mt-4">

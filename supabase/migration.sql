@@ -30,6 +30,7 @@ ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.
 -- 3. Add user_id + admin_reply to messages
 ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS admin_reply TEXT;
+ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS user_reply TEXT;
 
 -- 4. User carts table
 CREATE TABLE IF NOT EXISTS public.user_carts (
