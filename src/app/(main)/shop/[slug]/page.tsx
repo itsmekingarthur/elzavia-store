@@ -10,11 +10,13 @@ interface Product {
   name: string;
   slug: string;
   description: string;
+  benefits?: string[];
   price: number;
   images: string[];
   category: string;
   ingredients: string[];
   usage: string;
+  warnings?: string;
   weight: string;
 }
 
@@ -105,7 +107,7 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">{product.name}</h1>
             <p className="text-white/60 leading-relaxed mb-6">{product.description}</p>
 
-            {product.benefits?.length > 0 && (
+            {product.benefits && product.benefits.length > 0 && (
               <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-emerald-500/5 to-primary-500/5 border border-emerald-500/10">
                 <h3 className="text-sm font-bold text-emerald-400 mb-3 flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
