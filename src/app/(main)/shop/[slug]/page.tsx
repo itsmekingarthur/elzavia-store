@@ -105,9 +105,26 @@ export default function ProductDetailPage() {
             <h1 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">{product.name}</h1>
             <p className="text-white/60 leading-relaxed mb-6">{product.description}</p>
 
+            {product.benefits?.length > 0 && (
+              <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-emerald-500/5 to-primary-500/5 border border-emerald-500/10">
+                <h3 className="text-sm font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  أبرز الفوائد
+                </h3>
+                <div className="space-y-2">
+                  {product.benefits.map((b) => (
+                    <div key={b} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                      <span className="text-white/70 text-sm">{b}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {product.ingredients?.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-sm font-bold text-white/40 mb-2">المكونات</h3>
+                <h3 className="text-sm font-bold text-white/40 mb-2">المكونات الفعالة</h3>
                 <div className="flex flex-wrap gap-2">
                   {product.ingredients.map((ing) => (
                     <span key={ing} className="text-xs bg-white/5 border border-white/10 text-white/70 px-3 py-1 rounded-lg">{ing}</span>
@@ -117,7 +134,19 @@ export default function ProductDetailPage() {
             )}
 
             {product.usage && (
-              <p className="text-sm text-white/40 mb-4"><span className="text-emerald-400 font-bold">طريقة الاستخدام:</span> {product.usage}</p>
+              <div className="mb-4">
+                <h3 className="text-sm font-bold text-white/40 mb-1">طريقة الاستخدام</h3>
+                <p className="text-sm text-white/60 leading-relaxed">{product.usage}</p>
+              </div>
+            )}
+
+            {product.warnings && (
+              <div className="mb-6 p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                <div className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+                  <p className="text-amber-300/80 text-xs leading-relaxed">{product.warnings}</p>
+                </div>
+              </div>
             )}
 
             <div className="space-y-3 mt-6">
