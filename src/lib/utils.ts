@@ -60,6 +60,10 @@ export function ordersToExcelData(
   return rows;
 }
 
+export function getOrdersStorageKey(userId?: string | null): string {
+  return userId ? `elzavia-orders-${userId}` : "elzavia-orders-guest";
+}
+
 export async function downloadExcel(
   data: OrderRow[],
   filename: string

@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, getOrdersStorageKey } from "@/lib/utils";
 
 const timelineSteps = [
   { key: "قيد التجهيز", label: "قيد التجهيز", icon: "⏳", desc: "تم استلام طلبك وبدأ تجهيزه" },
@@ -145,7 +145,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     try {
-      const orders = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
+      const orders = JSON.parse(localStorage.getItem(getOrdersStorageKey(user?.id)) || "[]");
       setLocalOrders(orders);
     } catch {}
     try {

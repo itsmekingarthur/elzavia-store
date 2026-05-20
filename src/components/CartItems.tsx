@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { formatPrice, generateOrderId } from "@/lib/utils";
+import { formatPrice, generateOrderId, getOrdersStorageKey } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -122,9 +122,10 @@ export default function CartItems() {
       createdAt: new Date().toISOString(),
     };
 
-    const orders = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
+    const key = getOrdersStorageKey(user?.id);
+    const orders = JSON.parse(localStorage.getItem(key) || "[]");
     orders.push(order);
-    localStorage.setItem("elzavia-orders", JSON.stringify(orders));
+    localStorage.setItem(key, JSON.stringify(orders));
 
     try {
       await fetch("/api/orders", {
