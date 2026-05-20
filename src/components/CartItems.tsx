@@ -366,16 +366,28 @@ export default function CartItems() {
             توصيل مجاني لجميع الطلبات
           </div>
           {user && userPoints >= 100 && (
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/5">
+            <div className={`mt-4 pt-4 border-t border-white/10 rounded-xl p-4 transition-all duration-300 ${usePoints ? "bg-gold-500/15 border-gold-500/30" : "bg-white/5 border-white/10"}`}>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-2xl">⭐</span>
+                <div className="flex-1">
+                  <p className="text-white text-sm font-bold">لديك {userPoints} نقطة</p>
+                  <p className="text-white/50 text-xs">كل 100 نقطة = 25 درهم خصم</p>
+                </div>
+              </div>
               <button
                 onClick={() => setUsePoints(!usePoints)}
-                className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${usePoints ? "bg-gold-500" : "bg-white/20"}`}
+                className={`w-full py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                  usePoints
+                    ? "bg-gold-500 text-surface-900 hover:bg-gold-400 shadow-lg shadow-gold-500/20"
+                    : "bg-gold-500/20 text-gold-400 hover:bg-gold-500/30 border border-gold-500/30"
+                }`}
               >
-                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-300 ${usePoints ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+                <span>{usePoints ? "✅" : "🎯"}</span>
+                {usePoints
+                  ? `خصم ${formatPrice(pointsDiscount)} مطبق`
+                  : `استخدم ${Math.floor(userPoints / 100) * 100} نقطة ووفر ${formatPrice(Math.floor(userPoints / 100) * 25)}`
+                }
               </button>
-              <span className="text-white/80 text-xs font-medium">
-                استخدم {Math.floor(userPoints / 100) * 100} نقطة (خصم {formatPrice(Math.floor(userPoints / 100) * 25)})
-              </span>
             </div>
           )}
         </div>
