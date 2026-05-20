@@ -47,7 +47,7 @@ export default function ContactPage() {
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📱</div>
                   <div>
                     <p className="text-white/40 text-xs">واتساب</p>
-                    <p className="text-emerald-400 text-sm md:text-base font-medium group-hover:text-emerald-300 transition-colors" dir="ltr">+212 6 77 02 77 1</p>
+                    <p className="text-emerald-400 text-sm md:text-base font-medium group-hover:text-emerald-300 transition-colors" dir="ltr">0677027771</p>
                   </div>
                 </a>
                 <a
