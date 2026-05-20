@@ -16,7 +16,7 @@ function OrderTimeline({ status, shippedAt, deliveredAt, createdAt }: any) {
   const statusIndex = timelineSteps.findIndex((s) => s.key === status);
   return (
     <div className="mt-3 pt-3 border-t border-white/10">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center" dir="ltr">
         {timelineSteps.map((step, i) => {
           const done = i <= statusIndex;
           const current = i === statusIndex;
