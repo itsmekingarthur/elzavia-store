@@ -193,6 +193,39 @@ export default function CartItems() {
   return (
     <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
       <div className="lg:col-span-2 space-y-3 md:space-y-4">
+        {/* Prominent coupon section */}
+        <div className="bg-gradient-to-r from-emerald-500/5 to-primary-500/5 border border-emerald-500/15 rounded-xl p-4 md:p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            <span className="text-emerald-400 text-sm font-bold">هل لديك كود خصم؟</span>
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+              placeholder="أدخل كود الخصم"
+              className="flex-1 text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+            />
+            <button onClick={applyCoupon} className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap shadow-lg shadow-emerald-500/20">
+              تطبيق
+            </button>
+          </div>
+          {couponError && (
+            <p className="text-red-400 text-xs mt-2">{couponError}</p>
+          )}
+          {discount > 0 && (
+            <div className="flex items-center gap-1.5 mt-2 text-emerald-400 text-xs font-medium">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {discountLabel} مطبق بنجاح
+            </div>
+          )}
+        </div>
+
         {items.map((item) => {
           const product = products.find((p) => p.id === item.productId);
           if (!product) return null;

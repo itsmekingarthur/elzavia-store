@@ -9,7 +9,7 @@ export default function ContactPage() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const data = { name: formData.get("name") as string, email: formData.get("email") as string, message: formData.get("message") as string, date: new Date().toISOString() };
+    const data = { name: formData.get("name") as string, message: formData.get("message") as string, date: new Date().toISOString() };
     try {
       await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       setSent(true);
@@ -38,32 +38,37 @@ export default function ContactPage() {
           <div className="grid md:grid-cols-2 gap-8 md:gap-12">
             <div>
               <div className="space-y-6">
-                {[
-                  { icon: "📧", label: "البريد الإلكتروني", value: "contact@elzavia.ma" },
-                  { icon: "📱", label: "واتساب", value: "+212 6XX-XXXXXX" },
-                  { icon: "📍", label: "المقر", value: "المغرب" },
-                  { icon: "📸", label: "إنستغرام", value: "@elzavia_shop", href: "https://instagram.com/elzavia_shop" },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:border-primary-500/20 transition-all duration-300">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary-500/10 flex items-center justify-center flex-shrink-0 text-xl">{item.icon}</div>
-                    <div>
-                      <p className="text-white/40 text-xs">{item.label}</p>
-                      {"href" in item && item.href ? (
-                        <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-primary-400 hover:text-primary-300 text-sm md:text-base font-medium transition-colors">{item.value}</a>
-                      ) : (
-                        <p className="text-white text-sm md:text-base font-medium">{item.value}</p>
-                      )}
-                    </div>
+                <a
+                  href="https://wa.me/21267702771"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 group"
+                >
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📱</div>
+                  <div>
+                    <p className="text-white/40 text-xs">واتساب</p>
+                    <p className="text-emerald-400 text-sm md:text-base font-medium group-hover:text-emerald-300 transition-colors" dir="ltr">+212 6 77 02 77 1</p>
                   </div>
-                ))}
+                </a>
+                <a
+                  href="https://instagram.com/elzavia_shop"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:border-gold-500/30 hover:bg-gold-500/5 transition-all duration-300 group"
+                >
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gold-500/10 flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📸</div>
+                  <div>
+                    <p className="text-white/40 text-xs">إنستغرام</p>
+                    <p className="text-gold-400 text-sm md:text-base font-medium group-hover:text-gold-300 transition-colors">@elzavia_shop</p>
+                  </div>
+                </a>
               </div>
             </div>
 
             <div>
               <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 space-y-4">
                 <input type="text" name="name" placeholder="الاسم" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                <input type="email" name="email" placeholder="البريد الإلكتروني" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                <textarea name="message" placeholder="رسالتك" required rows={4} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                <textarea name="message" placeholder="رسالتك" required rows={5} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
                 <button type="submit" className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20">
                   {sent ? "تم الإرسال ✓" : "إرسال"}
                 </button>
