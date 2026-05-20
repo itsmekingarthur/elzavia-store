@@ -33,10 +33,10 @@ export default function Header() {
                 scrolled ? "drop-shadow-none opacity-90" : "drop-shadow-lg brightness-0 invert opacity-90"
               }`}
             />
-            <span className={`text-base md:text-lg font-extrabold tracking-wide transition-all duration-500 ${
-              scrolled ? "text-primary-700" : "text-white"
+            <span className={`text-base md:text-lg font-black tracking-[0.15em] transition-all duration-500 ${
+              scrolled ? "gradient-text" : "text-white/90 drop-shadow-sm"
             }`}>
-              elzavia
+              ELZAVIA
             </span>
           </Link>
 
