@@ -108,26 +108,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6 md:gap-8">
-        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-4">آخر الطلبات</h2>
-          {orders.length === 0 ? (
-            <p className="text-gray-400 text-sm md:text-base">لا توجد طلبات بعد</p>
-          ) : (
-            <div className="space-y-3">
-              {orders.slice(-5).reverse().map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div className="min-w-0">
-                    <p className="font-bold text-gray-900 text-xs md:text-sm truncate">{order.id}</p>
-                    <p className="text-xs text-gray-500 truncate">{order.customer.name}</p>
-                  </div>
-                  <span className="text-xs md:text-sm font-bold flex-shrink-0">{formatPrice(order.total)}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
+      <div className="grid lg:grid-cols-1 gap-6 md:gap-8">
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
           <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-4">الرسائل الواردة</h2>
           {messages.length === 0 ? (

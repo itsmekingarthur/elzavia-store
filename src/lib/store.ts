@@ -42,6 +42,10 @@ export async function addMessage(msg: any) {
   await supabase.from("messages").insert(msg);
 }
 
+export async function deleteMessage(date: string) {
+  await supabase.from("messages").delete().eq("date", date);
+}
+
 // ---------- Products ----------
 export async function getProducts(): Promise<any[]> {
   const defaults = [

@@ -33,6 +33,18 @@ export default function MessagesPage() {
     return () => window.removeEventListener("focus", refresh);
   }, [refresh]);
 
+  const handleDelete = async (msg: Message, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("هل أنت متأكد من حذف هذه الرسالة؟")) return;
+    try {
+      await fetch("/api/messages", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ date: msg.date }) });
+    } catch {}
+    const updated = messages.filter((m) => m.date !== msg.date);
+    setMessages(updated);
+    localStorage.setItem("elzavia-messages", JSON.stringify(updated));
+    if (selected?.date === msg.date) setSelected(null);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -82,10 +94,16 @@ export default function MessagesPage() {
                     <p className="text-sm font-medium text-gray-900" dir="ltr">{selected.email}</p>
                   </div>
                 )}
-                <div className="p-4 bg-gray-50 rounded-xl">
+                <div className="p-4 bg-gray-50 rounded-xl mb-6">
                   <p className="text-xs text-gray-500 mb-1">الرسالة</p>
                   <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{selected.message}</p>
                 </div>
+                <button
+                  onClick={(e) => handleDelete(selected, e)}
+                  className="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl font-bold text-sm transition-colors"
+                >
+                  🗑️ حذف الرسالة
+                </button>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-64 text-center">
