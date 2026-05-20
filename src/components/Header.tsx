@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { itemCount } = useCart();
+  const { user, profile } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -62,7 +64,30 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 md:gap-2">
+            {user ? (
+              <Link
+                href="/account"
+                className={`px-3 py-2 rounded-xl text-sm font-bold transition-all duration-300 hidden md:block ${
+                  scrolled
+                    ? "text-primary-600 bg-primary-50 hover:bg-primary-100"
+                    : "text-white bg-white/10 hover:bg-white/20"
+                }`}
+              >
+                {profile?.username || "حسابي"}
+              </Link>
+            ) : (
+              <Link
+                href="/auth/login"
+                className={`px-3 py-2 rounded-xl text-sm font-bold transition-all duration-300 hidden md:block ${
+                  scrolled
+                    ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                دخول
+              </Link>
+            )}
             <Link
               href="/cart"
               aria-label="عربة التسوق"
@@ -116,6 +141,8 @@ export default function Header() {
               { href: "/about", label: "عن إلزافيا" },
               { href: "/faq", label: "الأسئلة الشائعة" },
               { href: "/contact", label: "اتصل بنا" },
+              { href: user ? "/account" : "/auth/login", label: user ? "حسابي" : "تسجيل الدخول" },
+              ...(user ? [] : [{ href: "/auth/signup", label: "إنشاء حساب" }]),
             ].map((link) => (
               <Link
                 key={link.href}

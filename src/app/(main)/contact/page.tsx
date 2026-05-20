@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ContactPage() {
+  const { user } = useAuth();
   const [sent, setSent] = useState(false);
   const [animating, setAnimating] = useState(false);
 
@@ -10,7 +12,7 @@ export default function ContactPage() {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const data = { name: formData.get("name") as string, message: formData.get("message") as string, date: new Date().toISOString(), email: formData.get("email") as string };
+    const data = { name: formData.get("name") as string, message: formData.get("message") as string, date: new Date().toISOString(), email: formData.get("email") as string, user_id: user?.id || null };
 
     const saved = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
     saved.push(data);

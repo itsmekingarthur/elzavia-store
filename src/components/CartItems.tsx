@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatPrice, generateOrderId } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 interface Coupon {
   id: string; code: string; type: "percentage" | "fixed";
@@ -24,6 +25,7 @@ function validateCoupon(code: string, cartTotal: number, coupons: Coupon[]): Cou
 
 export default function CartItems() {
   const { items, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { user } = useAuth();
   const [products, setProducts] = useState<any[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [couponCode, setCouponCode] = useState("");
@@ -83,8 +85,9 @@ export default function CartItems() {
     if (!form.name.trim() || !form.phone.trim() || !form.address.trim()) return;
     setSubmitting(true);
 
-    const order = {
+    const order: any = {
       id: generateOrderId(),
+      user_id: user?.id || null,
       items: items.map((i) => {
         const p = products.find((prod) => prod.id === i.productId);
         return { name: p?.name || "", quantity: i.quantity, price: p?.price || 0 };

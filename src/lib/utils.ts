@@ -13,6 +13,10 @@ const productSKUMap: Record<string, string> = {
   "كبسولات التعافي العضلي": "moringa",
   "كبسولات الزنك والسبيرولينا": "zinc-picolinate",
   "كبسولات دعم المعدة والهضم": "gastro-balance30",
+  "كبسولات النوم الهادئ": "melatonine30",
+  "كبسولات دعم الأمعاء والهضم": "gut-balance30",
+  "كبسولات زيادة الوزن": "weightgain30",
+  "كبسولات حرق الدهون": "perte-poids30",
 };
 
 export function getProductSKU(productName: string): string {
