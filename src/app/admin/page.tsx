@@ -28,21 +28,54 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const mergeOrders = useCallback((apiOrders: Order[]) => {
+    const localOrders: Order[] = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
+    const localMap = new Map(localOrders.map((o) => [o.id, o]));
+    const seen = new Set<string>();
+
+    const merged = apiOrders.map((apiOrder) => {
+      seen.add(apiOrder.id);
+      const local = localMap.get(apiOrder.id);
+      return local && local.status !== apiOrder.status ? { ...apiOrder, status: local.status } : apiOrder;
+    });
+
+    for (const local of localOrders) {
+      if (!seen.has(local.id)) merged.push(local);
+    }
+
+    setOrders(merged);
+    localStorage.setItem("elzavia-orders", JSON.stringify(merged));
+  }, []);
+
   const refresh = useCallback(async () => {
+    const localOrders: Order[] = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
+    const localMessages: Message[] = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
     try {
       const [oRes, mRes] = await Promise.all([
         fetch("/api/orders"),
         fetch("/api/messages"),
       ]);
-      if (oRes.ok) setOrders(await oRes.json());
-      if (mRes.ok) setMessages(await mRes.json());
+      if (oRes.ok) {
+        const apiOrders = await oRes.json();
+        if (apiOrders.length > 0 || localOrders.length === 0) {
+          mergeOrders(apiOrders);
+        } else {
+          setOrders(localOrders);
+        }
+      } else {
+        setOrders(localOrders);
+      }
+      if (mRes.ok) {
+        const apiMessages = await mRes.json();
+        setMessages(apiMessages.length > 0 ? apiMessages : localMessages);
+      } else {
+        setMessages(localMessages);
+      }
     } catch {
-      const savedOrders = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
-      const savedMessages = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
-      setOrders(savedOrders);
-      setMessages(savedMessages);
+      setOrders(localOrders);
+      setMessages(localMessages);
     }
-  }, []);
+  }, [mergeOrders]);
 
   useEffect(() => {
     refresh();

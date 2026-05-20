@@ -66,16 +66,45 @@ export async function PATCH(request: Request) {
     await updateOrder(id, updates);
 
     if (updates.status === "تم التوصيل") {
-      const sdb = supabaseAdmin || supabase;
-      const { data: order } = await sdb.from("orders").select("*").eq("id", id).single();
-      const userId = (order as any)?.user_id || user_id;
-      const orderItems = (order as any)?.items || bodyItems || [];
-      if (userId) {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pmvidjjauvosqfuxkrrg.supabase.co";
+      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+      const headers: Record<string, string> = { "Content-Type": "application/json", "Accept": "application/json" };
+      if (serviceRoleKey) headers["apikey"] = serviceRoleKey;
+      else headers["apikey"] = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+      let userId = user_id;
+      let orderItems = bodyItems || [];
+
+      if (!userId || !orderItems.length) {
+        try {
+          const url = `${supabaseUrl}/rest/v1/orders?id=eq.${id}&select=*`;
+          const res = await fetch(url, { headers });
+          const rows = await res.json();
+          if (rows?.[0]) {
+            userId = userId || rows[0].user_id;
+            orderItems = orderItems.length ? orderItems : (rows[0].items || []);
+          }
+        } catch {}
+      }
+
+      if (userId && orderItems.length) {
         const totalQty = orderItems.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
         const earnedPoints = totalQty * 50;
-        const { data: profile } = await sdb.from("profiles").select("points").eq("id", userId).single();
-        const currentPoints = (profile as any)?.points || 0;
-        await sdb.from("profiles").update({ points: currentPoints + earnedPoints }).eq("id", userId);
+
+        try {
+          const selectUrl = `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}&select=points`;
+          const profileRes = await fetch(selectUrl, { headers });
+          const profileRows = await profileRes.json();
+          const currentPoints = profileRows?.[0]?.points || 0;
+
+          await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`, {
+            method: "PATCH",
+            headers,
+            body: JSON.stringify({ points: currentPoints + earnedPoints }),
+          });
+        } catch (e) {
+          console.error("Failed to update points via REST:", e);
+        }
       }
     }
 
