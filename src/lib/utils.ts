@@ -64,6 +64,10 @@ export function getOrdersStorageKey(userId?: string | null): string {
   return userId ? `elzavia-orders-${userId}` : "elzavia-orders-guest";
 }
 
+export function getMessagesStorageKey(userId?: string | null): string {
+  return userId ? `elzavia-messages-${userId}` : "elzavia-messages-guest";
+}
+
 export async function downloadExcel(
   data: OrderRow[],
   filename: string

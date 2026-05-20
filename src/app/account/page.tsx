@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { formatPrice, getOrdersStorageKey } from "@/lib/utils";
+import { formatPrice, getOrdersStorageKey, getMessagesStorageKey } from "@/lib/utils";
 
 const timelineSteps = [
   { key: "قيد التجهيز", label: "قيد التجهيز", icon: "⏳", desc: "تم استلام طلبك وبدأ تجهيزه" },
@@ -149,7 +149,7 @@ export default function AccountPage() {
       setLocalOrders(orders);
     } catch {}
     try {
-      const msgs = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
+      const msgs = JSON.parse(localStorage.getItem(getMessagesStorageKey(user?.id)) || "[]");
       setLocalMessages(msgs);
     } catch {}
     try {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { getMessagesStorageKey } from "@/lib/utils";
 
 export default function ContactPage() {
   const { user, profile } = useAuth();
@@ -16,9 +17,10 @@ export default function ContactPage() {
     const email = user ? user.email || "" : formData.get("email") as string;
     const data = { name, message: formData.get("message") as string, date: new Date().toISOString(), email, user_id: user?.id || null };
 
-    const saved = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
+    const key = getMessagesStorageKey(user?.id);
+    const saved = JSON.parse(localStorage.getItem(key) || "[]");
     saved.push(data);
-    localStorage.setItem("elzavia-messages", JSON.stringify(saved));
+    localStorage.setItem(key, JSON.stringify(saved));
 
     try {
       await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
