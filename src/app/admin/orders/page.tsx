@@ -41,17 +41,19 @@ function OrdersContent() {
   const [orders, setOrders] = useState<Order[]>([]);
 
   const refresh = useCallback(async () => {
+    const saved = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
     try {
       const res = await fetch("/api/orders");
       if (res.ok) {
         const data = await res.json();
-        setOrders(data);
-        localStorage.setItem("elzavia-orders", JSON.stringify(data));
-        return;
+        if (data.length > 0 || saved.length === 0) {
+          setOrders(data);
+          localStorage.setItem("elzavia-orders", JSON.stringify(data));
+          return;
+        }
       }
     } catch {
     }
-    const saved = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
     setOrders(saved);
   }, []);
 
@@ -74,6 +76,7 @@ function OrdersContent() {
   };
 
   const updateStatus = async (orderId: string, newStatus: string) => {
+    const targetOrder = orders.find((o) => o.id === orderId);
     const updated = orders.map((o) =>
       o.id === orderId ? { ...o, status: newStatus } : o
     );
@@ -83,7 +86,12 @@ function OrdersContent() {
       await fetch("/api/orders", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: orderId, status: newStatus }),
+        body: JSON.stringify({
+          id: orderId,
+          status: newStatus,
+          items: targetOrder?.items,
+          user_id: (targetOrder as any)?.user_id || null,
+        }),
       });
     } catch {}
   };

@@ -200,9 +200,14 @@ export default function AccountPage() {
 
         <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-4 mb-6 flex items-center gap-3">
           <span className="text-2xl">⭐</span>
-          <div>
-            <p className="text-white font-bold">لديك {points} {points === 0 ? "نقطة — اكسب 50 نقطة عند توصيل طلبك الأول" : "نقطة"}</p>
-            <p className="text-white/50 text-xs mt-0.5">تجمع النقاط مع كل طلب يتم توصيله. استخدمها للحصول على خصومات قريباً</p>
+          <div className="flex-1">
+            <p className="text-white font-bold">لديك {points} {points === 0 ? "نقطة — اكسب 50 نقطة عن كل منتج في طلبك عند التوصيل" : "نقطة"}</p>
+            <p className="text-white/50 text-xs mt-0.5">كل 100 نقطة = 25 درهم خصم. استخدم النقاط عند إتمام الطلب</p>
+            {points >= 100 && (
+              <Link href="/shop" className="inline-block mt-2 bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs font-bold px-4 py-1.5 rounded-lg transition-colors">
+                🛒 استخدام النقاط في الشراء
+              </Link>
+            )}
           </div>
         </div>
 

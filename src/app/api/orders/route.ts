@@ -7,7 +7,8 @@ const TELEGRAM_CHAT_ID = "7505359725";
 
 async function sendTelegramNotification(order: any) {
   const items = order.items?.map((i: any) => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} درهم`).join("\n") || "";
-  const message = `🆕 طلبية جديدة!
+  const pointsLine = order.pointsDiscount ? `\n⭐ خصم النقاط: ${order.pointsDiscount} درهم` : "";
+const message = `🆕 طلبية جديدة!
 ━━━━━━━━━━━━━━
 👤 الاسم: ${order.customer?.name || "غير محدد"}
 📞 الهاتف: ${order.customer?.phone || "غير محدد"}
@@ -17,7 +18,7 @@ async function sendTelegramNotification(order: any) {
 📦 المنتجات:
 ${items}
 ━━━━━━━━━━━━━━
-💰 المجموع: ${order.total} درهم
+💰 المجموع: ${order.total} درهم${pointsLine}
 💳 الدفع: عند الاستلام
 🆔 رقم الطلب: ${order.id}
 📅 التاريخ: ${new Date(order.createdAt).toLocaleString("ar-MA")}`;
@@ -55,7 +56,7 @@ export async function PATCH(request: Request) {
     if (!body.id) {
       return NextResponse.json({ success: false, error: "id required" }, { status: 400 });
     }
-    const { id, ...updates } = body;
+    const { id, user_id, items: bodyItems, ...updates } = body;
 
     const now = new Date().toISOString();
     if (updates.status === "تم الشحن") updates.shippedAt = now;
@@ -64,11 +65,15 @@ export async function PATCH(request: Request) {
     await updateOrder(id, updates);
 
     if (updates.status === "تم التوصيل") {
-      const { data: order } = await supabase.from("orders").select("user_id").eq("id", id).single();
-      if (order?.user_id) {
-        const { data: profile } = await supabase.from("profiles").select("points").eq("id", order.user_id).single();
+      const { data: order } = await supabase.from("orders").select("*").eq("id", id).single();
+      const userId = (order as any)?.user_id || user_id;
+      const orderItems = (order as any)?.items || bodyItems || [];
+      if (userId) {
+        const totalQty = orderItems.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
+        const earnedPoints = totalQty * 50;
+        const { data: profile } = await supabase.from("profiles").select("points").eq("id", userId).single();
         const currentPoints = (profile as any)?.points || 0;
-        await supabase.from("profiles").update({ points: currentPoints + 50 }).eq("id", order.user_id);
+        await supabase.from("profiles").update({ points: currentPoints + earnedPoints }).eq("id", userId);
       }
     }
 

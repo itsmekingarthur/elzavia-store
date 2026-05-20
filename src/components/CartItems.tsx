@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatPrice, generateOrderId } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 interface Coupon {
   id: string; code: string; type: "percentage" | "fixed";
@@ -34,6 +35,8 @@ export default function CartItems() {
   const [couponError, setCouponError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
+  const [usePoints, setUsePoints] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -44,7 +47,20 @@ export default function CartItems() {
       .then((r) => (r.ok ? r.json() : []))
       .then(setCoupons)
       .catch(() => setCoupons([]));
-  }, []);
+    const saved = parseInt(localStorage.getItem(`elzavia-points-${user?.id}`) || "0", 10);
+    if (!isNaN(saved)) setUserPoints(saved);
+    if (user) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        const token = session?.access_token;
+        if (token) {
+          fetch("/api/auth/me", { headers: { Authorization: `Bearer ${token}` } })
+            .then(r => r.ok && r.json())
+            .then(d => { if (d.profile?.points) { setUserPoints(d.profile.points); localStorage.setItem(`elzavia-points-${user.id}`, String(d.profile.points)); } })
+            .catch(() => {});
+        }
+      });
+    }
+  }, [user]);
 
   const [form, setForm] = useState({
     name: "",
@@ -60,7 +76,8 @@ export default function CartItems() {
     return sum + base - deal;
   }, 0);
 
-  const total = Math.max(0, subtotal - discount);
+  const pointsDiscount = usePoints ? Math.floor(userPoints / 100) * 25 : 0;
+  const total = Math.max(0, subtotal - discount - pointsDiscount);
 
   const applyCoupon = () => {
     setCouponError("");
@@ -85,6 +102,8 @@ export default function CartItems() {
     if (!form.name.trim() || !form.phone.trim() || !form.address.trim()) return;
     setSubmitting(true);
 
+    const pointsToUse = pointsDiscount > 0 ? Math.floor(userPoints / 100) * 100 : 0;
+
     const order: any = {
       id: generateOrderId(),
       user_id: user?.id || null,
@@ -93,9 +112,11 @@ export default function CartItems() {
         return { name: p?.name || "", quantity: i.quantity, price: p?.price || 0 };
       }),
       subtotal,
-      discount,
+      discount: discount + pointsDiscount,
       total,
       coupon: discountLabel,
+      pointsUsed: pointsToUse,
+      pointsDiscount,
       customer: form,
       status: "قيد التجهيز",
       createdAt: new Date().toISOString(),
@@ -113,6 +134,19 @@ export default function CartItems() {
       });
     } catch {
       console.warn("Server save failed, order saved locally");
+    }
+
+    if (pointsToUse > 0 && user?.id) {
+      const remaining = userPoints - pointsToUse;
+      setUserPoints(remaining);
+      localStorage.setItem(`elzavia-points-${user.id}`, String(remaining));
+      try {
+        await fetch("/api/auth/points", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.id, points: remaining }),
+        });
+      } catch { console.warn("Points sync failed"); }
     }
 
     clearCart();
@@ -312,6 +346,12 @@ export default function CartItems() {
               <span className="font-bold">-{formatPrice(discount)}</span>
             </div>
           )}
+          {pointsDiscount > 0 && (
+            <div className="flex justify-between text-gold-400 text-sm md:text-base">
+              <span>خصم النقاط ({Math.floor(userPoints / 100) * 100} نقطة)</span>
+              <span className="font-bold">-{formatPrice(pointsDiscount)}</span>
+            </div>
+          )}
           <div className="flex justify-between text-base md:text-lg">
             <span className="font-bold text-white">الإجمالي</span>
             <span className="font-extrabold text-primary-400">
@@ -324,6 +364,19 @@ export default function CartItems() {
             </svg>
             توصيل مجاني لجميع الطلبات
           </div>
+          {user && userPoints >= 100 && (
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-white/5">
+              <button
+                onClick={() => setUsePoints(!usePoints)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-300 ${usePoints ? "bg-gold-500" : "bg-white/20"}`}
+              >
+                <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-300 ${usePoints ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+              </button>
+              <span className="text-white/80 text-xs font-medium">
+                استخدم {Math.floor(userPoints / 100) * 100} نقطة (خصم {formatPrice(Math.floor(userPoints / 100) * 25)})
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="mb-5 md:mb-6">
