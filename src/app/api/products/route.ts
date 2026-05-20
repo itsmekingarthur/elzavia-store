@@ -5,10 +5,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const products = await getProducts();
-    return NextResponse.json({ products, _build: "v4" });
+    return NextResponse.json(await getProducts());
   } catch (e) {
-    return NextResponse.json({ products: [], _build: "v4" }, { status: 500 });
+    return NextResponse.json([], { status: 500 });
   }
 }
 

@@ -44,13 +44,6 @@ export async function addMessage(msg: any) {
 
 // ---------- Products ----------
 export async function getProducts(): Promise<any[]> {
-  try {
-    const { data } = await supabase.from("products").select("*");
-    if (data && data.length > 0) return data;
-  } catch (e) {
-    console.error("Supabase error, using fallback products:", e);
-  }
-
   const defaults = [
     {
       id: "1",
