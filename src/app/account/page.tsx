@@ -203,11 +203,9 @@ export default function AccountPage() {
           <div className="flex-1">
             <p className="text-white font-bold">لديك {points} {points === 0 ? "نقطة — اكسب 50 نقطة عن كل منتج في طلبك عند التوصيل" : "نقطة"}</p>
             <p className="text-white/50 text-xs mt-0.5">كل 100 نقطة = 25 درهم خصم. استخدم النقاط عند إتمام الطلب</p>
-            {points >= 100 && (
-              <Link href="/shop" className="inline-block mt-2 bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs font-bold px-4 py-1.5 rounded-lg transition-colors">
-                🛒 استخدام النقاط في الشراء
-              </Link>
-            )}
+            <Link href="/shop" className="inline-block mt-2 bg-gold-500/20 hover:bg-gold-500/30 text-gold-400 text-xs font-bold px-4 py-1.5 rounded-lg transition-colors">
+              🛒 {points >= 100 ? "استخدام النقاط في الشراء" : "تصفح المنتجات"}
+            </Link>
           </div>
         </div>
 

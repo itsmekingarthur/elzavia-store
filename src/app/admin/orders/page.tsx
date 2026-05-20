@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect, useCallback } from "react";
+import { Suspense, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { formatPrice, ordersToExcelData, downloadExcel } from "@/lib/utils";
 
@@ -38,40 +38,25 @@ function OrdersContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const activeStatus = searchParams.get("status") || "";
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>(() =>
+    JSON.parse(typeof window !== "undefined" ? localStorage.getItem("elzavia-orders") || "[]" : "[]")
+  );
 
-  const refresh = useCallback(async () => {
-    const saved = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
-    try {
-      const res = await fetch("/api/orders");
-      if (res.ok) {
-        const data = await res.json();
-        if (data.length > 0 || saved.length === 0) {
-          setOrders(data);
-          localStorage.setItem("elzavia-orders", JSON.stringify(data));
-          return;
-        }
-      }
-    } catch {
-    }
-    setOrders(saved);
+  const saveOrders = useCallback((updated: Order[]) => {
+    setOrders(updated);
+    localStorage.setItem("elzavia-orders", JSON.stringify(updated));
   }, []);
-
-  useEffect(() => {
-    refresh();
-    window.addEventListener("focus", refresh);
-    return () => window.removeEventListener("focus", refresh);
-  }, [refresh]);
 
   const deleteOrderItem = async (orderId: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الطلبية؟")) return;
+    const updated = orders.filter((o) => o.id !== orderId);
+    saveOrders(updated);
     try {
       await fetch("/api/orders", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: orderId }),
       });
-      refresh();
     } catch {}
   };
 
@@ -80,8 +65,7 @@ function OrdersContent() {
     const updated = orders.map((o) =>
       o.id === orderId ? { ...o, status: newStatus } : o
     );
-    setOrders(updated);
-    localStorage.setItem("elzavia-orders", JSON.stringify(updated));
+    saveOrders(updated);
     try {
       await fetch("/api/orders", {
         method: "PATCH",
@@ -146,7 +130,7 @@ function OrdersContent() {
                 تحميل Excel
               </button>
             )}
-            <button onClick={refresh} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
+            <button onClick={() => saveOrders(JSON.parse(localStorage.getItem("elzavia-orders") || "[]"))} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
@@ -266,7 +250,7 @@ function OrdersContent() {
               تحميل Excel
             </button>
           )}
-          <button onClick={refresh} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
+          <button onClick={() => saveOrders(JSON.parse(localStorage.getItem("elzavia-orders") || "[]"))} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>

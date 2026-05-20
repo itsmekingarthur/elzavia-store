@@ -1,4 +1,7 @@
 import { supabase } from "./supabase";
+import { supabaseAdmin } from "./supabase-admin";
+
+const db = supabaseAdmin || supabase;
 
 // ---------- Orders ----------
 export async function getOrders(): Promise<any[]> {
@@ -7,15 +10,15 @@ export async function getOrders(): Promise<any[]> {
 }
 
 export async function addOrder(order: any) {
-  await supabase.from("orders").insert(order);
+  await db.from("orders").insert(order);
 }
 
 export async function updateOrder(id: string, updates: Partial<any>) {
-  await supabase.from("orders").update(updates).eq("id", id);
+  await db.from("orders").update(updates).eq("id", id);
 }
 
 export async function deleteOrder(id: string) {
-  await supabase.from("orders").delete().eq("id", id);
+  await db.from("orders").delete().eq("id", id);
 }
 
 // ---------- Coupons ----------

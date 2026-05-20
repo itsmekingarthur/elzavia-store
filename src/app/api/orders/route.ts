@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getOrders, addOrder, updateOrder, deleteOrder } from "@/lib/store";
 import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const TELEGRAM_BOT_TOKEN = "8819995357:AAGvygoQa-UzvwCVua1LDZC3XpRJFGDzQhs";
 const TELEGRAM_CHAT_ID = "7505359725";
@@ -65,15 +66,16 @@ export async function PATCH(request: Request) {
     await updateOrder(id, updates);
 
     if (updates.status === "تم التوصيل") {
-      const { data: order } = await supabase.from("orders").select("*").eq("id", id).single();
+      const sdb = supabaseAdmin || supabase;
+      const { data: order } = await sdb.from("orders").select("*").eq("id", id).single();
       const userId = (order as any)?.user_id || user_id;
       const orderItems = (order as any)?.items || bodyItems || [];
       if (userId) {
         const totalQty = orderItems.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0);
         const earnedPoints = totalQty * 50;
-        const { data: profile } = await supabase.from("profiles").select("points").eq("id", userId).single();
+        const { data: profile } = await sdb.from("profiles").select("points").eq("id", userId).single();
         const currentPoints = (profile as any)?.points || 0;
-        await supabase.from("profiles").update({ points: currentPoints + earnedPoints }).eq("id", userId);
+        await sdb.from("profiles").update({ points: currentPoints + earnedPoints }).eq("id", userId);
       }
     }
 
