@@ -74,12 +74,16 @@ export default function AdminDashboard() {
           <p className="text-2xl md:text-3xl font-extrabold text-yellow-600">{pendingOrders}</p>
         </div>
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
-          <p className="text-gray-500 text-xs md:text-sm mb-1">الإيرادات</p>
-          <p className="text-2xl md:text-3xl font-extrabold text-primary-600">{formatPrice(totalRevenue)}</p>
+          <p className="text-gray-500 text-xs md:text-sm mb-1">نسبة التأكيد</p>
+          <p className="text-2xl md:text-3xl font-extrabold text-emerald-600">
+            {orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم التوصيل").length / orders.length) * 100) : 0}%
+          </p>
         </div>
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
-          <p className="text-gray-500 text-xs md:text-sm mb-1">المنتجات</p>
-          <p className="text-2xl md:text-3xl font-extrabold text-gray-900">{products.length}</p>
+          <p className="text-gray-500 text-xs md:text-sm mb-1">نسبة الشحن</p>
+          <p className="text-2xl md:text-3xl font-extrabold text-blue-600">
+            {orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم الشحن" || o.status === "تم التوصيل").length / orders.length) * 100) : 0}%
+          </p>
         </div>
       </div>
 

@@ -9,6 +9,7 @@ const navItems = [
   { label: "الطلبات", href: "/admin/orders", icon: "📦" },
   { label: "المنتجات", href: "/admin/products", icon: "🏷️" },
   { label: "آراء العملاء", href: "/admin/testimonials", icon: "⭐" },
+  { label: "الرسائل الواردة", href: "/admin/messages", icon: "📨" },
   { label: "كوبونات الخصم", href: "/admin/coupons", icon: "🎫" },
 ];
 

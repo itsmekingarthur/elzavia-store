@@ -98,10 +98,14 @@ function OrdersContent() {
     : [];
   const activeMeta = statuses.find((s) => s.key === activeStatus);
 
-  if (activeStatus && activeMeta) {
+  if (activeStatus === "الكل" || (activeStatus && activeMeta)) {
+    const displayOrders = activeStatus === "الكل" ? orders : filtered;
+    const displayMeta = activeStatus === "الكل"
+      ? { icon: "📋", label: "جميع الطلبات", color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300", cardBg: "bg-gray-50", bar: "#6B7280" }
+      : activeMeta!;
     return (
       <div>
-          <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.push("/admin/orders")}
@@ -112,19 +116,19 @@ function OrdersContent() {
               </svg>
             </button>
             <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
-              {activeMeta.icon} {activeMeta.label}
+              {displayMeta.icon} {displayMeta.label}
             </h1>
-            <span className={`px-3 py-0.5 rounded-full text-xs font-bold ${activeMeta.color} ${activeMeta.bg}`}>
-              {filtered.length}
+            <span className={`px-3 py-0.5 rounded-full text-xs font-bold ${displayMeta.color} ${displayMeta.bg}`}>
+              {displayOrders.length}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {filtered.length > 0 && (
+            {displayOrders.length > 0 && (
               <button
                 onClick={() => {
-                  const data = ordersToExcelData(filtered);
+                  const data = ordersToExcelData(displayOrders);
                   const date = new Date().toISOString().split("T")[0];
-                  downloadExcel(data, `elzavia-orders-${activeMeta.key}-${date}.xlsx`);
+                  downloadExcel(data, `elzavia-orders-${activeStatus === "الكل" ? "all" : (activeMeta?.key || "filtered")}-${date}.xlsx`);
                 }}
                 className="text-sm bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2 rounded-xl flex items-center gap-1.5 transition-colors shadow-sm"
               >
@@ -143,14 +147,16 @@ function OrdersContent() {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {displayOrders.length === 0 ? (
           <div className="bg-white rounded-xl md:rounded-2xl p-8 md:p-12 text-center shadow-sm">
             <p className="text-gray-400 text-base md:text-lg">لا توجد طلبات في هذه الحالة</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {[...filtered].reverse().map((order) => (
-              <div key={order.id} className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4" style={{ borderRightColor: activeMeta.bar }}>
+            {[...displayOrders].reverse().map((order) => {
+              const meta = statuses.find(s => s.key === order.status) || { color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300", bar: "#6B7280" };
+              return (
+              <div key={order.id} className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4" style={{ borderRightColor: meta.bar }}>
                 <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4 mb-4">
                   <div>
                     <span className="text-xs text-gray-500">رقم الطلب</span>
@@ -167,7 +173,7 @@ function OrdersContent() {
                     <select
                       value={order.status}
                       onChange={(e) => updateStatus(order.id, e.target.value)}
-                      className={`mr-2 px-2 md:px-3 py-1 rounded-lg font-bold text-xs md:text-sm border ${activeMeta.color} ${activeMeta.bg} ${activeMeta.border}`}
+                      className={`mr-2 px-2 md:px-3 py-1 rounded-lg font-bold text-xs md:text-sm border ${meta.color} ${meta.bg} ${meta.border}`}
                     >
                       {statuses.map((s) => (
                         <option key={s.key} value={s.key}>{s.label}</option>
@@ -224,7 +230,8 @@ function OrdersContent() {
                   </div>
                 </div>
               </div>
-            ))}
+            );
+          })}
           </div>
         )}
       </div>
@@ -260,7 +267,17 @@ function OrdersContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+        <button
+          onClick={() => orders.length > 0 && router.push("/admin/orders?status=%D8%A7%D9%84%D9%83%D9%84")}
+          className={`relative overflow-hidden rounded-2xl p-5 text-right border-2 transition-all hover:shadow-md active:scale-[0.97] ${
+            orders.length > 0 ? "cursor-pointer hover:-translate-y-0.5" : "cursor-default opacity-60"
+          } bg-gray-50 border-gray-200`}
+        >
+          <div className="text-2xl mb-2">📋</div>
+          <div className="text-3xl font-extrabold text-gray-600">{orders.length}</div>
+          <div className="text-sm font-bold text-gray-600 mt-1">الكل</div>
+        </button>
         {counts.map((s) => (
           <button
             key={s.key}
@@ -274,12 +291,6 @@ function OrdersContent() {
             <div className={`text-sm font-bold mt-1 ${s.color}`}>{s.label}</div>
           </button>
         ))}
-      </div>
-
-      <div className="mt-8 bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-        <p className="text-gray-400 text-base">
-          اضغط على أي تصنيف لعرض الطلبات الخاصة به
-        </p>
       </div>
     </div>
   );
