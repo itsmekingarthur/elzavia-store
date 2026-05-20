@@ -82,9 +82,9 @@ export default function Footer() {
             © {new Date().getFullYear()} إلزافيا. جميع الحقوق محفوظة.
           </p>
           <div className="flex items-center gap-4 text-surface-500 text-xs">
-            <Link href="/about" className="hover:text-gold-400 transition-colors">سياسة الخصوصية</Link>
+            <Link href="/privacy" className="hover:text-gold-400 transition-colors">سياسة الخصوصية</Link>
             <span className="w-1 h-1 bg-surface-700 rounded-full" />
-            <Link href="/contact" className="hover:text-gold-400 transition-colors">الشروط والأحكام</Link>
+            <Link href="/terms" className="hover:text-gold-400 transition-colors">الشروط والأحكام</Link>
           </div>
         </div>
       </div>
