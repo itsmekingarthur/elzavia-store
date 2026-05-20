@@ -90,6 +90,10 @@ const config: Config = {
         "leaf-fall": "leaf-fall 12s ease-in infinite",
         "paper-plane": "paper-plane 1.2s ease-out forwards",
         "ping-once": "ping-once 0.6s ease-out 1",
+        "fade-in-up": "fade-in-up 0.7s ease-out forwards",
+        "fade-in-up-delayed": "fade-in-up 0.7s ease-out 0.15s forwards",
+        "fade-in-up-slow": "fade-in-up 1s ease-out forwards",
+        "marquee": "marquee 20s linear infinite",
       },
       keyframes: {
         "gradient-x": {
@@ -137,6 +141,14 @@ const config: Config = {
           "0%": { transform: "scale(1)", opacity: "1" },
           "50%": { transform: "scale(1.3)", opacity: "0.8" },
           "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "fade-in-up": {
+          "0%": { transform: "translateY(30px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "marquee": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(-100%)" },
         },
       },
       backgroundSize: {

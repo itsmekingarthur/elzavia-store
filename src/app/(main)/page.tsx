@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Hero from "@/components/Hero";
 import ProductGrid from "@/components/ProductGrid";
 import Leaves from "@/components/Leaves";
+import Reveal from "@/components/Reveal";
 import Link from "next/link";
 
 const defaultTestimonials = [
@@ -18,7 +19,7 @@ export default function Home() {
   useEffect(() => {
     const saved = localStorage.getItem("elzavia-testimonials");
     if (saved) {
-      try { setTestimonials(JSON.parse(saved)); } catch { /* use defaults */ }
+      try { setTestimonials(JSON.parse(saved)); } catch {}
     }
   }, []);
 
@@ -32,7 +33,7 @@ export default function Home() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 text-center">
             <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 text-emerald-400 animate-float" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
               </svg>
               <span className="text-emerald-300 font-extrabold text-lg md:text-2xl">توصيل مجاني</span>
@@ -43,8 +44,12 @@ export default function Home() {
             </p>
             <div className="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-3 py-1">
               <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping" />
-              <span className="text-emerald-400 text-xs font-bold">عرض محدود</span>
+              <span className="text-emerald-400 text-xs font-bold animate-shimmer-slow" style={{ background: "linear-gradient(90deg, #34d399, #6ee7b7, #34d399)", backgroundSize: "200% 100%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>عرض محدود</span>
             </div>
+          </div>
+          {/* Animated marquee line */}
+          <div className="mt-3 overflow-hidden whitespace-nowrap text-emerald-400/20 text-xs font-bold animate-marquee">
+            ✦ توصيل مجاني لجميع الطلبات ✦ الدفع عند الاستلام ✦ جودة مضمونة ✦
           </div>
         </div>
       </section>
@@ -57,31 +62,37 @@ export default function Home() {
         <Leaves />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-14 md:mb-18">
-            <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
-              منتجاتنا
-            </span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
-              منتجات <span className="gradient-text">الطبيعة</span>
-            </h2>
-            <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
-              اختر ما يناسب احتياجاتك من أفضل المكملات الغذائية الطبيعية
-            </p>
-          </div>
+          <Reveal>
+            <div className="text-center mb-14 md:mb-18">
+              <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
+                منتجاتنا
+              </span>
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
+                منتجات <span className="gradient-text">الطبيعة</span>
+              </h2>
+              <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
+                اختر ما يناسب احتياجاتك من أفضل المكملات الغذائية الطبيعية
+              </p>
+            </div>
+          </Reveal>
 
-          <ProductGrid limit={4} />
+          <Reveal delay={0.15}>
+            <ProductGrid limit={4} />
+          </Reveal>
 
-          <div className="text-center mt-14 md:mt-18">
-            <Link
-              href="/shop"
-              className="btn-nature text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-primary-500/20"
-            >
-              عرض جميع المنتجات
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
+          <Reveal delay={0.3}>
+            <div className="text-center mt-14 md:mt-18">
+              <Link
+                href="/shop"
+                className="btn-nature text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-primary-500/20 shine-btn"
+              >
+                عرض جميع المنتجات
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-all duration-300 group-hover:translate-x-1 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -89,21 +100,22 @@ export default function Home() {
       <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-950 to-emerald-950">
         <div className="absolute inset-0 bg-dots-nature" />
         <div className="absolute inset-0 bg-earth-warm" />
-
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/30 to-transparent" />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-14 md:mb-18">
-            <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 px-4 py-1.5 rounded-full mb-4">
-              لماذا إلزافيا
-            </span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
-              مميزات <span className="gradient-text-gold">طبيعية</span>
-            </h2>
-            <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
-              نقدم لك أفضل تجربة تسوق للمكملات الغذائية
-            </p>
-          </div>
+          <Reveal>
+            <div className="text-center mb-14 md:mb-18">
+              <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 px-4 py-1.5 rounded-full mb-4">
+                لماذا إلزافيا
+              </span>
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
+                مميزات <span className="gradient-text-gold">طبيعية</span>
+              </h2>
+              <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto leading-relaxed">
+                نقدم لك أفضل تجربة تسوق للمكملات الغذائية
+              </p>
+            </div>
+          </Reveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
             {[
@@ -141,17 +153,16 @@ export default function Home() {
                 accent: "text-emerald-400",
                 iconBg: "bg-emerald-500/10",
               },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className="group relative glass-nature rounded-2xl p-6 md:p-8 hover:-translate-y-1 overflow-hidden"
-              >
-                <div className={`w-12 h-12 rounded-xl ${feature.iconBg} ${feature.accent} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}>
-                  {feature.icon}
+            ].map((feature, i) => (
+              <Reveal key={feature.title} delay={0.1 * i}>
+                <div className="group relative glass-nature rounded-2xl p-6 md:p-8 hover:-translate-y-1 overflow-hidden">
+                  <div className={`w-12 h-12 rounded-xl ${feature.iconBg} ${feature.accent} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-500`}>
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-lg font-extrabold text-white mb-2">{feature.title}</h3>
+                  <p className="text-white/50 leading-relaxed text-sm">{feature.desc}</p>
                 </div>
-                <h3 className="text-lg font-extrabold text-white mb-2">{feature.title}</h3>
-                <p className="text-white/50 leading-relaxed text-sm">{feature.desc}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -160,36 +171,39 @@ export default function Home() {
       {/* Testimonials */}
       <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-b from-emerald-950 via-primary-950 to-primary-950">
         <div className="absolute inset-0 bg-forest-deep" />
-
         <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-14 md:mb-18">
-            <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
-              آراء العملاء
-            </span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
-              ماذا يقولون <span className="gradient-text">عنّا</span>
-            </h2>
-          </div>
+          <Reveal>
+            <div className="text-center mb-14 md:mb-18">
+              <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
+                آراء العملاء
+              </span>
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
+                ماذا يقولون <span className="gradient-text">عنّا</span>
+              </h2>
+            </div>
+          </Reveal>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {testimonials.map((t) => (
-              <div key={t.name} className="glass-nature rounded-2xl p-6 md:p-8 hover:border-primary-500/20 transition-all duration-300">
-                <div className="flex gap-1 mb-4">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <svg key={i} className="w-4 h-4 text-gold-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                  <div className="w-10 h-10 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-400 font-extrabold text-sm">{t.name[0]}</div>
-                  <div>
-                    <p className="text-white font-bold text-sm">{t.name}</p>
-                    <p className="text-white/40 text-xs">{t.from}</p>
+            {testimonials.map((t, i) => (
+              <Reveal key={t.name} delay={0.1 * i}>
+                <div className="glass-nature rounded-2xl p-6 md:p-8 hover:border-primary-500/20 transition-all duration-300">
+                  <div className="flex gap-1 mb-4">
+                    {Array.from({ length: 5 }).map((_, j) => (
+                      <svg key={j} className="w-4 h-4 text-gold-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <p className="text-white/70 text-sm leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-white/5">
+                    <div className="w-10 h-10 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-400 font-extrabold text-sm">{t.name[0]}</div>
+                    <div>
+                      <p className="text-white font-bold text-sm">{t.name}</p>
+                      <p className="text-white/40 text-xs">{t.from}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -198,21 +212,25 @@ export default function Home() {
       {/* Trust */}
       <section className="relative py-16 md:py-20 bg-primary-950 border-t border-white/5">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-10">
-            <h3 className="text-white/40 text-sm font-bold tracking-widest uppercase">خدماتنا</h3>
-          </div>
+          <Reveal>
+            <div className="text-center mb-10">
+              <h3 className="text-white/40 text-sm font-bold tracking-widest uppercase">خدماتنا</h3>
+            </div>
+          </Reveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
               { icon: "🌿", title: "منتجات طبيعية", desc: "مكونات طبيعية 100%" },
               { icon: "🚚", title: "توصيل سريع", desc: "48 ساعة كحد أقصى" },
               { icon: "💎", title: "جودة مضمونة", desc: "أعلى معايير الجودة" },
               { icon: "📞", title: "دعم متواصل", desc: "خدمة عملاء 24/7" },
-            ].map((item) => (
-              <div key={item.title} className="text-center p-4">
-                <div className="text-3xl mb-3">{item.icon}</div>
-                <p className="text-white font-bold text-sm mb-1">{item.title}</p>
-                <p className="text-white/40 text-xs">{item.desc}</p>
-              </div>
+            ].map((item, i) => (
+              <Reveal key={item.title} delay={0.08 * i}>
+                <div className="text-center p-4">
+                  <div className="text-3xl mb-3">{item.icon}</div>
+                  <p className="text-white font-bold text-sm mb-1">{item.title}</p>
+                  <p className="text-white/40 text-xs">{item.desc}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -228,27 +246,29 @@ export default function Home() {
         <div className="absolute -bottom-40 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-[150px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold-500/8 rounded-full blur-[100px]" />
 
-        <div className="container mx-auto px-4 relative z-10 text-center">
-          <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 rounded-full px-4 py-1.5 mb-4">
-            عرض خاص
-          </span>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
-            استعد للانطلاق <br className="md:hidden" />
-            <span className="gradient-text">مع إلزافيا</span>
-          </h2>
-          <p className="text-white/60 text-base md:text-xl max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed">
-            ابدأ رحلتك نحو حياة أكثر صحة وطاقة. اطلب الآن واستفد من عروضنا الحصرية.
-          </p>
-          <Link
-            href="/shop"
-            className="btn-nature text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-primary-500/30"
-          >
-            تسوق الآن
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+        <Reveal>
+          <div className="container mx-auto px-4 relative z-10 text-center">
+            <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 rounded-full px-4 py-1.5 mb-4">
+              عرض خاص
+            </span>
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
+              استعد للانطلاق <br className="md:hidden" />
+              <span className="gradient-text">مع إلزافيا</span>
+            </h2>
+            <p className="text-white/60 text-base md:text-xl max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed">
+              ابدأ رحلتك نحو حياة أكثر صحة وطاقة. اطلب الآن واستفد من عروضنا الحصرية.
+            </p>
+            <Link
+              href="/shop"
+              className="btn-nature text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-primary-500/30 shine-btn"
+            >
+              تسوق الآن
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-all duration-300 group-hover:translate-x-1 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+        </Reveal>
       </section>
     </>
   );

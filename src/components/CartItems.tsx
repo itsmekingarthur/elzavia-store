@@ -234,11 +234,13 @@ export default function CartItems() {
               key={item.productId}
               className="flex items-center gap-3 md:gap-4 bg-white/5 backdrop-blur-md rounded-xl p-3 md:p-4 border border-white/10"
             >
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="w-14 h-14 md:w-20 md:h-20 object-contain bg-white/5 rounded-lg flex-shrink-0"
-              />
+              <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-primary-500/10 to-emerald-500/10 flex items-center justify-center flex-shrink-0 border border-white/10 overflow-hidden">
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-3/4 h-3/4 object-contain"
+                />
+              </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-white text-sm md:text-base truncate">
                   {product.name}

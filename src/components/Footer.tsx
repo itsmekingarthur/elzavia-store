@@ -5,9 +5,32 @@ export default function Footer() {
     <footer className="bg-surface-900 text-white relative overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
 
+      {/* Decorative background leaves */}
+      <svg className="absolute -left-20 -top-10 w-60 h-60 opacity-[0.03]" viewBox="0 0 200 300" fill="none">
+        <path d="M100 280 Q5 200 20 100 Q30 20 100 10 Q170 20 180 100 Q195 200 100 280Z" fill="#34d399" />
+        <path d="M100 280 L100 20" stroke="#34d399" strokeWidth="1.5" />
+      </svg>
+      <svg className="absolute -right-20 -bottom-10 w-60 h-60 opacity-[0.03] rotate-45" viewBox="0 0 200 300" fill="none">
+        <path d="M100 280 Q5 200 20 100 Q30 20 100 10 Q170 20 180 100 Q195 200 100 280Z" fill="#fbbf24" />
+        <path d="M100 280 L100 20" stroke="#fbbf24" strokeWidth="1.5" />
+      </svg>
+
       <div className="container mx-auto px-4 py-16 md:py-20 relative z-10">
+        <div className="hidden lg:flex items-center justify-center gap-2 mb-12">
+          <span className="block w-12 h-px bg-gradient-to-l from-gold-500/40 to-transparent" />
+          <span className="block w-16 h-px bg-gold-500/20" />
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-500/40" />
+            <span className="w-2 h-2 rounded-full bg-gold-500/60" />
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-500/40" />
+          </span>
+          <span className="block w-16 h-px bg-gold-500/20" />
+          <span className="block w-12 h-px bg-gradient-to-r from-gold-500/40 to-transparent" />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 relative">
+            <div className="absolute -right-4 top-0 w-px h-full hidden md:block bg-gradient-to-b from-transparent via-gold-500/10 to-transparent" />
             <img
               src="/images/logo.png"
               alt="Elzavia"
@@ -18,7 +41,8 @@ export default function Footer() {
             </p>
           </div>
 
-          <div>
+          <div className="relative">
+            <div className="absolute -right-4 top-0 w-px h-full hidden md:block bg-gradient-to-b from-transparent via-gold-500/10 to-transparent" />
             <h3 className="text-sm font-bold text-white/60 uppercase tracking-wider mb-5">روابط سريعة</h3>
             <ul className="space-y-3">
               {[
@@ -37,7 +61,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="relative">
+            <div className="absolute -right-4 top-0 w-px h-full hidden md:block bg-gradient-to-b from-transparent via-gold-500/10 to-transparent" />
             <h3 className="text-sm font-bold text-white/60 uppercase tracking-wider mb-5">تواصل معنا</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-surface-300 text-sm">
@@ -59,7 +84,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="relative">
+            <div className="absolute -right-4 top-0 w-px h-full hidden md:block bg-gradient-to-b from-transparent via-gold-500/10 to-transparent" />
             <h3 className="text-sm font-bold text-white/60 uppercase tracking-wider mb-5">عروض حصرية</h3>
             <p className="text-surface-400 text-sm mb-4 leading-relaxed">
               اشترك لتحصل على آخر العروض والتخفيضات الحصرية
@@ -77,7 +103,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Decorative divider before copyright */}
+        <div className="flex items-center justify-center gap-2 mt-12 mb-6">
+          <span className="block h-px flex-1 bg-gradient-to-l from-surface-700/50 to-transparent" />
+          <svg className="w-4 h-4 text-gold-500/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+          </svg>
+          <span className="block h-px flex-1 bg-gradient-to-r from-surface-700/50 to-transparent" />
+        </div>
+
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-surface-500 text-xs md:text-sm">
             © {new Date().getFullYear()} إلزافيا. جميع الحقوق محفوظة.
           </p>
