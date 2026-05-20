@@ -46,6 +46,10 @@ export async function deleteMessage(date: string) {
   await supabase.from("messages").delete().eq("date", date);
 }
 
+export async function updateMessage(date: string, updates: Record<string, any>) {
+  await supabase.from("messages").update(updates).eq("date", date);
+}
+
 // ---------- Products ----------
 export async function getProducts(): Promise<any[]> {
   const defaults = [

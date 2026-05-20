@@ -4,6 +4,15 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 
+const benefits = [
+  { icon: "📦", title: "تتبع الطلبات", desc: "تابع حالة طلباتك بسهولة في أي وقت" },
+  { icon: "📋", title: "سجل الطلبات الكامل", desc: "راجع جميع طلباتك السابقة ومشترياتك" },
+  { icon: "💬", title: "حفظ المحادثات", desc: "جميع رسائلك وردود الدعم محفوظة لك" },
+  { icon: "⚡", title: "شراء أسرع", desc: "إتمام الطلبات دون إعادة إدخال المعلومات" },
+  { icon: "🎁", title: "عروض حصرية", desc: "خصومات وعروض خاصة للأعضاء المسجلين" },
+  { icon: "🔒", title: "بيانات آمنة", desc: "معلوماتك محفوظة بشكل آمن ومحمي" },
+];
+
 export default function SignupPage() {
   const { signUp } = useAuth();
   const [email, setEmail] = useState("");
@@ -28,7 +37,7 @@ export default function SignupPage() {
 
   if (done) {
     return (
-      <div className="bg-white/5 backdrop-blur-md border border-gold-500/20 rounded-2xl p-8 text-center">
+      <div className="bg-white/5 backdrop-blur-md border border-gold-500/20 rounded-2xl p-8 text-center max-w-md mx-auto">
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold-500/10 flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -55,69 +64,86 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
-      <h1 className="text-2xl font-extrabold text-white text-center mb-2">إنشاء حساب جديد</h1>
-      <p className="text-white/50 text-center text-sm mb-8">أنشئ حسابك لتتبع طلباتك ورسائلك</p>
+    <div className="grid md:grid-cols-5 gap-6 items-start">
+      <div className="md:col-span-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
+        <h1 className="text-2xl font-extrabold text-white text-center mb-2">إنشاء حساب جديد</h1>
+        <p className="text-white/50 text-center text-sm mb-8">أنشئ حسابك واستمتع بجميع المزايا</p>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label htmlFor="signup-username" className="block text-white/70 text-sm font-medium mb-1.5">اسم المستخدم</label>
-          <input
-            id="signup-username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="اسمك أو اسم المستخدم"
-            required
-            autoComplete="username"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/40 transition-colors"
-          />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="signup-username" className="block text-white/70 text-sm font-medium mb-1.5">اسم المستخدم</label>
+            <input
+              id="signup-username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="اسمك أو اسم المستخدم"
+              required
+              autoComplete="username"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/40 transition-colors"
+            />
+          </div>
+          <div>
+            <label htmlFor="signup-email" className="block text-white/70 text-sm font-medium mb-1.5">البريد الإلكتروني</label>
+            <input
+              id="signup-email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+              autoComplete="email"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/40 transition-colors"
+            />
+          </div>
+          <div>
+            <label htmlFor="signup-password" className="block text-white/70 text-sm font-medium mb-1.5">كلمة المرور</label>
+            <input
+              id="signup-password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="•••••••• (6 أحرف على الأقل)"
+              required
+              minLength={6}
+              autoComplete="new-password"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/40 transition-colors"
+            />
+          </div>
+
+          {error && (
+            <p className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
+          </button>
+        </form>
+
+        <p className="text-center text-white/50 text-sm mt-6">
+          لديك حساب بالفعل؟{" "}
+          <Link href="/auth/login" className="text-primary-400 hover:text-primary-300 font-medium transition-colors">تسجيل الدخول</Link>
+        </p>
+      </div>
+
+      <div className="md:col-span-2 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8">
+        <h2 className="text-lg font-extrabold text-white mb-5 text-center">لماذا تنشئ حساباً في ELZAVIA؟</h2>
+        <div className="space-y-4">
+          {benefits.map((b, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <span className="text-xl flex-shrink-0 mt-0.5">{b.icon}</span>
+              <div>
+                <p className="text-white font-bold text-sm">{b.title}</p>
+                <p className="text-white/50 text-xs mt-0.5">{b.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
-        <div>
-          <label htmlFor="signup-email" className="block text-white/70 text-sm font-medium mb-1.5">البريد الإلكتروني</label>
-          <input
-            id="signup-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            required
-            autoComplete="email"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/40 transition-colors"
-          />
-        </div>
-        <div>
-          <label htmlFor="signup-password" className="block text-white/70 text-sm font-medium mb-1.5">كلمة المرور</label>
-          <input
-            id="signup-password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="•••••••• (6 أحرف على الأقل)"
-            required
-            minLength={6}
-            autoComplete="new-password"
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/40 transition-colors"
-          />
-        </div>
-
-        {error && (
-          <p className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{error}</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
-        </button>
-      </form>
-
-      <p className="text-center text-white/50 text-sm mt-6">
-        لديك حساب بالفعل؟{" "}
-        <Link href="/auth/login" className="text-primary-400 hover:text-primary-300 font-medium transition-colors">تسجيل الدخول</Link>
-      </p>
+      </div>
     </div>
   );
 }

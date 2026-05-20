@@ -25,8 +25,9 @@ CREATE POLICY "Users can update own profile"
 -- 2. Add user_id to orders
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 
--- 3. Add user_id to messages
+-- 3. Add user_id + admin_reply to messages
 ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
+ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS admin_reply TEXT;
 
 -- 4. User carts table
 CREATE TABLE IF NOT EXISTS public.user_carts (

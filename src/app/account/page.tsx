@@ -141,7 +141,16 @@ export default function AccountPage() {
                             <span className="text-white font-medium">{msg.name}</span>
                             <span className="text-white/40 text-xs">{new Date(msg.date).toLocaleDateString("ar-MA")}</span>
                           </div>
-                          <p className="text-white/60 text-sm leading-relaxed">{msg.message}</p>
+                          <p className="text-white/60 text-sm leading-relaxed mb-3">{msg.message}</p>
+                          {msg.admin_reply && (
+                            <div className="bg-emerald-500/5 border border-emerald-500/15 rounded-lg p-3">
+                              <div className="flex items-center gap-1.5 mb-1">
+                                <span className="text-xs font-bold text-emerald-400">ELZAVIA</span>
+                                <span className="text-[10px] text-emerald-500/40">— رد الإدارة</span>
+                              </div>
+                              <p className="text-sm text-emerald-300/80 leading-relaxed">{msg.admin_reply}</p>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

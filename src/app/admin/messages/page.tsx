@@ -7,11 +7,14 @@ interface Message {
   email: string;
   message: string;
   date: string;
+  admin_reply?: string;
 }
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [selected, setSelected] = useState<Message | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [sending, setSending] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -45,6 +48,26 @@ export default function MessagesPage() {
     if (selected?.date === msg.date) setSelected(null);
   };
 
+  const handleReply = async () => {
+    if (!selected || !replyText.trim()) return;
+    setSending(true);
+    try {
+      await fetch("/api/messages", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ date: selected.date, admin_reply: replyText.trim() }),
+      });
+    } catch {}
+    const updated = messages.map((m) =>
+      m.date === selected.date ? { ...m, admin_reply: replyText.trim() } : m
+    );
+    setMessages(updated);
+    localStorage.setItem("elzavia-messages", JSON.stringify(updated));
+    setSelected({ ...selected, admin_reply: replyText.trim() });
+    setReplyText("");
+    setSending(false);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -67,7 +90,7 @@ export default function MessagesPage() {
             {[...messages].reverse().map((m, i) => (
               <button
                 key={i}
-                onClick={() => setSelected(m)}
+                onClick={() => { setSelected(m); setReplyText(""); }}
                 className={`w-full text-right p-4 md:p-5 hover:bg-gray-50 transition-colors ${
                   selected === m ? "bg-primary-50 ring-1 ring-primary-200" : ""
                 }`}
@@ -77,6 +100,9 @@ export default function MessagesPage() {
                   <span className="text-xs text-gray-400">{new Date(m.date).toLocaleDateString("ar-MA")}</span>
                 </div>
                 <p className="text-xs md:text-sm text-gray-500 truncate">{m.message || "بدون رسالة"}</p>
+                {m.admin_reply && (
+                  <p className="text-xs text-emerald-600 mt-1">✓ تم الرد</p>
+                )}
               </button>
             ))}
           </div>
@@ -94,16 +120,51 @@ export default function MessagesPage() {
                     <p className="text-sm font-medium text-gray-900" dir="ltr">{selected.email}</p>
                   </div>
                 )}
-                <div className="p-4 bg-gray-50 rounded-xl mb-6">
+                <div className="p-4 bg-gray-50 rounded-xl mb-4">
                   <p className="text-xs text-gray-500 mb-1">الرسالة</p>
                   <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">{selected.message}</p>
                 </div>
-                <button
-                  onClick={(e) => handleDelete(selected, e)}
-                  className="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl font-bold text-sm transition-colors"
-                >
-                  🗑️ حذف الرسالة
-                </button>
+
+                {selected.admin_reply && (
+                  <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl mb-4">
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-xs font-bold text-emerald-700">ELZAVIA</span>
+                      <span className="text-[10px] text-emerald-400">— رد الإدارة</span>
+                    </div>
+                    <p className="text-sm text-emerald-900 leading-relaxed whitespace-pre-wrap">{selected.admin_reply}</p>
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <label htmlFor="admin-reply" className="block text-xs text-gray-500 mb-1.5 font-medium">
+                    الرد على {selected.name}
+                  </label>
+                  <textarea
+                    id="admin-reply"
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder="اكتب ردك هنا..."
+                    rows={3}
+                    className="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20 transition-all"
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleReply}
+                    disabled={!replyText.trim() || sending}
+                    className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-2.5 rounded-xl font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {sending ? "جاري الإرسال..." : "📤 إرسال الرد باسم ELZAVIA"}
+                  </button>
+                  <button
+                    onClick={(e) => handleDelete(selected, e)}
+                    className="bg-red-500 hover:bg-red-600 text-white py-2.5 px-4 rounded-xl font-bold text-sm transition-colors"
+                    title="حذف الرسالة"
+                  >
+                    🗑️
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-64 text-center">

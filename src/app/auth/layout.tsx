@@ -19,7 +19,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     <div className="min-h-screen bg-primary-950 flex flex-col">
       <div className="absolute inset-0 bg-forest" />
       <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-5xl">
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 group mb-4">
               <img src="/images/logo.png" alt="Elzavia" className="h-12 w-auto opacity-80" />
