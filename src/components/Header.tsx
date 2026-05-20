@@ -34,7 +34,7 @@ export default function Header() {
               }`}
             />
             <span className={`text-base md:text-lg font-black tracking-[0.15em] transition-all duration-500 ${
-              scrolled ? "gradient-text" : "text-white/90 drop-shadow-sm"
+              scrolled ? "text-surface-700" : "text-white/90 drop-shadow-sm"
             }`}>
               ELZAVIA
             </span>
