@@ -143,7 +143,7 @@ export default function ProductsPage() {
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">رابط الصورة /images/products/...</label>
                 <div className="flex gap-3 items-center">
-                  <input type="text" value={imageInput} onChange={(e) => setImageInput(e.target.value)} className="input-field text-sm flex-1 dir-ltr" dir="ltr" placeholder="/images/products/product-1.png" />
+                  <input type="text" value={imageInput} onChange={(e) => setImageInput(e.target.value)} className="input-field text-sm flex-1 dir-ltr" dir="ltr" placeholder="/images/products/product-1.jpeg" />
                   {imageInput && (
                     <img src={imageInput} alt="" className="w-14 h-14 object-contain bg-gray-50 rounded-lg border" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} onLoad={(e) => { (e.target as HTMLImageElement).style.display = ""; }} />
                   )}

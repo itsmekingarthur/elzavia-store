@@ -19,7 +19,7 @@ export const products: Product[] = [
     description:
       "كبسولات طبيعية 100% مصممة لتعزيز الطاقة والتركيز طوال اليوم. تركيبة متطورة من الأعشاب الطبيعية والفيتامينات الأساسية.",
     price: 199,
-    images: ["/images/products/product-1.png"],
+    images: ["/images/products/product-1.jpeg"],
     category: "الطاقة والتركيز",
     ingredients: ["مستخلص الجينسنغ", "فيتامين B12", "مستخلص الشاي الأخضر", "الزنك", "مغنيسيوم"],
     usage: "كبسولة واحدة يومياً مع وجبة الإفطار",
@@ -32,7 +32,7 @@ export const products: Product[] = [
     description:
       "دعم متكامل لتعافي العضلات بعد التمرين. تحتوي على الأحماض الأمينية الأساسية والبروتينات النباتية لتسريع التعافي.",
     price: 199,
-    images: ["/images/products/product-2.png"],
+    images: ["/images/products/product-2.jpeg"],
     category: "التعافي والعضلات",
     ingredients: ["BCAA", "جلوتامين", "مستخلص الكركم", "فيتامين D3", "بروتين البازلاء"],
     usage: "كبسولتين بعد التمرين مباشرة",
