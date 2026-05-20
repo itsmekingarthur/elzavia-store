@@ -125,8 +125,8 @@ export default function CartItems() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">تم تقديم الطلب بنجاح!</h2>
-        <p className="text-white/60 mb-8">سنقوم بالتواصل معك قريباً لتأكيد الطلب.</p>
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">لقد تم الطلب بنجاح، شكراً لطلبك</h2>
+        <p className="text-white/60 mb-8">بما أن التوصيل يتم عند الاستلام، سيقوم فريقنا بالتواصل معك قريباً لتأكيد معلومات الطلب وتحديد موعد التوصيل.</p>
         <Link href="/shop" className="btn-nature">
           العودة للتسوق
         </Link>
