@@ -73,6 +73,18 @@ export default function ContactPage() {
                     <p className="text-gold-400 text-sm md:text-base font-medium group-hover:text-gold-300 transition-colors">@elzavia_shop</p>
                   </div>
                 </a>
+                <a
+                  href="https://www.facebook.com/profile.php?id=61590113944108"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300 group"
+                >
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0 text-xl group-hover:scale-110 transition-transform">📘</div>
+                  <div>
+                    <p className="text-white/40 text-xs">فيسبوك</p>
+                    <p className="text-blue-400 text-sm md:text-base font-medium group-hover:text-blue-300 transition-colors">Elzavia Shop</p>
+                  </div>
+                </a>
                 <div className="flex items-center gap-4 bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary-500/10 flex items-center justify-center flex-shrink-0 text-xl">📍</div>
                   <div>
