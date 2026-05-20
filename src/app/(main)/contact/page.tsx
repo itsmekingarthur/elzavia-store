@@ -4,17 +4,28 @@ import { useState } from "react";
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [animating, setAnimating] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const data = { name: formData.get("name") as string, message: formData.get("message") as string, date: new Date().toISOString() };
+    const data = { name: formData.get("name") as string, message: formData.get("message") as string, date: new Date().toISOString(), email: formData.get("email") as string };
+
+    const saved = JSON.parse(localStorage.getItem("elzavia-messages") || "[]");
+    saved.push(data);
+    localStorage.setItem("elzavia-messages", JSON.stringify(saved));
+
     try {
       await fetch("/api/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
-      setSent(true);
-      form.reset();
     } catch {}
+
+    setAnimating(true);
+    form.reset();
+    setTimeout(() => {
+      setAnimating(false);
+      setSent(true);
+    }, 1200);
   };
 
   return (
@@ -73,14 +84,45 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 space-y-4">
-                <input type="text" name="name" placeholder="الاسم" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                <input type="email" name="email" placeholder="البريد الإلكتروني" className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                <textarea name="message" placeholder="رسالتك" required rows={5} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
-                <button type="submit" className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20">
-                  {sent ? "تم الإرسال ✓" : "إرسال"}
-                </button>
-              </form>
+              {!sent ? (
+                <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 space-y-4 relative overflow-hidden">
+                  <div className={`transition-all duration-500 ${animating ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
+                    <input type="text" name="name" placeholder="الاسم" required className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                    <div className="mt-4">
+                      <input type="email" name="email" placeholder="البريد الإلكتروني" className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                    </div>
+                    <div className="mt-4">
+                      <textarea name="message" placeholder="رسالتك" required rows={5} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-primary-500/30 transition-colors text-sm md:text-base" />
+                    </div>
+                    <button type="submit" className="w-full bg-gradient-to-r from-primary-600 to-emerald-600 text-white py-3 rounded-xl font-bold text-base hover:from-primary-500 hover:to-emerald-500 transition-all duration-300 shadow-lg shadow-primary-500/20 mt-4">
+                      إرسال
+                    </button>
+                  </div>
+
+                  {animating && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg
+                        className="w-16 h-16 text-emerald-400 animate-paper-plane"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+                      </svg>
+                    </div>
+                  )}
+                </form>
+              ) : (
+                <div className="bg-white/5 backdrop-blur-md border border-emerald-500/20 rounded-2xl p-8 md:p-12 text-center">
+                  <div className="text-5xl mb-4 animate-ping-once">✉️</div>
+                  <p className="text-white text-lg md:text-xl font-bold">
+                    شكرا لتواصلكم معنا
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

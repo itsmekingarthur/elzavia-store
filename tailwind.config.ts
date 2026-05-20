@@ -88,6 +88,8 @@ const config: Config = {
         "spin-slow": "spin 12s linear infinite",
         "spin-slower": "spin 20s linear infinite",
         "leaf-fall": "leaf-fall 12s ease-in infinite",
+        "paper-plane": "paper-plane 1.2s ease-out forwards",
+        "ping-once": "ping-once 0.6s ease-out 1",
       },
       keyframes: {
         "gradient-x": {
@@ -125,6 +127,16 @@ const config: Config = {
           "10%": { opacity: "1" },
           "90%": { opacity: "1" },
           "100%": { transform: "translateY(110vh) translateX(var(--drift, 30px)) rotate(var(--rotation, 360deg))", opacity: "0" },
+        },
+        "paper-plane": {
+          "0%": { transform: "translate(0, 0) rotate(0deg) scale(1)", opacity: "1" },
+          "60%": { transform: "translate(60px, -60px) rotate(15deg) scale(1.15)", opacity: "1" },
+          "100%": { transform: "translate(120px, -140px) rotate(30deg) scale(0.4)", opacity: "0" },
+        },
+        "ping-once": {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.3)", opacity: "0.8" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
       backgroundSize: {

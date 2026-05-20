@@ -51,6 +51,14 @@ export default function AdminDashboard() {
 
   const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
   const pendingOrders = orders.filter((o) => o.status === "قيد التجهيز").length;
+  const delivered = orders.filter((o) => o.status === "تم التوصيل");
+  const now = new Date();
+  const thisMonthDelivered = delivered.filter((o) => {
+    const d = new Date(o.createdAt);
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  });
+  const monthlyCommission = thisMonthDelivered.reduce((s, o) => s + o.total, 0);
+  const totalCommission = delivered.reduce((s, o) => s + o.total, 0);
 
   return (
     <div>
@@ -84,6 +92,19 @@ export default function AdminDashboard() {
           <p className="text-2xl md:text-3xl font-extrabold text-blue-600">
             {orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم الشحن" || o.status === "تم التوصيل").length / orders.length) * 100) : 0}%
           </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10">
+        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4 border-emerald-500">
+          <p className="text-gray-500 text-xs md:text-sm mb-1">عمولة الشهر (تم التوصيل)</p>
+          <p className="text-2xl md:text-3xl font-extrabold text-emerald-600">{formatPrice(monthlyCommission)}</p>
+          <p className="text-xs text-gray-400 mt-1">{thisMonthDelivered.length} طلبية مكتملة هذا الشهر</p>
+        </div>
+        <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4 border-primary-500">
+          <p className="text-gray-500 text-xs md:text-sm mb-1">إجمالي العمولات (كل الأوقات)</p>
+          <p className="text-2xl md:text-3xl font-extrabold text-primary-600">{formatPrice(totalCommission)}</p>
+          <p className="text-xs text-gray-400 mt-1">{delivered.length} طلبية مكتملة إجمالاً</p>
         </div>
       </div>
 
