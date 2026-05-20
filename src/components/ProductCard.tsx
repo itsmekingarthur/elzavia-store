@@ -59,8 +59,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link href={`/shop/${product.slug}`} className="group block">
-      <div className="relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-        <div className="aspect-square overflow-hidden p-8 md:p-10 flex items-center justify-center relative" style={{ backgroundColor: palette.light }}>
+      <div className="relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500 hover:-translate-y-2 overflow-hidden flex flex-col h-full">
+        <div className="aspect-square overflow-hidden p-8 md:p-10 flex items-center justify-center relative flex-shrink-0" style={{ backgroundColor: palette.light }}>
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: `radial-gradient(circle at 50% 50%, ${palette.bg}, transparent 70%)` }} />
           <BranchOverlay />
           <img
@@ -70,7 +70,7 @@ export default function ProductCard({ product }: { product: Product }) {
           />
         </div>
 
-        <div className="p-5 md:p-6 relative z-10">
+        <div className="p-5 md:p-6 relative z-10 flex flex-col flex-1">
           <div className="flex items-center justify-between mb-3">
             <span
               className="text-[10px] md:text-xs font-bold px-3 py-1 rounded-full"
@@ -91,7 +91,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.description}
           </p>
 
-          <div className="flex items-center justify-between pt-3 border-t border-white/10">
+          <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-auto">
             <span className="text-xl md:text-2xl font-extrabold text-primary-400">
               {formatPrice(product.price)}
             </span>

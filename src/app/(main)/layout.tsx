@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Leaves from "@/components/Leaves";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function MainLayout({
   children,
@@ -13,6 +14,7 @@ export default function MainLayout({
       <Header />
       <main className="flex-1 relative z-10">{children}</main>
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }
