@@ -3,22 +3,28 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const ADMIN_USER = process.env.NEXT_PUBLIC_ADMIN_USER || "admin";
-const ADMIN_PASS = process.env.NEXT_PUBLIC_ADMIN_PASS || "elzavia2024";
-
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === ADMIN_USER && password === ADMIN_PASS) {
-      localStorage.setItem("elzavia-admin-auth", "true");
-      router.push("/admin");
-    } else {
-      setError("اسم المستخدم أو كلمة المرور غير صحيحة");
+    setError("");
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      if (res.ok) {
+        router.push("/admin");
+      } else {
+        setError("اسم المستخدم أو كلمة المرور غير صحيحة");
+      }
+    } catch {
+      setError("حدث خطأ في الاتصال");
     }
   };
 

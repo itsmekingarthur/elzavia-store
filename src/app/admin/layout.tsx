@@ -24,13 +24,24 @@ export default function AdminLayout({
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const auth = localStorage.getItem("elzavia-admin-auth");
-    if (auth === "true") {
-      setAuthed(true);
-    } else if (pathname !== "/admin/login") {
-      router.push("/admin/login");
+    if (pathname === "/admin/login") {
+      setChecking(false);
+      return;
     }
-    setChecking(false);
+    fetch("/api/auth")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.authed) {
+          setAuthed(true);
+        } else {
+          router.push("/admin/login");
+        }
+        setChecking(false);
+      })
+      .catch(() => {
+        router.push("/admin/login");
+        setChecking(false);
+      });
   }, [pathname, router]);
 
   if (pathname === "/admin/login") {
@@ -47,8 +58,8 @@ export default function AdminLayout({
 
   if (!authed) return null;
 
-  const handleLogout = () => {
-    localStorage.removeItem("elzavia-admin-auth");
+  const handleLogout = async () => {
+    await fetch("/api/auth", { method: "DELETE" });
     router.push("/admin/login");
   };
 
