@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "إلزافيا | المكملات الغذائية الطبيعية",
   description:
     "مكملات غذائية طبيعية 100% لدعم صحتك ورفع أدائك. اكتشف قوة الطبيعة مع إلزافيا.",
+  icons: {
+    icon: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({
