@@ -38,13 +38,17 @@ function OrdersContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const activeStatus = searchParams.get("status") || "";
-  const [orders, setOrders] = useState<Order[]>(() =>
-    JSON.parse(typeof window !== "undefined" ? localStorage.getItem("elzavia-orders") || "[]" : "[]")
-  );
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const getOrders = useCallback((): Order[] =>
+    JSON.parse(typeof window !== "undefined" ? localStorage.getItem("elzavia-orders") || "[]" : "[]"),
+  []);
+
+  const orders = getOrders();
 
   const saveOrders = useCallback((updated: Order[]) => {
-    setOrders(updated);
     localStorage.setItem("elzavia-orders", JSON.stringify(updated));
+    setRefreshKey((k) => k + 1);
   }, []);
 
   const deleteOrderItem = async (orderId: string) => {
