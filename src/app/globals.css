@@ -12,7 +12,13 @@
 
   body {
     font-family: "Tajawal", system-ui, sans-serif;
+    min-height: 100dvh;
     @apply bg-primary-950 text-white;
+  }
+
+  input, textarea, select {
+    touch-action: manipulation;
+    font-size: 16px;
   }
 
   ::selection {

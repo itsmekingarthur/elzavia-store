@@ -150,6 +150,7 @@ export default function CartItems() {
     }
 
     clearCart();
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     setSubmitted(true);
     setSubmitting(false);
   };

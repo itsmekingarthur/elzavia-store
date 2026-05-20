@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useCallback } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { formatPrice, ordersToExcelData, downloadExcel } from "@/lib/utils";
 
@@ -38,23 +38,65 @@ function OrdersContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const activeStatus = searchParams.get("status") || "";
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [orders, setOrders] = useState<Order[]>([]);
 
-  const getOrders = useCallback((): Order[] =>
-    JSON.parse(typeof window !== "undefined" ? localStorage.getItem("elzavia-orders") || "[]" : "[]"),
-  []);
+  const mergeOrders = useCallback((apiOrders: Order[]) => {
+    const localOrders: Order[] = JSON.parse(
+      typeof window !== "undefined" ? localStorage.getItem("elzavia-orders") || "[]" : "[]"
+    );
+    const localMap = new Map(localOrders.map((o) => [o.id, o]));
+    const seen = new Set<string>();
 
-  const orders = getOrders();
+    const merged = apiOrders.map((apiOrder) => {
+      seen.add(apiOrder.id);
+      const local = localMap.get(apiOrder.id);
+      if (local && local.status !== apiOrder.status) {
+        return { ...apiOrder, status: local.status };
+      }
+      return apiOrder;
+    });
 
-  const saveOrders = useCallback((updated: Order[]) => {
-    localStorage.setItem("elzavia-orders", JSON.stringify(updated));
-    setRefreshKey((k) => k + 1);
+    for (const local of localOrders) {
+      if (!seen.has(local.id)) {
+        merged.push(local);
+      }
+    }
+
+    merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    setOrders(merged);
+    localStorage.setItem("elzavia-orders", JSON.stringify(merged));
   }, []);
+
+  const refresh = useCallback(async () => {
+    const localOrders: Order[] = JSON.parse(
+      typeof window !== "undefined" ? localStorage.getItem("elzavia-orders") || "[]" : "[]"
+    );
+    try {
+      const res = await fetch("/api/orders");
+      if (res.ok) {
+        const data = await res.json();
+        mergeOrders(data);
+        return;
+      }
+    } catch {}
+    if (localOrders.length > 0) {
+      setOrders(localOrders);
+      localStorage.setItem("elzavia-orders", JSON.stringify(localOrders));
+    }
+  }, [mergeOrders]);
+
+  useEffect(() => {
+    refresh();
+    window.addEventListener("focus", refresh);
+    return () => window.removeEventListener("focus", refresh);
+  }, [refresh]);
 
   const deleteOrderItem = async (orderId: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الطلبية؟")) return;
     const updated = orders.filter((o) => o.id !== orderId);
-    saveOrders(updated);
+    setOrders(updated);
+    localStorage.setItem("elzavia-orders", JSON.stringify(updated));
     try {
       await fetch("/api/orders", {
         method: "DELETE",
@@ -69,7 +111,8 @@ function OrdersContent() {
     const updated = orders.map((o) =>
       o.id === orderId ? { ...o, status: newStatus } : o
     );
-    saveOrders(updated);
+    setOrders(updated);
+    localStorage.setItem("elzavia-orders", JSON.stringify(updated));
     try {
       await fetch("/api/orders", {
         method: "PATCH",
@@ -134,7 +177,7 @@ function OrdersContent() {
                 تحميل Excel
               </button>
             )}
-            <button onClick={() => saveOrders(JSON.parse(localStorage.getItem("elzavia-orders") || "[]"))} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
+            <button onClick={refresh} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
@@ -142,7 +185,6 @@ function OrdersContent() {
             </button>
           </div>
         </div>
-
         {displayOrders.length === 0 ? (
           <div className="bg-white rounded-xl md:rounded-2xl p-8 md:p-12 text-center shadow-sm">
             <p className="text-gray-400 text-base md:text-lg">لا توجد طلبات في هذه الحالة</p>
@@ -254,7 +296,7 @@ function OrdersContent() {
               تحميل Excel
             </button>
           )}
-          <button onClick={() => saveOrders(JSON.parse(localStorage.getItem("elzavia-orders") || "[]"))} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
+          <button onClick={refresh} className="text-sm text-primary-600 hover:text-primary-800 font-medium flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
