@@ -44,8 +44,12 @@ export async function addMessage(msg: any) {
 
 // ---------- Products ----------
 export async function getProducts(): Promise<any[]> {
-  const { data } = await supabase.from("products").select("*");
-  if (data && data.length > 0) return data;
+  try {
+    const { data } = await supabase.from("products").select("*");
+    if (data && data.length > 0) return data;
+  } catch (e) {
+    console.error("Supabase error, using fallback products:", e);
+  }
 
   const defaults = [
     { id: "1", name: "الكبسولات الذهبية للطاقة", slug: "golden-energy-capsules", description: "كبسولات طبيعية 100% مصممة لتعزيز الطاقة والتركيز طوال اليوم.", price: 199, images: ["/images/products/product-1.png"], category: "الطاقة والتركيز", ingredients: ["مستخلص الجينسنغ", "فيتامين B12", "مستخلص الشاي الأخضر", "الزنك", "مغنيسيوم"], usage: "كبسولة واحدة يومياً مع وجبة الإفطار", weight: "60 كبسولة" },

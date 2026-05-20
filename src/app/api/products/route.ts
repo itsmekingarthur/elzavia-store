@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getProducts, addProduct, updateProduct, deleteProduct } from "@/lib/store";
 
 export async function GET() {
-  return NextResponse.json(await getProducts());
+  try {
+    return NextResponse.json(await getProducts());
+  } catch (e) {
+    return NextResponse.json([], { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
