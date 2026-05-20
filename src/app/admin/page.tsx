@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { products } from "@/data/products";
 import { formatPrice } from "@/lib/utils";
+import AnimatedNumber from "@/components/AnimatedNumber";
 
 interface Order {
   id: string;
@@ -75,22 +76,22 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-10">
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
           <p className="text-gray-500 text-xs md:text-sm mb-1">إجمالي الطلبات</p>
-          <p className="text-2xl md:text-3xl font-extrabold text-gray-900">{orders.length}</p>
+          <p className="text-2xl md:text-3xl font-extrabold text-gray-900"><AnimatedNumber value={orders.length} /></p>
         </div>
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
           <p className="text-gray-500 text-xs md:text-sm mb-1">قيد التجهيز</p>
-          <p className="text-2xl md:text-3xl font-extrabold text-yellow-600">{pendingOrders}</p>
+          <p className="text-2xl md:text-3xl font-extrabold text-yellow-600"><AnimatedNumber value={pendingOrders} /></p>
         </div>
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
           <p className="text-gray-500 text-xs md:text-sm mb-1">نسبة التأكيد</p>
           <p className="text-2xl md:text-3xl font-extrabold text-emerald-600">
-            {orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم التوصيل").length / orders.length) * 100) : 0}%
+            <AnimatedNumber value={orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم التوصيل").length / orders.length) * 100) : 0} suffix="%" />
           </p>
         </div>
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
           <p className="text-gray-500 text-xs md:text-sm mb-1">نسبة الشحن</p>
           <p className="text-2xl md:text-3xl font-extrabold text-blue-600">
-            {orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم الشحن" || o.status === "تم التوصيل").length / orders.length) * 100) : 0}%
+            <AnimatedNumber value={orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم الشحن" || o.status === "تم التوصيل").length / orders.length) * 100) : 0} suffix="%" />
           </p>
         </div>
       </div>

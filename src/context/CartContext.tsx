@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { useToast } from "./ToastContext";
 
 export interface CartItem {
   productId: string;
@@ -23,6 +24,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const saved = localStorage.getItem("elzavia-cart");
@@ -56,7 +58,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("elzavia-cart", JSON.stringify(newItems));
       return newItems;
     });
-  }, []);
+    toast(`تمت الإضافة للسلة ✓`);
+  }, [toast]);
 
   const addToCart = useCallback((productId: string) => {
     setItems((prev) => {
@@ -72,7 +75,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("elzavia-cart", JSON.stringify(newItems));
       return newItems;
     });
-  }, []);
+    toast(`تمت الإضافة للسلة ✓`);
+  }, [toast]);
 
   const removeFromCart = useCallback((productId: string) => {
     setItems((prev) => {

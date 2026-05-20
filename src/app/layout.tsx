@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { ToastProvider } from "@/context/ToastContext";
 
 export const metadata: Metadata = {
   title: "إلزافيا | المكملات الغذائية الطبيعية",
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="ar" className="dark">
       <body className="min-h-screen bg-primary-950 flex flex-col">
-        <CartProvider>{children}</CartProvider>
+        <ToastProvider>
+          <CartProvider>{children}</CartProvider>
+        </ToastProvider>
       </body>
     </html>
   );

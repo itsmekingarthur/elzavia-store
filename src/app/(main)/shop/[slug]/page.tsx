@@ -34,6 +34,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [selectedDeal, setSelectedDeal] = useState("رائج");
   const [added, setAdded] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -95,8 +96,14 @@ export default function ProductDetailPage() {
 
         <div className="grid md:grid-cols-2 gap-10 md:gap-16">
           <div className="relative">
-            <div className="aspect-square rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-10 md:p-16 flex items-center justify-center">
-              <img src={product.images?.[0] || "/images/placeholder.png"} alt={product.name} className="w-full h-full object-contain drop-shadow-2xl" />
+            <div
+              className="aspect-square rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 p-10 md:p-16 flex items-center justify-center cursor-zoom-in group"
+              onClick={() => setLightboxOpen(true)}
+            >
+              <img src={product.images?.[0] || "/images/placeholder.png"} alt={product.name} className="w-full h-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-500" />
+              <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm rounded-lg px-2 py-1 text-[10px] text-white/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                تكبير
+              </div>
             </div>
           </div>
 
@@ -268,6 +275,28 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors p-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src={product.images?.[0] || "/images/placeholder.png"}
+            alt={product.name}
+            className="max-w-full max-h-[90vh] object-contain animate-fade-in-up"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }

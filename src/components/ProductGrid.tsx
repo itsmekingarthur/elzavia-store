@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
+import { ProductGridSkeleton } from "./Skeleton";
 
 interface Product {
   id: string;
@@ -15,15 +16,26 @@ interface Product {
 
 export default function ProductGrid({ limit }: { limit?: number }) {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/products")
       .then((r) => r.ok ? r.json() : [])
-      .then(setProducts)
-      .catch(() => setProducts([]));
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setProducts([]);
+        setLoading(false);
+      });
   }, []);
 
   const displayProducts = limit ? products.slice(0, limit) : products;
+
+  if (loading) {
+    return <ProductGridSkeleton count={limit || 4} />;
+  }
 
   if (products.length === 0) {
     return (

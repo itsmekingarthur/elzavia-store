@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Typewriter from "./Typewriter";
 
 export default function Hero() {
   return (
@@ -46,10 +47,10 @@ export default function Hero() {
             <span className="text-primary-300/80 text-xs md:text-sm font-medium tracking-wide">مكملات طبيعية 100%</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-extrabold mb-3 md:mb-6 leading-[1.1]">
-            <span className="text-white">غذاء لجسمك</span>
+          <h1 className="text-3xl sm:text-4xl md:text-7xl lg:text-8xl font-extrabold mb-3 md:mb-6 leading-[1.1] min-h-[2em]">
+            <span className="text-white"><Typewriter text="غذاء لجسمك" /></span>
             <br />
-            <span className="gradient-text">طاقة لحياتك</span>
+            <span className="gradient-text"><Typewriter text="طاقة لحياتك" delay={1.5} /></span>
           </h1>
 
           <p className="text-sm md:text-xl text-white/60 leading-relaxed max-w-2xl mb-6 md:mb-10 mx-auto">
