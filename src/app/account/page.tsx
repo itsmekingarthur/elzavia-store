@@ -6,6 +6,37 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 
+const timelineSteps = [
+  { key: "قيد التجهيز", label: "قيد التجهيز", icon: "⏳", desc: "تم استلام طلبك وبدأ تجهيزه" },
+  { key: "تم الشحن", label: "تم الشحن", icon: "📦", desc: "تم شحن طلبك وهو في الطريق إليك" },
+  { key: "تم التوصيل", label: "تم التوصيل", icon: "✅", desc: "تم توصيل طلبك بنجاح" },
+];
+
+function OrderTimeline({ status, shippedAt, deliveredAt, createdAt }: any) {
+  const statusIndex = timelineSteps.findIndex((s) => s.key === status);
+  return (
+    <div className="flex items-start gap-1 mt-3 pt-3 border-t border-white/10">
+      {timelineSteps.map((step, i) => {
+        const done = i <= statusIndex;
+        const current = i === statusIndex;
+        const date = i === 0 ? createdAt : i === 1 ? shippedAt : deliveredAt;
+        return (
+          <div key={step.key} className="flex-1 text-center relative">
+            <div className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center text-sm mb-1 transition-all ${
+              done ? "bg-primary-500/20 text-primary-400" : "bg-white/5 text-white/30"
+            } ${current ? "ring-2 ring-primary-500/40 scale-110" : ""}`}>
+              {step.icon}
+            </div>
+            <div className={`h-0.5 absolute top-4 -left-1/2 w-full ${i > 0 && done ? "bg-primary-500/30" : i > 0 ? "bg-white/10" : ""}`} style={{ display: i === 0 ? "none" : undefined }} />
+            <p className={`text-[10px] font-bold ${done ? "text-primary-300" : "text-white/30"}`}>{step.label}</p>
+            {date && <p className="text-[9px] text-white/30 mt-0.5">{new Date(date).toLocaleDateString("ar-MA")}</p>}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function AccountPage() {
   const { user, profile, loading, signOut } = useAuth();
   const router = useRouter();
@@ -14,6 +45,8 @@ export default function AccountPage() {
   const [localMessages, setLocalMessages] = useState<any[]>([]);
   const [localCart, setLocalCart] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
+  const [points, setPoints] = useState(0);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !user) router.push("/auth/login");
@@ -33,7 +66,17 @@ export default function AccountPage() {
       setLocalCart(cart);
     } catch {}
     fetch("/api/products").then(r => r.ok && r.json()).then(setProducts).catch(() => {});
+
+    const savedPoints = parseInt(localStorage.getItem(`elzavia-points-${user?.id}`) || "0", 10);
+    setPoints(savedPoints);
   }, []);
+
+  useEffect(() => {
+    if (profile && (profile as any).points !== undefined) {
+      setPoints((profile as any).points || 0);
+      if (user) localStorage.setItem(`elzavia-points-${user.id}`, String((profile as any).points || 0));
+    }
+  }, [profile, user]);
 
   if (loading) return null;
   if (!user) return null;
@@ -63,6 +106,16 @@ export default function AccountPage() {
             تسجيل الخروج
           </button>
         </div>
+
+        {points > 0 && (
+          <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-4 mb-6 flex items-center gap-3">
+            <span className="text-2xl">⭐</span>
+            <div>
+              <p className="text-white font-bold">لديك {points} نقطة</p>
+              <p className="text-white/50 text-xs mt-0.5">اكسب 50 نقطة عن كل طلب يتم توصيله. استخدم النقاط للحصول على خصومات قريباً</p>
+            </div>
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
@@ -99,25 +152,41 @@ export default function AccountPage() {
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      {localOrders.map((order, i) => (
-                        <div key={i} className="bg-white/5 border border-white/5 rounded-lg p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-primary-400 font-mono text-sm font-bold" dir="ltr">{order.id}</span>
-                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                              order.status === "قيد التجهيز" ? "bg-gold-500/15 text-gold-400" :
-                              order.status === "تم التوصيل" ? "bg-emerald-500/15 text-emerald-400" :
-                              "bg-white/10 text-white/60"
-                            }`}>{order.status}</span>
-                          </div>
-                          <div className="text-white/70 text-sm mb-2">
-                            {order.items?.map((item: any, j: number) => (
-                              <span key={j}>{item.name} ×{item.quantity}{j < order.items.length - 1 ? ", " : ""}</span>
-                            ))}
-                          </div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-white/50">{new Date(order.createdAt).toLocaleDateString("ar-MA")}</span>
-                            <span className="text-primary-400 font-bold">{formatPrice(order.total)}</span>
-                          </div>
+                      {[...localOrders].reverse().map((order, i) => (
+                        <div key={i}>
+                          <button
+                            onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                            className="w-full text-right bg-white/5 border border-white/5 rounded-lg p-4 hover:bg-white/10 transition-colors"
+                          >
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-primary-400 font-mono text-sm font-bold" dir="ltr">{order.id}</span>
+                              <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                                order.status === "قيد التجهيز" ? "bg-gold-500/15 text-gold-400" :
+                                order.status === "تم الشحن" ? "bg-blue-500/15 text-blue-400" :
+                                order.status === "تم التوصيل" ? "bg-emerald-500/15 text-emerald-400" :
+                                "bg-white/10 text-white/60"
+                              }`}>{order.status}</span>
+                            </div>
+                            <div className="text-white/70 text-sm mb-2">
+                              {order.items?.map((item: any, j: number) => (
+                                <span key={j}>{item.name} ×{item.quantity}{j < order.items.length - 1 ? ", " : ""}</span>
+                              ))}
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-white/50">{new Date(order.createdAt).toLocaleDateString("ar-MA")}</span>
+                              <span className="text-primary-400 font-bold">{formatPrice(order.total)}</span>
+                            </div>
+                          </button>
+                          {expandedOrder === order.id && (
+                            <div className="bg-white/5 border-x border-b border-white/5 rounded-b-lg px-4 pb-4 -mt-2">
+                              <OrderTimeline
+                                status={order.status}
+                                shippedAt={order.shippedAt}
+                                deliveredAt={order.deliveredAt}
+                                createdAt={order.createdAt}
+                              />
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -201,6 +270,11 @@ export default function AccountPage() {
                     <div>
                       <label className="block text-white/50 text-xs font-medium mb-1">البريد الإلكتروني</label>
                       <p className="text-white font-medium">{user.email}</p>
+                    </div>
+                    <div>
+                      <label className="block text-white/50 text-xs font-medium mb-1">النقاط</label>
+                      <p className="text-gold-400 font-bold">{points} نقطة</p>
+                      <p className="text-white/40 text-xs mt-0.5">احصل على 50 نقطة عن كل طلب يتم توصيله</p>
                     </div>
                     <div>
                       <label className="block text-white/50 text-xs font-medium mb-1">تاريخ الإنشاء</label>

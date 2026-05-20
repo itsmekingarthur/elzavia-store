@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getOrders, addOrder, updateOrder, deleteOrder } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 
 const TELEGRAM_BOT_TOKEN = "8819995357:AAGvygoQa-UzvwCVua1LDZC3XpRJFGDzQhs";
 const TELEGRAM_CHAT_ID = "7505359725";
@@ -55,7 +56,22 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ success: false, error: "id required" }, { status: 400 });
     }
     const { id, ...updates } = body;
+
+    const now = new Date().toISOString();
+    if (updates.status === "تم الشحن") updates.shippedAt = now;
+    if (updates.status === "تم التوصيل") updates.deliveredAt = now;
+
     await updateOrder(id, updates);
+
+    if (updates.status === "تم التوصيل") {
+      const { data: order } = await supabase.from("orders").select("user_id").eq("id", id).single();
+      if (order?.user_id) {
+        const { data: profile } = await supabase.from("profiles").select("points").eq("id", order.user_id).single();
+        const currentPoints = (profile as any)?.points || 0;
+        await supabase.from("profiles").update({ points: currentPoints + 50 }).eq("id", order.user_id);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch (e) {
     return NextResponse.json({ success: false, error: String(e) }, { status: 400 });
