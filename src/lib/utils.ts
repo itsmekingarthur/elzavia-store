@@ -40,6 +40,7 @@ export function ordersToExcelData(
     items: { name: string; quantity: number; price: number }[];
     createdAt: string;
     total: number;
+    offerB2G1?: boolean;
   }[]
 ): OrderRow[] {
   const rows: OrderRow[] = [];
@@ -52,7 +53,7 @@ export function ordersToExcelData(
         delivery_note: order.customer.notes || "",
         price: item.price,
         sku: getProductSKU(item.name),
-        qte: item.quantity,
+        qte: order.offerB2G1 ? 3 : item.quantity,
         date_order: new Date(order.createdAt).toISOString().split("T")[0],
       });
     }
