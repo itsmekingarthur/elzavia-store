@@ -165,7 +165,14 @@ export default function AccountPage() {
         for (const local of localOrders) {
           if (seen.has(local.id)) {
             const idx = merged.findIndex((o: any) => o.id === local.id);
-            if (idx !== -1) merged[idx] = { ...merged[idx], ...local };
+            if (idx !== -1) {
+              // Only copy fields that don't exist in API (localStorage-only extras)
+              const localExtra: any = {};
+              for (const key of ["offerB2G1", "offerDiscount", "pointsUsed", "pointsDiscount"]) {
+                if (local[key] !== undefined) localExtra[key] = local[key];
+              }
+              merged[idx] = { ...merged[idx], ...localExtra };
+            }
           } else {
             merged.push(local);
           }
