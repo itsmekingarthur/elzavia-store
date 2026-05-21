@@ -45,6 +45,8 @@ function OrdersContent() {
   const activeStatus = searchParams.get("status") || "";
   const [orders, setOrders] = useState<Order[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cancelTarget, setCancelTarget] = useState<string | null>(null);
+  const [cancelReason, setCancelReason] = useState("");
 
   const mergeOrders = useCallback((apiOrders: Order[]) => {
     const localOrders: Order[] = JSON.parse(
@@ -118,9 +120,18 @@ function OrdersContent() {
   };
 
   const updateStatus = async (orderId: string, newStatus: string) => {
+    if (newStatus === "تم الإلغاء") {
+      setCancelTarget(orderId);
+      setCancelReason("");
+      return;
+    }
+    performStatusUpdate(orderId, newStatus);
+  };
+
+  const performStatusUpdate = async (orderId: string, newStatus: string, reason?: string) => {
     const targetOrder = orders.find((o) => o.id === orderId);
     const updated = orders.map((o) =>
-      o.id === orderId ? { ...o, status: newStatus } : o
+      o.id === orderId ? { ...o, status: newStatus, ...(reason ? { cancelReason: reason } : {}) } : o
     );
     setOrders(updated);
     localStorage.setItem("elzavia-orders", JSON.stringify(updated));
@@ -294,6 +305,37 @@ function OrdersContent() {
           })}
           </div>
         )}
+
+        {cancelTarget && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-start justify-center p-4" onClick={() => setCancelTarget(null)}>
+            <div className="bg-white rounded-2xl p-6 w-full max-w-md mt-16 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">إلغاء الطلبية</h3>
+              <p className="text-sm text-gray-500 mb-4">يرجى ذكر سبب الإلغاء ليتم إظهاره للعميل</p>
+              <textarea
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="سبب الإلغاء..."
+                rows={3}
+                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-400 transition-colors resize-none"
+                autoFocus
+              />
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={() => {
+                    performStatusUpdate(cancelTarget, "تم الإلغاء", cancelReason);
+                    setCancelTarget(null);
+                  }}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-sm transition-colors"
+                >
+                  تأكيد الإلغاء
+                </button>
+                <button onClick={() => setCancelTarget(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl text-sm transition-colors">
+                  رجوع
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -388,6 +430,37 @@ function OrdersContent() {
           </button>
         ))}
       </div>
+
+      {cancelTarget && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-start justify-center p-4" onClick={() => setCancelTarget(null)}>
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md mt-16 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">إلغاء الطلبية</h3>
+            <p className="text-sm text-gray-500 mb-4">يرجى ذكر سبب الإلغاء ليتم إظهاره للعميل</p>
+            <textarea
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+              placeholder="سبب الإلغاء..."
+              rows={3}
+              className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-primary-400 transition-colors resize-none"
+              autoFocus
+            />
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => {
+                  performStatusUpdate(cancelTarget, "تم الإلغاء", cancelReason);
+                  setCancelTarget(null);
+                }}
+                className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl text-sm transition-colors"
+              >
+                تأكيد الإلغاء
+              </button>
+              <button onClick={() => setCancelTarget(null)} className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl text-sm transition-colors">
+                رجوع
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
