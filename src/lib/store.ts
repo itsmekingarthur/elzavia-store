@@ -10,47 +10,50 @@ export async function getOrders(): Promise<any[]> {
 }
 
 export async function addOrder(order: any) {
-  await db.from("orders").insert(order);
+  const { error } = await db.from("orders").insert(order);
+  if (error) throw new Error(error.message);
 }
 
 export async function updateOrder(id: string, updates: Partial<any>) {
-  await db.from("orders").update(updates).eq("id", id);
+  const { error } = await db.from("orders").update(updates).eq("id", id);
+  if (error) throw new Error(error.message);
 }
 
 export async function deleteOrder(id: string) {
-  await db.from("orders").delete().eq("id", id);
+  const { error } = await db.from("orders").delete().eq("id", id);
+  if (error) throw new Error(error.message);
 }
 
 // ---------- Coupons ----------
 export async function getCoupons(): Promise<any[]> {
-  const { data } = await supabase.from("coupons").select("*");
+  const { data } = await db.from("coupons").select("*");
   return data || [];
 }
 
 export async function addCoupon(coupon: any) {
-  await supabase.from("coupons").insert(coupon);
+  await db.from("coupons").insert(coupon);
 }
 
 export async function deleteCoupon(id: string) {
-  await supabase.from("coupons").delete().eq("id", id);
+  await db.from("coupons").delete().eq("id", id);
 }
 
 // ---------- Messages ----------
 export async function getMessages(): Promise<any[]> {
-  const { data } = await supabase.from("messages").select("*").order("date", { ascending: false });
+  const { data } = await db.from("messages").select("*").order("date", { ascending: false });
   return data || [];
 }
 
 export async function addMessage(msg: any) {
-  await supabase.from("messages").insert(msg);
+  await db.from("messages").insert(msg);
 }
 
 export async function deleteMessage(date: string) {
-  await supabase.from("messages").delete().eq("date", date);
+  await db.from("messages").delete().eq("date", date);
 }
 
 export async function updateMessage(date: string, updates: Record<string, any>) {
-  await supabase.from("messages").update(updates).eq("date", date);
+  await db.from("messages").update(updates).eq("date", date);
 }
 
 // ---------- Products ----------

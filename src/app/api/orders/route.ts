@@ -43,7 +43,11 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    await addOrder(body);
+    try {
+      await addOrder(body);
+    } catch (e) {
+      console.error("Failed to save order to Supabase:", e);
+    }
     sendTelegramNotification(body);
     return NextResponse.json({ success: true, id: body.id });
   } catch (e) {
