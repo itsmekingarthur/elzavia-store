@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const benefits = [
   { icon: "📦", title: "تتبع الطلبات", desc: "تابع حالة طلبك خطوة بخطوة حتى التوصيل" },
@@ -15,6 +16,16 @@ const benefits = [
 ];
 
 export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-primary-950 flex items-center justify-center"><div className="text-primary-400 text-lg">جاري التحميل...</div></div>}>
+      <SignupContent />
+    </Suspense>
+  );
+}
+
+function SignupContent() {
+  const searchParams = useSearchParams();
+  const isOffer = searchParams.get("offer") === "b2g1";
   const { signUp } = useAuth();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -69,6 +80,23 @@ export default function SignupPage() {
       <div className="md:col-span-3 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
         <h1 className="text-2xl font-extrabold text-white text-center mb-2">إنشاء حساب جديد</h1>
         <p className="text-white/50 text-center text-sm mb-8">أنشئ حسابك واستمتع بجميع المزايا</p>
+
+        {isOffer && (
+          <div className="bg-gradient-to-r from-gold-500/15 to-amber-500/10 border-2 border-gold-500/30 rounded-xl p-5 mb-6 text-center">
+            <div className="text-3xl mb-2">🎁</div>
+            <h3 className="text-gold-300 font-extrabold text-lg mb-1">قم بالتسجيل للاستفادة من العرض</h3>
+            <p className="text-white/60 text-sm leading-relaxed">
+              سجل حساب الآن واستفد من <span className="text-gold-300 font-bold">عرض 2+1</span>: اشتري منتجين واحصل على الثالث مجاناً! بالإضافة إلى <span className="text-gold-300 font-bold">50 نقطة</span> مع كل منتج وخصومات حصرية للأعضاء.
+            </p>
+            <div className="flex items-center justify-center gap-4 mt-4 text-xs text-white/50">
+              <span>🎁 2+1 مجاناً</span>
+              <span className="w-px h-4 bg-white/10" />
+              <span>⭐ 50 نقطة لكل منتج</span>
+              <span className="w-px h-4 bg-white/10" />
+              <span>🚚 توصيل مجاني</span>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>

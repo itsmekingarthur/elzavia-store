@@ -5,36 +5,67 @@ export default function ShopPage({
 }: {
   searchParams?: { offer?: string };
 }) {
+  const isOffer = searchParams?.offer === "b2g1";
+
   return (
     <div className="relative min-h-screen bg-primary-950 overflow-hidden">
       <div className="absolute inset-0 bg-forest" />
 
       <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-        <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
-          {searchParams?.offer === "b2g1" && (
-            <div className="inline-flex items-center gap-2 bg-gold-500/15 border border-gold-500/30 text-gold-400 text-sm font-bold px-5 py-2 rounded-full mb-4">
-              🎁 عرض 2+1 مفعل — أقل منتج مجاناً
+        {isOffer ? (
+          <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <div className="relative">
+              {/* Decorative glow */}
+              <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-gold-500/10 rounded-full blur-[100px]" />
+              <div className="relative">
+                <div className="inline-flex items-center gap-2 bg-gold-500/20 border-2 border-gold-500/40 text-gold-400 text-sm font-bold px-6 py-2 rounded-full mb-4 shadow-lg shadow-gold-500/10">
+                  🎁 عرض خاص لفترة محدودة
+                </div>
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
+                  <span className="gradient-text-gold">اشتري 2</span> واحصل على <span className="gradient-text-gold">الثالث مجاناً</span>
+                </h1>
+                <p className="text-white/60 text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
+                  اختر منتجين من الباقة أدناه واستمتع بالثالث مجاناً تماماً! بالإضافة إلى توصيل مجاني ونقاط خصم مع كل طلب.
+                </p>
+                <div className="flex items-center justify-center gap-4 md:gap-6 mt-6 flex-wrap">
+                  <div className="flex items-center gap-2 bg-gold-500/10 border border-gold-500/20 rounded-xl px-4 py-2">
+                    <span className="text-lg">🎁</span>
+                    <span className="text-gold-300 font-bold text-sm">الثالث مجاناً</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-2">
+                    <span className="text-lg">🚚</span>
+                    <span className="text-emerald-300 font-bold text-sm">توصيل مجاني</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-xl px-4 py-2">
+                    <span className="text-lg">⭐</span>
+                    <span className="text-primary-300 font-bold text-sm">50 نقطة لكل منتج</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-          <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
-            المتجر
-          </span>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
-            منتجات <span className="gradient-text">إلزافيا</span>
-          </h1>
-          <p className="text-white/60 text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
-            تصفح جميع منتجاتنا من المكملات الغذائية الطبيعية المصممة لدعم صحتك
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-6">
-            <div className="h-px w-12 bg-gradient-to-l from-primary-500/30 to-transparent" />
-            <svg className="w-4 h-4 text-primary-400/30" viewBox="0 0 100 100" fill="currentColor">
-              <path d="M50 5C50 5 20 30 15 55C10 80 30 95 50 95C70 95 90 80 85 55C80 30 50 5 50 5Z" />
-            </svg>
-            <div className="h-px w-12 bg-gradient-to-r from-primary-500/30 to-transparent" />
           </div>
-        </div>
+        ) : (
+          <div className="max-w-2xl mx-auto text-center mb-12 md:mb-16">
+            <span className="inline-block text-sm font-bold text-primary-300 bg-primary-500/10 backdrop-blur-md border border-primary-500/20 px-4 py-1.5 rounded-full mb-4">
+              المتجر
+            </span>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 leading-tight">
+              منتجات <span className="gradient-text">إلزافيا</span>
+            </h1>
+            <p className="text-white/60 text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
+              تصفح جميع منتجاتنا من المكملات الغذائية الطبيعية المصممة لدعم صحتك
+            </p>
+            <div className="flex items-center justify-center gap-2 mt-6">
+              <div className="h-px w-12 bg-gradient-to-l from-primary-500/30 to-transparent" />
+              <svg className="w-4 h-4 text-primary-400/30" viewBox="0 0 100 100" fill="currentColor">
+                <path d="M50 5C50 5 20 30 15 55C10 80 30 95 50 95C70 95 90 80 85 55C80 30 50 5 50 5Z" />
+              </svg>
+              <div className="h-px w-12 bg-gradient-to-r from-primary-500/30 to-transparent" />
+            </div>
+          </div>
+        )}
 
-        <ProductGrid offerMode={searchParams?.offer === "b2g1"} />
+        <ProductGrid offerMode={isOffer} />
       </div>
     </div>
   );

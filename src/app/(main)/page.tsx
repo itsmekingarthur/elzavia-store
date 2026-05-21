@@ -6,6 +6,7 @@ import ProductGrid from "@/components/ProductGrid";
 import Leaves from "@/components/Leaves";
 import Reveal from "@/components/Reveal";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const defaultTestimonials = [
   { name: "محمد", text: "المنتجات زوينة بزاف حسيت بالفرق من اول سيمانة وليت كنحس بالطاقة والتركيز ديالي تزاد فالخدمة", from: "الدار البيضاء" },
@@ -15,6 +16,7 @@ const defaultTestimonials = [
 
 export default function Home() {
   const [testimonials, setTestimonials] = useState(defaultTestimonials);
+  const { user } = useAuth();
 
   useEffect(() => {
     const saved = localStorage.getItem("elzavia-testimonials");
@@ -85,7 +87,7 @@ export default function Home() {
                     </svg>
                   </Link>
                   <Link
-                    href="/shop?offer=b2g1"
+                    href={user ? "/shop?offer=b2g1" : "/auth/signup?offer=b2g1"}
                     className="border border-gold-500/40 text-gold-400 hover:bg-gold-500/10 font-bold text-sm px-6 py-3 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
                   >
                     🎁 استفد من العرض
@@ -319,7 +321,7 @@ export default function Home() {
                 </svg>
               </Link>
               <Link
-                href="/shop?offer=b2g1"
+                href={user ? "/shop?offer=b2g1" : "/auth/signup?offer=b2g1"}
                 className="border border-white/20 text-white hover:bg-white/5 font-bold text-base md:text-lg px-8 md:px-12 py-3.5 md:py-4 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
               >
                 🎁 عرض 2+1
