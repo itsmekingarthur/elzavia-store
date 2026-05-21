@@ -177,7 +177,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
         <div className="bg-white rounded-xl p-4 shadow-sm">
           <p className="text-gray-500 text-xs mb-1">إجمالي الطلبات</p>
           <p className="text-2xl font-extrabold text-gray-900"><AnimatedNumber value={orders.length} /></p>
@@ -185,6 +185,10 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl p-4 shadow-sm">
           <p className="text-gray-500 text-xs mb-1">قيد التجهيز</p>
           <p className="text-2xl font-extrabold text-yellow-600"><AnimatedNumber value={pendingOrders} /></p>
+        </div>
+        <div className="bg-white rounded-xl p-4 shadow-sm">
+          <p className="text-gray-500 text-xs mb-1">تم التأكيد</p>
+          <p className="text-2xl font-extrabold text-emerald-600"><AnimatedNumber value={confirmed.length} /></p>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm">
           <p className="text-gray-500 text-xs mb-1">تم التوصيل</p>
