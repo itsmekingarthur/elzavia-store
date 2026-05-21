@@ -54,6 +54,57 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Offers CTA */}
+      <section className="relative py-12 md:py-16 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-emerald-950">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,191,36,0.06),transparent_70%)]" />
+        <div className="absolute top-0 right-0 w-72 h-72 bg-gold-500/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-emerald-500/5 rounded-full blur-[120px]" />
+        <Leaves />
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-gold-500/10 via-primary-500/5 to-emerald-500/10 backdrop-blur-xl rounded-3xl border border-gold-500/20 p-8 md:p-12">
+            <div className="flex flex-col lg:flex-row items-center gap-8">
+              <div className="flex-1 text-center lg:text-right">
+                <div className="inline-flex items-center gap-2 bg-gold-500/15 border border-gold-500/30 text-gold-400 text-xs font-bold px-4 py-1.5 rounded-full mb-4">
+                  🎁 عرض 2+1
+                </div>
+                <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-3 leading-tight">
+                  اشتري 2 <span className="gradient-text-gold">واحصل على الثالث مجاناً</span>
+                </h2>
+                <p className="text-white/60 text-sm md:text-base leading-relaxed mb-6">
+                  عرض حصري لفترة محدودة! بالإضافة إلى <span className="text-gold-300 font-bold">50 نقطة</span> مع كل منتج تطلبه — استخدمها كخصم في طلبك القادم.
+                </p>
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                  <Link
+                    href="/auth/signup"
+                    className="bg-gold-500 hover:bg-gold-600 text-surface-900 font-extrabold text-sm px-6 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-gold-500/20 inline-flex items-center gap-2"
+                  >
+                    ✨ سجل واحصل على النقاط
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/shop?offer=b2g1"
+                    className="border border-gold-500/40 text-gold-400 hover:bg-gold-500/10 font-bold text-sm px-6 py-3 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
+                  >
+                    🎁 استفد من العرض
+                  </Link>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-gold-500/20 to-amber-500/10 rounded-full flex items-center justify-center border-2 border-gold-500/30">
+                  <div className="text-center">
+                    <div className="text-3xl md:text-4xl">🎁</div>
+                    <div className="text-gold-400 font-extrabold text-xs md:text-sm mt-1">2+1 مجاناً</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Products */}
       <section className="relative pt-8 md:pt-16 pb-16 md:pb-32 overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950">
         <div className="absolute inset-0 bg-forest" />
@@ -236,7 +287,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* Offers + Points CTA */}
       <section className="relative py-24 md:py-36 overflow-hidden bg-gradient-to-br from-primary-950 via-emerald-950 to-primary-950">
         <div className="absolute inset-0">
           <img src="/images/atlas.png" alt="" className="w-full h-full object-cover" />
@@ -249,24 +300,31 @@ export default function Home() {
         <Reveal>
           <div className="container mx-auto px-4 relative z-10 text-center">
             <span className="inline-block text-sm font-bold text-gold-400 bg-gold-500/10 backdrop-blur-md border border-gold-500/20 rounded-full px-4 py-1.5 mb-4">
-              عرض خاص
+              ⭐ نظام النقاط
             </span>
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
-              استعد للانطلاق <br className="md:hidden" />
-              <span className="gradient-text">مع إلزافيا</span>
+              اربح <span className="gradient-text-gold">50 نقطة</span> مع كل منتج
             </h2>
             <p className="text-white/60 text-base md:text-xl max-w-xl mx-auto mb-8 md:mb-10 leading-relaxed">
-              ابدأ رحلتك نحو حياة أكثر صحة وطاقة. اطلب الآن واستفد من عروضنا الحصرية.
+              سجل حساب الآن وابدأ بجمع النقاط مع كل طلب. كل 100 نقطة = 25 درهم خصم على طلبك التالي. بالإضافة إلى عروض حصرية للمشتركين.
             </p>
-            <Link
-              href="/shop"
-              className="btn-nature text-base md:text-lg px-10 md:px-14 py-3.5 md:py-4 inline-flex items-center gap-2 group shadow-2xl shadow-primary-500/30 shine-btn"
-            >
-              تسوق الآن
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transition-all duration-300 group-hover:translate-x-1 group-hover:-rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/auth/signup"
+                className="bg-gold-500 hover:bg-gold-600 text-surface-900 font-extrabold text-base md:text-lg px-8 md:px-12 py-3.5 md:py-4 rounded-xl transition-all duration-300 shadow-lg shadow-gold-500/20 inline-flex items-center gap-2"
+              >
+                ✨ إنشاء حساب مجاني
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+              <Link
+                href="/shop?offer=b2g1"
+                className="border border-white/20 text-white hover:bg-white/5 font-bold text-base md:text-lg px-8 md:px-12 py-3.5 md:py-4 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
+              >
+                🎁 عرض 2+1
+              </Link>
+            </div>
           </div>
         </Reveal>
       </section>
