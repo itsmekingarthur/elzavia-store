@@ -28,5 +28,14 @@ export async function GET() {
     results.messages = `error: ${e.message}`;
   }
 
-  return NextResponse.json(results);
+  return new Response(
+    `<html dir="rtl"><head><meta charset="utf-8"><title>تنظيف</title></head><body style="font-family:sans-serif;padding:2rem;background:#0b0f1a;color:#fff;text-align:center">
+    <h1>🧹 التنظيف</h1>
+    <p>Supabase: ${results.orders} / ${results.messages}</p>
+    <p>جاري مسخ localStorage...</p>
+    <script>localStorage.clear(); document.write('<p style="color:#10b981">✅ تم مسح localStorage بنجاح</p>'); setTimeout(() => { window.location.href = '/account' }, 2000);</script>
+    <noscript><p>يرجى فتح F12 → Console ← اكتب: localStorage.clear() ثم refresh</p></noscript>
+    </body></html>`,
+    { headers: { "Content-Type": "text/html; charset=utf-8" } }
+  );
 }
