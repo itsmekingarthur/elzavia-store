@@ -37,6 +37,7 @@ export default function CartItems() {
   const [submitting, setSubmitting] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
   const [usePoints, setUsePoints] = useState(false);
+  const [offerB2G1, setOfferB2G1] = useState(false);
 
   useEffect(() => {
     fetch("/api/products")
@@ -77,7 +78,15 @@ export default function CartItems() {
   }, 0);
 
   const pointsDiscount = usePoints ? Math.floor(userPoints / 100) * 25 : 0;
-  const total = Math.max(0, subtotal - discount - pointsDiscount);
+
+  const totalQty = items.reduce((sum, i) => sum + i.quantity, 0);
+  const cheapestPrice = totalQty >= 3 ? Math.min(...items.map(i => {
+    const p = products.find(prod => prod.id === i.productId);
+    return p?.price || Infinity;
+  })) : 0;
+  const offerDiscount = offerB2G1 && totalQty >= 3 ? cheapestPrice : 0;
+
+  const total = Math.max(0, subtotal - discount - pointsDiscount - offerDiscount);
 
   const applyCoupon = () => {
     setCouponError("");
@@ -112,11 +121,13 @@ export default function CartItems() {
         return { name: p?.name || "", quantity: i.quantity, price: p?.price || 0 };
       }),
       subtotal,
-      discount: discount + pointsDiscount,
+      discount: discount + pointsDiscount + offerDiscount,
       total,
       coupon: discountLabel,
       pointsUsed: pointsToUse,
       pointsDiscount,
+      offerB2G1: offerDiscount > 0,
+      offerDiscount,
       customer: form,
       status: "قيد التجهيز",
       createdAt: new Date().toISOString(),
@@ -186,9 +197,15 @@ export default function CartItems() {
         </div>
 
         <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">لقد تم الطلب بنجاح، شكراً لطلبك</h2>
-        <p className="text-white/60 max-w-md mx-auto mb-8 leading-relaxed">
+        <p className="text-white/60 max-w-md mx-auto mb-4 leading-relaxed">
           بما أن الدفع يتم عند الاستلام، سيقوم فريقنا بالتواصل معك قريباً لتأكيد معلومات الطلب وتحديد موعد التوصيل.
         </p>
+
+        {offerDiscount > 0 && (
+          <p className="text-gold-400 text-sm font-bold mb-6">
+            🎁 تم تفعيل عرض 2+1 — وفرت {formatPrice(offerDiscount)} درهم
+          </p>
+        )}
 
         {/* Next steps */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
@@ -340,6 +357,12 @@ export default function CartItems() {
               <span className="font-bold">-{formatPrice(discount)}</span>
             </div>
           )}
+          {offerDiscount > 0 && (
+            <div className="flex justify-between text-gold-400 text-sm md:text-base">
+              <span>عرض 2+1 مجاناً</span>
+              <span className="font-bold">-{formatPrice(offerDiscount)}</span>
+            </div>
+          )}
           {pointsDiscount > 0 && (
             <div className="flex justify-between text-gold-400 text-sm md:text-base">
               <span>خصم النقاط ({Math.floor(userPoints / 100) * 100} نقطة)</span>
@@ -358,6 +381,30 @@ export default function CartItems() {
             </svg>
             توصيل مجاني لجميع الطلبات
           </div>
+          {totalQty >= 3 && (
+            <div className={`mt-4 pt-4 border-t border-white/10 rounded-xl p-4 transition-all duration-300 ${offerB2G1 ? "bg-gold-500/15 border-gold-500/30" : "bg-white/5 border-white/10"}`}>
+              <div className="flex items-center gap-3 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gold-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                </svg>
+                <div className="flex-1">
+                  <p className="text-white text-sm font-bold">عرض: اشتري 2 واحصل على 1 مجاناً</p>
+                  <p className="text-white/50 text-xs">اقل منتج سعراً مجاني — وفر {formatPrice(cheapestPrice)}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setOfferB2G1(!offerB2G1)}
+                className={`w-full py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                  offerB2G1
+                    ? "bg-gold-500 text-surface-900 hover:bg-gold-400 shadow-lg shadow-gold-500/20"
+                    : "bg-gold-500/20 text-gold-400 hover:bg-gold-500/30 border border-gold-500/30"
+                }`}
+              >
+                <span>{offerB2G1 ? "✅" : "🎁"}</span>
+                <span>{offerB2G1 ? "العرض مفعل" : "استفد من العرض"}</span>
+              </button>
+            </div>
+          )}
           {user && userPoints >= 100 && (
             <div className={`mt-4 pt-4 border-t border-white/10 rounded-xl p-4 transition-all duration-300 ${usePoints ? "bg-gold-500/15 border-gold-500/30" : "bg-white/5 border-white/10"}`}>
               <div className="flex items-center gap-3 mb-2">

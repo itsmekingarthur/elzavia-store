@@ -131,7 +131,7 @@ function MessageThread({ msg }: { msg: any }) {
 export default function AccountPage() {
   const { user, profile, loading, signOut } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<"orders" | "messages" | "cart" | "profile">("orders");
+  const [tab, setTab] = useState<"orders" | "messages" | "cart" | "profile" | "offers">("orders");
   const [localOrders, setLocalOrders] = useState<any[]>([]);
   const [localMessages, setLocalMessages] = useState<any[]>([]);
   const [localCart, setLocalCart] = useState<any[]>([]);
@@ -154,9 +154,14 @@ export default function AccountPage() {
       .then(r => r.ok ? r.json() : [])
       .then((apiOrders: any[]) => {
         const merged = [...apiOrders];
-        const seen = new Set(apiOrders.map((o: any) => o.id));
+        const seen = new Map(apiOrders.map((o: any) => [o.id, true]));
         for (const local of localOrders) {
-          if (!seen.has(local.id)) merged.push(local);
+          if (seen.has(local.id)) {
+            const idx = merged.findIndex((o: any) => o.id === local.id);
+            if (idx !== -1) merged[idx] = { ...merged[idx], ...local };
+          } else {
+            merged.push(local);
+          }
         }
         setLocalOrders(merged);
       })
@@ -166,9 +171,14 @@ export default function AccountPage() {
       .then(r => r.ok ? r.json() : [])
       .then((apiMsgs: any[]) => {
         const merged = [...apiMsgs];
-        const seenDates = new Set(apiMsgs.map((m: any) => m.date));
+        const seenDates = new Map(apiMsgs.map((m: any) => [m.date, true]));
         for (const local of localMsgs) {
-          if (!seenDates.has(local.date)) merged.push(local);
+          if (seenDates.has(local.date)) {
+            const idx = merged.findIndex((m: any) => m.date === local.date);
+            if (idx !== -1) merged[idx] = { ...merged[idx], ...local };
+          } else {
+            merged.push(local);
+          }
         }
         setLocalMessages(merged);
       })
@@ -198,6 +208,7 @@ export default function AccountPage() {
     { key: "orders" as const, label: "الطلبات", icon: "📦", count: localOrders.length },
     { key: "messages" as const, label: "الرسائل", icon: "✉️", count: localMessages.length },
     { key: "cart" as const, label: "السلة", icon: "🛒", count: localCart.length },
+    { key: "offers" as const, label: "العروض", icon: "🎁" },
     { key: "profile" as const, label: "الملف الشخصي", icon: "👤" },
   ];
 
@@ -294,8 +305,9 @@ export default function AccountPage() {
                                 <span key={j}>{item.name} ×{item.quantity}{j < order.items.length - 1 ? ", " : ""}</span>
                               ))}
                             </div>
-                            <div className="flex items-center justify-between text-sm">
+                            <div className="flex items-center gap-2 text-sm">
                               <span className="text-white/50">{new Date(order.createdAt).toLocaleDateString("ar-MA")}</span>
+                              {order.offerB2G1 && <span className="text-gold-400 text-[10px]">🎁 2+1</span>}
                               <span className="text-primary-400 font-bold">{formatPrice(order.total)}</span>
                             </div>
                           </button>
@@ -363,6 +375,50 @@ export default function AccountPage() {
                       </Link>
                     </div>
                   )}
+                </div>
+              )}
+
+              {tab === "offers" && (
+                <div>
+                  <h2 className="text-lg font-bold text-white mb-4">العروض الخاصة</h2>
+                  <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-emerald-500/10 to-primary-500/10 border border-emerald-500/20 rounded-xl p-5">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-emerald-300 font-bold">توصيل مجاني لجميع الطلبات</p>
+                          <p className="text-white/50 text-xs mt-1">استمتع بتوصيل مجاني بدون أي شروط. عرض دائم لجميع المستخدمين.</p>
+                          <div className="flex items-center gap-1.5 mt-2 text-emerald-400/60 text-xs">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>مفعل تلقائياً</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-5">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-gold-300 font-bold">اشتري 2 واحصل على الثالث مجاناً</p>
+                          <p className="text-white/50 text-xs mt-1">أضف 3 منتجات إلى سلة التسوق وأقلهم سعراً مجاناً. العرض ساري على جميع المنتجات.</p>
+                          <Link href="/shop" className="inline-flex items-center gap-1.5 mt-3 bg-gold-500 hover:bg-gold-600 text-surface-900 text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300">
+                            تصفح المنتجات والاستفادة من العرض
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 

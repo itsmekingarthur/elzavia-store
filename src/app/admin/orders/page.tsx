@@ -264,6 +264,9 @@ function OrdersContent() {
                     {order.discount > 0 && (
                       <p className="text-green-600">الخصم: -{formatPrice(order.discount)} ({order.coupon})</p>
                     )}
+                    {order.offerB2G1 && (
+                      <p className="text-gold-600">🎁 عرض 2+1: وفر {formatPrice(order.offerDiscount)} درهم</p>
+                    )}
                     <p className="text-base md:text-lg font-extrabold text-primary-700">الإجمالي: {formatPrice(order.total)}</p>
                   </div>
                 </div>

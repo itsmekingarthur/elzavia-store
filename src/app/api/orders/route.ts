@@ -7,6 +7,7 @@ const TELEGRAM_CHAT_ID = "7505359725";
 async function sendTelegramNotification(order: any) {
   const items = order.items?.map((i: any) => `• ${i.name} ×${i.quantity} = ${i.price * i.quantity} درهم`).join("\n") || "";
   const pointsLine = order.pointsDiscount ? `\n⭐ خصم النقاط: ${order.pointsDiscount} درهم` : "";
+  const offerLine = order.offerB2G1 ? `\n🎁 عرض 2+1 مجاناً: وفر ${order.offerDiscount} درهم` : "";
 const message = `🆕 طلبية جديدة!
 ━━━━━━━━━━━━━━
 👤 الاسم: ${order.customer?.name || "غير محدد"}
@@ -17,7 +18,7 @@ const message = `🆕 طلبية جديدة!
 📦 المنتجات:
 ${items}
 ━━━━━━━━━━━━━━
-💰 المجموع: ${order.total} درهم${pointsLine}
+💰 المجموع: ${order.total} درهم${pointsLine}${offerLine}
 💳 الدفع: عند الاستلام
 🆔 رقم الطلب: ${order.id}
 📅 التاريخ: ${new Date(order.createdAt).toLocaleString("ar-MA")}`;
