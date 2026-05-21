@@ -15,7 +15,7 @@ export default function Footer() {
         <path d="M100 280 L100 20" stroke="#fbbf24" strokeWidth="1.5" />
       </svg>
 
-      <div className="container mx-auto px-4 py-16 md:py-20 relative z-10">
+      <div className="container mx-auto px-4 py-16 md:py-20 pb-20 relative z-10">
         <div className="hidden lg:flex items-center justify-center gap-2 mb-12">
           <span className="block w-12 h-px bg-gradient-to-l from-gold-500/40 to-transparent" />
           <span className="block w-16 h-px bg-gold-500/20" />

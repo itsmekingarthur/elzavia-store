@@ -232,37 +232,29 @@ export default function CartItems() {
   return (
     <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
       <div className="lg:col-span-2 space-y-3 md:space-y-4">
-        {/* Prominent coupon section */}
-        <div className="bg-gradient-to-r from-emerald-500/5 to-primary-500/5 border border-emerald-500/15 rounded-xl p-4 md:p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-            </svg>
-            <span className="text-emerald-400 text-sm font-bold">هل لديك كود خصم؟</span>
-          </div>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value)}
-              placeholder="أدخل كود الخصم"
-              className="flex-1 text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
-            />
-            <button onClick={applyCoupon} className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap shadow-lg shadow-emerald-500/20">
-              تطبيق
-            </button>
-          </div>
-          {couponError && (
-            <p className="text-red-400 text-xs mt-2">{couponError}</p>
-          )}
-          {discount > 0 && (
-            <div className="flex items-center gap-1.5 mt-2 text-emerald-400 text-xs font-medium">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        {/* Signup prompt for points */}
+        <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-5">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              {discountLabel} مطبق بنجاح
             </div>
-          )}
+            <div className="flex-1 min-w-0">
+              <p className="text-gold-300 font-bold text-sm md:text-base leading-relaxed">
+                سجل حساب واحصل على <span className="text-gold-400">نقاط خصم مجانية</span> مع كل طلب!
+              </p>
+              <p className="text-white/50 text-xs mt-1 leading-relaxed">
+                50 نقطة لكل منتج تطلبها — كل 100 نقطة = 25 درهم خصم على طلبك التالي
+              </p>
+              <Link href="/auth/signup" className="inline-flex items-center gap-1.5 mt-3 bg-gold-500 hover:bg-gold-600 text-surface-900 text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300 shadow-lg shadow-gold-500/20">
+                إنشاء حساب جديد
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
         </div>
 
         {items.map((item) => {

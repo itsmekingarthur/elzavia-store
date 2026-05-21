@@ -89,6 +89,19 @@ export default function Header() {
               </Link>
             )}
             <Link
+              href={user ? "/account" : "/auth/login"}
+              aria-label="الحساب"
+              className={`md:hidden p-2.5 rounded-xl transition-all duration-300 ${
+                scrolled
+                  ? "text-surface-700 hover:text-primary-600 hover:bg-primary-50"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </Link>
+            <Link
               href="/cart"
               aria-label="عربة التسوق"
               className={`relative p-2.5 rounded-xl transition-all duration-300 ${
