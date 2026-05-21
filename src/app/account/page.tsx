@@ -8,7 +8,9 @@ import { formatPrice, getOrdersStorageKey, getMessagesStorageKey } from "@/lib/u
 
 const timelineSteps = [
   { key: "قيد التجهيز", label: "قيد التجهيز", icon: "⏳", desc: "تم استلام طلبك وبدأ تجهيزه" },
-  { key: "تم الشحن", label: "تم الشحن", icon: "📦", desc: "تم شحن طلبك وهو في الطريق إليك" },
+  { key: "نحاول الاتصال بالرقم", label: "نحاول الاتصال", icon: "📞", desc: "نحن نحاول الاتصال بك لتأكيد الطلب" },
+  { key: "تم تأكيد الطلبية", label: "تم التأكيد", icon: "✅", desc: "تم تأكيد طلبك بنجاح" },
+  { key: "جاري التوصيل", label: "جاري التوصيل", icon: "📦", desc: "طلبك في الطريق إليك" },
   { key: "تم التوصيل", label: "تم التوصيل", icon: "✅", desc: "تم توصيل طلبك بنجاح" },
 ];
 
@@ -309,7 +311,9 @@ export default function AccountPage() {
                               <span className="text-primary-400 font-mono text-sm font-bold" dir="ltr">{order.id}</span>
                               <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
                                 order.status === "قيد التجهيز" ? "bg-gold-500/15 text-gold-400" :
-                                order.status === "تم الشحن" ? "bg-blue-500/15 text-blue-400" :
+                                order.status === "نحاول الاتصال بالرقم" ? "bg-amber-500/15 text-amber-400" :
+                                order.status === "تم تأكيد الطلبية" ? "bg-emerald-500/15 text-emerald-400" :
+                                order.status === "جاري التوصيل" ? "bg-blue-500/15 text-blue-400" :
                                 order.status === "تم التوصيل" ? "bg-emerald-500/15 text-emerald-400" :
                                 "bg-white/10 text-white/60"
                               }`}>{order.status}</span>

@@ -124,7 +124,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
           <p className="text-gray-500 text-xs md:text-sm mb-1">نسبة الشحن</p>
           <p className="text-2xl md:text-3xl font-extrabold text-blue-600">
-            <AnimatedNumber value={orders.length > 0 ? Math.round((orders.filter(o => o.status === "تم الشحن" || o.status === "تم التوصيل").length / orders.length) * 100) : 0} suffix="%" />
+            <AnimatedNumber value={orders.length > 0 ? Math.round((orders.filter(o => o.status === "جاري التوصيل" || o.status === "تم التوصيل").length / orders.length) * 100) : 0} suffix="%" />
           </p>
         </div>
       </div>

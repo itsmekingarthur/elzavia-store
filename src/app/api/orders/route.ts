@@ -65,7 +65,7 @@ export async function PATCH(request: Request) {
     const { id, user_id, items: bodyItems, ...updates } = body;
 
     const now = new Date().toISOString();
-    if (updates.status === "تم الشحن") updates.shippedAt = now;
+    if (updates.status === "جاري التوصيل") updates.shippedAt = now;
     if (updates.status === "تم التوصيل") updates.deliveredAt = now;
 
     await updateOrder(id, updates);
