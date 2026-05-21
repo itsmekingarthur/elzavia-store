@@ -149,13 +149,16 @@ function OrdersContent() {
 
   if (activeStatus === "الكل" || (activeStatus && activeMeta)) {
     const displayOrders = activeStatus === "الكل" ? orders : filtered;
+    const searchedOrders = searchQuery.trim()
+      ? displayOrders.filter(o => o.id.toLowerCase().includes(searchQuery.trim().toLowerCase()))
+      : displayOrders;
     const displayMeta = activeStatus === "الكل"
       ? { icon: "📋", label: "جميع الطلبات", color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300", cardBg: "bg-gray-50", bar: "#6B7280" }
       : activeMeta!;
     return (
       <div>
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3 w-full md:w-auto">
             <button
               onClick={() => router.push("/admin/orders")}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -164,14 +167,19 @@ function OrdersContent() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
             </button>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 whitespace-nowrap">
               {displayMeta.icon} {displayMeta.label}
             </h1>
-            <span className={`px-3 py-0.5 rounded-full text-xs font-bold ${displayMeta.color} ${displayMeta.bg}`}>
-              {displayOrders.length}
+            <span className={`px-3 py-0.5 rounded-full text-xs font-bold ${displayMeta.color} ${displayMeta.bg} whitespace-nowrap`}>
+              {searchedOrders.length}
             </span>
-          </div>
-          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="🔍 بحث برقم الطلب..."
+              className="text-sm border border-gray-200 rounded-lg px-3 py-2 w-full md:w-56 focus:outline-none focus:border-primary-400 transition-colors"
+            />
             {displayOrders.length > 0 && (
               <button
                 onClick={() => {
@@ -195,13 +203,13 @@ function OrdersContent() {
             </button>
           </div>
         </div>
-        {displayOrders.length === 0 ? (
+        {searchedOrders.length === 0 ? (
           <div className="bg-white rounded-xl md:rounded-2xl p-8 md:p-12 text-center shadow-sm">
-            <p className="text-gray-400 text-base md:text-lg">لا توجد طلبات في هذه الحالة</p>
+            <p className="text-gray-400 text-base md:text-lg">لا توجد طلبات بهذا الرقم</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {[...displayOrders].reverse().map((order) => {
+            {[...searchedOrders].reverse().map((order) => {
               const meta = statuses.find(s => s.key === order.status) || { color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300", bar: "#6B7280" };
               return (
               <div key={order.id} className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4" style={{ borderRightColor: meta.bar }}>
