@@ -5,7 +5,7 @@ const db = supabaseAdmin || supabase;
 
 // ---------- Orders ----------
 export async function getOrders(): Promise<any[]> {
-  const { data } = await supabase.from("orders").select("*").order("createdAt", { ascending: false });
+  const { data } = await db.from("orders").select("*").order("createdAt", { ascending: false });
   return data || [];
 }
 
