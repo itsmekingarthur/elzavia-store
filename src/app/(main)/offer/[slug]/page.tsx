@@ -94,6 +94,12 @@ export default function OfferCheckoutPage() {
     const orders = JSON.parse(localStorage.getItem(key) || "[]");
     orders.push(order);
     localStorage.setItem(key, JSON.stringify(orders));
+    // Also save to generic key for admin dashboard visibility
+    const genericOrders = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
+    const existingIdx = genericOrders.findIndex((o: any) => o.id === order.id);
+    if (existingIdx >= 0) genericOrders[existingIdx] = order;
+    else genericOrders.push(order);
+    localStorage.setItem("elzavia-orders", JSON.stringify(genericOrders));
 
     try {
       await fetch("/api/orders", {

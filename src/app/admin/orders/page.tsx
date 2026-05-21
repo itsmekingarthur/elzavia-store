@@ -52,9 +52,7 @@ function OrdersContent() {
     const merged = apiOrders.map((apiOrder) => {
       seen.add(apiOrder.id);
       const local = localMap.get(apiOrder.id);
-      if (local && local.status !== apiOrder.status) {
-        return { ...apiOrder, status: local.status };
-      }
+      if (local) return { ...apiOrder, ...local };
       return apiOrder;
     });
 
