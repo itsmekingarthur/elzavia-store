@@ -159,45 +159,57 @@ export default function AccountPage() {
     const localOrders: any[] = JSON.parse(localStorage.getItem(getOrdersStorageKey(userId)) || "[]");
     const localMsgs: any[] = JSON.parse(localStorage.getItem(getMessagesStorageKey(userId)) || "[]");
 
-    fetch(`/api/orders?user_id=${encodeURIComponent(userId)}`)
-      .then(r => r.ok ? r.json() : [])
-      .then((apiOrders: any[]) => {
-        const merged = [...apiOrders];
-        const seen = new Map(apiOrders.map((o: any) => [o.id, true]));
-        for (const local of localOrders) {
-          if (seen.has(local.id)) {
-            const idx = merged.findIndex((o: any) => o.id === local.id);
-            if (idx !== -1) {
-              // Only copy fields that don't exist in API (never overwrite API status, etc.)
-              const localExtra: any = {};
-              for (const key of Object.keys(local)) {
-                if (merged[idx][key] === undefined) localExtra[key] = local[key];
+    const fetchOrders = () => {
+      fetch(`/api/orders?user_id=${encodeURIComponent(userId)}`)
+        .then(r => r.ok ? r.json() : [])
+        .then((apiOrders: any[]) => {
+          const merged = [...apiOrders];
+          const seen = new Map(apiOrders.map((o: any) => [o.id, true]));
+          for (const local of localOrders) {
+            if (seen.has(local.id)) {
+              const idx = merged.findIndex((o: any) => o.id === local.id);
+              if (idx !== -1) {
+                const localExtra: any = {};
+                for (const key of Object.keys(local)) {
+                  if (merged[idx][key] === undefined) localExtra[key] = local[key];
+                }
+                merged[idx] = { ...merged[idx], ...localExtra };
               }
-              merged[idx] = { ...merged[idx], ...localExtra };
             }
           }
-          // Don't include localStorage-only orders when API is reachable
-        }
-        setLocalOrders(merged);
-      })
-      .catch(() => setLocalOrders(localOrders));
+          setLocalOrders(merged);
+        })
+        .catch(() => setLocalOrders(localOrders));
+    };
 
-    fetch(`/api/messages?user_id=${encodeURIComponent(userId)}`)
-      .then(r => r.ok ? r.json() : [])
-      .then((apiMsgs: any[]) => {
-        const merged = [...apiMsgs];
-        const seenDates = new Map(apiMsgs.map((m: any) => [m.date, true]));
-        for (const local of localMsgs) {
-          if (seenDates.has(local.date)) {
-            const idx = merged.findIndex((m: any) => m.date === local.date);
-            if (idx !== -1) merged[idx] = { ...merged[idx], ...local };
-          } else {
-            merged.push(local);
+    const fetchMessages = () => {
+      fetch(`/api/messages?user_id=${encodeURIComponent(userId)}`)
+        .then(r => r.ok ? r.json() : [])
+        .then((apiMsgs: any[]) => {
+          const merged = [...apiMsgs];
+          const seenDates = new Map(apiMsgs.map((m: any) => [m.date, true]));
+          for (const local of localMsgs) {
+            if (seenDates.has(local.date)) {
+              const idx = merged.findIndex((m: any) => m.date === local.date);
+              if (idx !== -1) merged[idx] = { ...merged[idx], ...local };
+            } else {
+              merged.push(local);
+            }
           }
-        }
-        setLocalMessages(merged);
-      })
-      .catch(() => setLocalMessages(localMsgs));
+          setLocalMessages(merged);
+        })
+        .catch(() => setLocalMessages(localMsgs));
+    };
+
+    fetchOrders();
+    fetchMessages();
+
+    const interval = setInterval(() => {
+      fetchOrders();
+      fetchMessages();
+    }, 30000);
+
+    return () => clearInterval(interval);
 
     try {
       const cart = JSON.parse(localStorage.getItem("elzavia-cart") || "[]");
@@ -314,6 +326,7 @@ export default function AccountPage() {
                                 order.status === "تم تأكيد الطلبية" ? "bg-emerald-500/15 text-emerald-400" :
                                 order.status === "جاري التوصيل" ? "bg-blue-500/15 text-blue-400" :
                                 order.status === "تم التوصيل" ? "bg-emerald-500/15 text-emerald-400" :
+                                order.status === "تم الإلغاء" ? "bg-red-500/15 text-red-400" :
                                 "bg-white/10 text-white/60"
                               }`}>{order.status}</span>
                             </div>
@@ -336,6 +349,12 @@ export default function AccountPage() {
                                 deliveredAt={order.deliveredAt}
                                 createdAt={order.createdAt}
                               />
+                              {order.status === "تم الإلغاء" && order.cancelReason && (
+                                <div className="mt-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                  <p className="text-xs font-bold text-red-400 mb-1">سبب الإلغاء</p>
+                                  <p className="text-sm text-red-300/80">{order.cancelReason}</p>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>

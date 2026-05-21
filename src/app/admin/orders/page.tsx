@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { formatPrice, ordersToExcelData, downloadExcel } from "@/lib/utils";
 
 interface Order {
@@ -215,8 +216,8 @@ function OrdersContent() {
               <div key={order.id} className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border-r-4" style={{ borderRightColor: meta.bar }}>
                 <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4 mb-4">
                   <div>
-                    <span className="text-xs text-gray-500">رقم الطلب</span>
-                    <p className="font-bold text-gray-900 text-sm md:text-base">{order.id}</p>
+                          <span className="text-xs text-gray-500">رقم الطلب</span>
+                          <Link href={`/admin/orders/${encodeURIComponent(order.id)}`} className="font-bold text-primary-700 hover:text-primary-500 text-sm md:text-base underline underline-offset-2 transition-colors" dir="ltr">{order.id}</Link>
                   </div>
                   <div>
                     <span className="text-xs text-gray-500">التاريخ</span>
@@ -348,7 +349,7 @@ function OrdersContent() {
                   return (
                     <div key={order.id} className="bg-white rounded-xl p-4 shadow-sm border-r-4" style={{ borderRightColor: meta.bar }}>
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                        <span className="font-bold text-gray-900 text-sm">{order.id}</span>
+                        <Link href={`/admin/orders/${encodeURIComponent(order.id)}`} className="font-bold text-primary-700 hover:text-primary-500 text-sm underline underline-offset-2 transition-colors" dir="ltr">{order.id}</Link>
                         <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${meta.color} ${meta.bg}`}>{order.status}</span>
                       </div>
                       <p className="text-gray-600 text-sm">{order.customer?.name} — {order.customer?.phone}</p>
