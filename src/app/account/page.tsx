@@ -57,6 +57,13 @@ function MessageThread({ msg }: { msg: any }) {
         body: JSON.stringify({ date: msg.date, user_reply: replyText.trim() }),
       });
     } catch {}
+    // Save reply locally since Supabase may not have user_reply column
+    const key = getMessagesStorageKey(msg.user_id);
+    const localMsgs = JSON.parse(localStorage.getItem(key) || "[]");
+    const idx = localMsgs.findIndex((m: any) => m.date === msg.date);
+    if (idx >= 0) localMsgs[idx] = { ...localMsgs[idx], user_reply: replyText.trim() };
+    else localMsgs.push({ ...msg, user_reply: replyText.trim() });
+    localStorage.setItem(key, JSON.stringify(localMsgs));
     setSentReply(replyText.trim());
     setReplyText("");
     setReplyOpen(false);
