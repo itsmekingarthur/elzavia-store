@@ -14,6 +14,8 @@ interface Order {
   customer: { name: string; phone: string; address: string; notes: string };
   status: string;
   createdAt: string;
+  offerB2G1?: boolean;
+  offerDiscount?: number;
 }
 
 const statuses = [
@@ -264,7 +266,7 @@ function OrdersContent() {
                     {order.discount > 0 && (
                       <p className="text-green-600">الخصم: -{formatPrice(order.discount)} ({order.coupon})</p>
                     )}
-                    {order.offerB2G1 && (
+                    {order.offerB2G1 && order.offerDiscount != null && (
                       <p className="text-gold-600">🎁 عرض 2+1: وفر {formatPrice(order.offerDiscount)} درهم</p>
                     )}
                     <p className="text-base md:text-lg font-extrabold text-primary-700">الإجمالي: {formatPrice(order.total)}</p>
