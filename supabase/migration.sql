@@ -27,6 +27,12 @@ ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS points INTEGER DEFAULT 0;
 -- 2. Add user_id to orders
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 
+-- Add points columns to orders (missing from original schema)
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "pointsUsed" INTEGER DEFAULT 0;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "pointsDiscount" NUMERIC DEFAULT 0;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "shippedAt" TIMESTAMPTZ;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "deliveredAt" TIMESTAMPTZ;
+
 -- 3. Add user_id + admin_reply to messages
 ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
 ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS admin_reply TEXT;

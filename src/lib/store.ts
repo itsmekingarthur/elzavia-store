@@ -19,11 +19,22 @@ export async function getOrders(): Promise<any[]> {
   return Array.isArray(data) ? data : [];
 }
 
+const ORDER_COLUMNS = ["id","user_id","items","subtotal","discount","total","coupon","customer","status","createdAt"];
+
+function sanitize(obj: Record<string, any>, allowed: string[]) {
+  const result: Record<string, any> = {};
+  for (const col of allowed) {
+    if (obj[col] !== undefined) result[col] = obj[col];
+  }
+  return result;
+}
+
 export async function addOrder(order: any) {
+  const sanitized = sanitize(order, ORDER_COLUMNS);
   const res = await fetch(`${supabaseUrl}/rest/v1/orders`, {
     method: "POST",
     headers: getHeaders(),
-    body: JSON.stringify(order),
+    body: JSON.stringify(sanitized),
   });
   if (!res.ok) {
     const text = await res.text();
@@ -32,10 +43,12 @@ export async function addOrder(order: any) {
 }
 
 export async function updateOrder(id: string, updates: Partial<any>) {
+  const sanitized = sanitize(updates, ORDER_COLUMNS);
+  if (!Object.keys(sanitized).length) return;
   const res = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${encodeURIComponent(id)}`, {
     method: "PATCH",
     headers: getHeaders(),
-    body: JSON.stringify(updates),
+    body: JSON.stringify(sanitized),
   });
   if (!res.ok) {
     const text = await res.text();
