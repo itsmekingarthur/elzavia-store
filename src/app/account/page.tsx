@@ -144,23 +144,45 @@ export default function AccountPage() {
   }, [user, loading, router]);
 
   useEffect(() => {
-    try {
-      const orders = JSON.parse(localStorage.getItem(getOrdersStorageKey(user?.id)) || "[]");
-      setLocalOrders(orders);
-    } catch {}
-    try {
-      const msgs = JSON.parse(localStorage.getItem(getMessagesStorageKey(user?.id)) || "[]");
-      setLocalMessages(msgs);
-    } catch {}
+    if (!user) return;
+    const userId = user.id;
+
+    const localOrders: any[] = JSON.parse(localStorage.getItem(getOrdersStorageKey(userId)) || "[]");
+    const localMsgs: any[] = JSON.parse(localStorage.getItem(getMessagesStorageKey(userId)) || "[]");
+
+    fetch(`/api/orders?user_id=${encodeURIComponent(userId)}`)
+      .then(r => r.ok ? r.json() : [])
+      .then((apiOrders: any[]) => {
+        const merged = [...apiOrders];
+        const seen = new Set(apiOrders.map((o: any) => o.id));
+        for (const local of localOrders) {
+          if (!seen.has(local.id)) merged.push(local);
+        }
+        setLocalOrders(merged);
+      })
+      .catch(() => setLocalOrders(localOrders));
+
+    fetch(`/api/messages?user_id=${encodeURIComponent(userId)}`)
+      .then(r => r.ok ? r.json() : [])
+      .then((apiMsgs: any[]) => {
+        const merged = [...apiMsgs];
+        const seenDates = new Set(apiMsgs.map((m: any) => m.date));
+        for (const local of localMsgs) {
+          if (!seenDates.has(local.date)) merged.push(local);
+        }
+        setLocalMessages(merged);
+      })
+      .catch(() => setLocalMessages(localMsgs));
+
     try {
       const cart = JSON.parse(localStorage.getItem("elzavia-cart") || "[]");
       setLocalCart(cart);
     } catch {}
     fetch("/api/products").then(r => r.ok && r.json()).then(setProducts).catch(() => {});
 
-    const savedPoints = parseInt(localStorage.getItem(`elzavia-points-${user?.id}`) || "0", 10);
+    const savedPoints = parseInt(localStorage.getItem(`elzavia-points-${userId}`) || "0", 10);
     setPoints(savedPoints);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (profile && (profile as any).points !== undefined) {

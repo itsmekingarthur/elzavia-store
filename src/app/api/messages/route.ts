@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { getMessages, addMessage, deleteMessage, updateMessage } from "@/lib/store";
 
-export async function GET() {
-  return NextResponse.json(await getMessages());
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("user_id") || undefined;
+  return NextResponse.json(await getMessages(userId));
 }
 
 export async function POST(request: Request) {

@@ -33,8 +33,10 @@ ${items}
   }
 }
 
-export async function GET() {
-  const orders = await getOrders();
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get("user_id") || undefined;
+  const orders = await getOrders(userId);
   return NextResponse.json(orders);
 }
 

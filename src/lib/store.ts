@@ -12,8 +12,10 @@ function getHeaders() {
 }
 
 // ---------- Orders ----------
-export async function getOrders(): Promise<any[]> {
-  const res = await fetch(`${supabaseUrl}/rest/v1/orders?select=*&order=createdAt.desc`, { headers: getHeaders() });
+export async function getOrders(userId?: string): Promise<any[]> {
+  let url = `${supabaseUrl}/rest/v1/orders?select=*&order=createdAt.desc`;
+  if (userId) url += `&user_id=eq.${encodeURIComponent(userId)}`;
+  const res = await fetch(url, { headers: getHeaders() });
   if (!res.ok) return [];
   const data = await res.json();
   return Array.isArray(data) ? data : [];
@@ -91,8 +93,10 @@ export async function deleteCoupon(id: string) {
 }
 
 // ---------- Messages ----------
-export async function getMessages(): Promise<any[]> {
-  const res = await fetch(`${supabaseUrl}/rest/v1/messages?select=*&order=date.desc`, { headers: getHeaders() });
+export async function getMessages(userId?: string): Promise<any[]> {
+  let url = `${supabaseUrl}/rest/v1/messages?select=*&order=date.desc`;
+  if (userId) url += `&user_id=eq.${encodeURIComponent(userId)}`;
+  const res = await fetch(url, { headers: getHeaders() });
   if (!res.ok) return [];
   const data = await res.json();
   return Array.isArray(data) ? data : [];
