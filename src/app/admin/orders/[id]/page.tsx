@@ -91,6 +91,18 @@ export default function OrderDetailPage() {
       });
   }, [id, findOrder]);
 
+  const syncToUserKey = (updatedOrder: Order) => {
+    if (updatedOrder.user_id) {
+      const userKey = `elzavia-orders-${updatedOrder.user_id}`;
+      const userOrders = JSON.parse(localStorage.getItem(userKey) || "[]");
+      const userIdx = userOrders.findIndex((o: any) => o.id === updatedOrder.id);
+      if (userIdx >= 0) {
+        userOrders[userIdx] = updatedOrder;
+        localStorage.setItem(userKey, JSON.stringify(userOrders));
+      }
+    }
+  };
+
   const updateStatus = async (newStatus: string) => {
     if (!order) return;
     if (newStatus === "تم الإلغاء") {
@@ -114,6 +126,7 @@ export default function OrderDetailPage() {
       localOrders[idx] = updated;
       localStorage.setItem("elzavia-orders", JSON.stringify(localOrders));
     }
+    syncToUserKey(updated);
 
     try {
       await fetch("/api/orders", {
@@ -137,6 +150,7 @@ export default function OrderDetailPage() {
       localOrders[idx] = updated;
       localStorage.setItem("elzavia-orders", JSON.stringify(localOrders));
     }
+    syncToUserKey(updated);
 
     try {
       await fetch("/api/orders", {
@@ -152,6 +166,12 @@ export default function OrderDetailPage() {
     const localOrders: Order[] = JSON.parse(localStorage.getItem("elzavia-orders") || "[]");
     const updated = localOrders.filter((o) => o.id !== order.id);
     localStorage.setItem("elzavia-orders", JSON.stringify(updated));
+    // Also remove from per-user key
+    if (order.user_id) {
+      const userKey = `elzavia-orders-${order.user_id}`;
+      const userOrders = JSON.parse(localStorage.getItem(userKey) || "[]");
+      localStorage.setItem(userKey, JSON.stringify(userOrders.filter((o: any) => o.id !== order.id)));
+    }
     router.push("/admin/orders");
     try {
       await fetch("/api/orders", {

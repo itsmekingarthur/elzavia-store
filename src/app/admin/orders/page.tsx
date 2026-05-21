@@ -89,6 +89,10 @@ function OrdersContent() {
       const res = await fetch("/api/orders");
       if (res.ok) {
         const data = await res.json();
+        if (data.length === 0 && localOrders.length > 0) {
+          setOrders(localOrders);
+          return;
+        }
         mergeOrders(data);
         return;
       }
@@ -107,9 +111,16 @@ function OrdersContent() {
 
   const deleteOrderItem = async (orderId: string) => {
     if (!confirm("هل أنت متأكد من حذف هذه الطلبية؟")) return;
+    const targetOrder = orders.find((o) => o.id === orderId);
     const updated = orders.filter((o) => o.id !== orderId);
     setOrders(updated);
     localStorage.setItem("elzavia-orders", JSON.stringify(updated));
+    // Also remove from per-user key
+    if (targetOrder && (targetOrder as any).user_id) {
+      const userKey = `elzavia-orders-${(targetOrder as any).user_id}`;
+      const userOrders = JSON.parse(localStorage.getItem(userKey) || "[]");
+      localStorage.setItem(userKey, JSON.stringify(userOrders.filter((o: any) => o.id !== orderId)));
+    }
     try {
       await fetch("/api/orders", {
         method: "DELETE",
@@ -135,6 +146,16 @@ function OrdersContent() {
     );
     setOrders(updated);
     localStorage.setItem("elzavia-orders", JSON.stringify(updated));
+    // Also update per-user key
+    if (targetOrder && (targetOrder as any).user_id) {
+      const userKey = `elzavia-orders-${(targetOrder as any).user_id}`;
+      const userOrders = JSON.parse(localStorage.getItem(userKey) || "[]");
+      const userIdx = userOrders.findIndex((o: any) => o.id === orderId);
+      if (userIdx >= 0) {
+        userOrders[userIdx] = { ...userOrders[userIdx], status: newStatus, ...(reason ? { cancelReason: reason } : {}) };
+        localStorage.setItem(userKey, JSON.stringify(userOrders));
+      }
+    }
     try {
       await fetch("/api/orders", {
         method: "PATCH",
