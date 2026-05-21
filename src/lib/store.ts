@@ -1,59 +1,115 @@
-import { supabase } from "./supabase";
-import { supabaseAdmin } from "./supabase-admin";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://pmvidjjauvosqfuxkrrg.supabase.co";
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
-const db = supabaseAdmin || supabase;
+function getHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "apikey": serviceRoleKey,
+    "Authorization": `Bearer ${serviceRoleKey}`,
+    "Accept": "application/json",
+    "Prefer": "return=minimal",
+  };
+}
 
 // ---------- Orders ----------
 export async function getOrders(): Promise<any[]> {
-  const { data } = await db.from("orders").select("*").order("createdAt", { ascending: false });
-  return data || [];
+  const res = await fetch(`${supabaseUrl}/rest/v1/orders?select=*&order=createdAt.desc`, { headers: getHeaders() });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
 }
 
 export async function addOrder(order: any) {
-  const { error } = await db.from("orders").insert(order);
-  if (error) throw new Error(error.message);
+  const res = await fetch(`${supabaseUrl}/rest/v1/orders`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(order),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to add order: ${res.status} ${text}`);
+  }
 }
 
 export async function updateOrder(id: string, updates: Partial<any>) {
-  const { error } = await db.from("orders").update(updates).eq("id", id);
-  if (error) throw new Error(error.message);
+  const res = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to update order: ${res.status} ${text}`);
+  }
 }
 
 export async function deleteOrder(id: string) {
-  const { error } = await db.from("orders").delete().eq("id", id);
-  if (error) throw new Error(error.message);
+  const res = await fetch(`${supabaseUrl}/rest/v1/orders?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to delete order: ${res.status} ${text}`);
+  }
 }
 
 // ---------- Coupons ----------
 export async function getCoupons(): Promise<any[]> {
-  const { data } = await db.from("coupons").select("*");
-  return data || [];
+  const res = await fetch(`${supabaseUrl}/rest/v1/coupons?select=*`, { headers: getHeaders() });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
 }
 
 export async function addCoupon(coupon: any) {
-  await db.from("coupons").insert(coupon);
+  await fetch(`${supabaseUrl}/rest/v1/coupons`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(coupon),
+  });
 }
 
 export async function deleteCoupon(id: string) {
-  await db.from("coupons").delete().eq("id", id);
+  await fetch(`${supabaseUrl}/rest/v1/coupons?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
 }
 
 // ---------- Messages ----------
 export async function getMessages(): Promise<any[]> {
-  const { data } = await db.from("messages").select("*").order("date", { ascending: false });
-  return data || [];
+  const res = await fetch(`${supabaseUrl}/rest/v1/messages?select=*&order=date.desc`, { headers: getHeaders() });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
 }
 
 export async function addMessage(msg: any) {
-  await db.from("messages").insert(msg);
+  const res = await fetch(`${supabaseUrl}/rest/v1/messages`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(msg),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to add message: ${res.status} ${text}`);
+  }
 }
 
 export async function deleteMessage(date: string) {
-  await db.from("messages").delete().eq("date", date);
+  await fetch(`${supabaseUrl}/rest/v1/messages?date=eq.${encodeURIComponent(date)}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
 }
 
 export async function updateMessage(date: string, updates: Record<string, any>) {
-  await db.from("messages").update(updates).eq("date", date);
+  await fetch(`${supabaseUrl}/rest/v1/messages?date=eq.${encodeURIComponent(date)}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    body: JSON.stringify(updates),
+  });
 }
 
 // ---------- Products ----------
@@ -231,13 +287,28 @@ export async function getProducts(): Promise<any[]> {
 }
 
 export async function addProduct(product: any) {
-  await supabase.from("products").insert(product);
+  const res = await fetch(`${supabaseUrl}/rest/v1/products`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: JSON.stringify(product),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to add product: ${res.status} ${text}`);
+  }
 }
 
 export async function updateProduct(id: string, updates: Partial<any>) {
-  await supabase.from("products").update(updates).eq("id", id);
+  await fetch(`${supabaseUrl}/rest/v1/products?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: getHeaders(),
+    body: JSON.stringify(updates),
+  });
 }
 
 export async function deleteProduct(id: string) {
-  await supabase.from("products").delete().eq("id", id);
+  await fetch(`${supabaseUrl}/rest/v1/products?id=eq.${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
 }

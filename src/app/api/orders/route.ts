@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { getOrders, addOrder, updateOrder, deleteOrder } from "@/lib/store";
-import { supabase } from "@/lib/supabase";
-import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const TELEGRAM_BOT_TOKEN = "8819995357:AAGvygoQa-UzvwCVua1LDZC3XpRJFGDzQhs";
 const TELEGRAM_CHAT_ID = "7505359725";
