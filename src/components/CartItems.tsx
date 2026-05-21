@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { formatPrice, generateOrderId, getOrdersStorageKey } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -27,6 +28,7 @@ function validateCoupon(code: string, cartTotal: number, coupons: Coupon[]): Cou
 export default function CartItems() {
   const { items, removeFromCart, updateQuantity, clearCart } = useCart();
   const { user } = useAuth();
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState<any[]>([]);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [couponCode, setCouponCode] = useState("");
@@ -62,6 +64,12 @@ export default function CartItems() {
       });
     }
   }, [user]);
+
+  useEffect(() => {
+    if (searchParams.get("offer") === "b2g1") {
+      setOfferB2G1(true);
+    }
+  }, [searchParams]);
 
   const [form, setForm] = useState({
     name: "",
@@ -249,7 +257,17 @@ export default function CartItems() {
   return (
     <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
       <div className="lg:col-span-2 space-y-3 md:space-y-4">
-        {/* Signup prompt for points */}
+        {/* Offer mode banner */}
+        {offerB2G1 && (
+          <div className="bg-gradient-to-r from-gold-500/15 to-amber-500/10 border-2 border-gold-500/30 rounded-xl p-5 text-center">
+            <div className="text-3xl mb-2">🎁</div>
+            <p className="text-gold-300 font-extrabold text-lg">سارع للاستفادة من عرض اشتري 2 + 1 مجاناً</p>
+            <p className="text-white/50 text-sm mt-1">أقل منتج سعراً مجاني — أضف 3 منتجات للسلة لتفعيل العرض</p>
+          </div>
+        )}
+
+        {/* Signup prompt for points - hidden when logged in */}
+        {!user && (
         <div className="bg-gradient-to-r from-gold-500/10 to-primary-500/10 border border-gold-500/20 rounded-xl p-5">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-full bg-gold-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -273,6 +291,7 @@ export default function CartItems() {
             </div>
           </div>
         </div>
+        )}
 
         {items.map((item) => {
           const product = products.find((p) => p.id === item.productId);

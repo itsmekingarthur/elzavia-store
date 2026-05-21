@@ -14,7 +14,7 @@ interface Product {
   category: string;
 }
 
-export default function ProductGrid({ limit }: { limit?: number }) {
+export default function ProductGrid({ limit, offerMode }: { limit?: number; offerMode?: boolean }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,7 +48,7 @@ export default function ProductGrid({ limit }: { limit?: number }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
       {displayProducts.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} offerMode={offerMode} />
       ))}
     </div>
   );

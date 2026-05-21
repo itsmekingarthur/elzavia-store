@@ -412,7 +412,7 @@ export default function AccountPage() {
                         <div className="flex-1">
                           <p className="text-gold-300 font-bold">اشتري 2 واحصل على الثالث مجاناً</p>
                           <p className="text-white/50 text-xs mt-1">أضف 3 منتجات إلى سلة التسوق وأقلهم سعراً مجاناً. العرض ساري على جميع المنتجات.</p>
-                          <Link href="/shop" className="inline-flex items-center gap-1.5 mt-3 bg-gold-500 hover:bg-gold-600 text-surface-900 text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300">
+                          <Link href="/shop?offer=b2g1" className="inline-flex items-center gap-1.5 mt-3 bg-gold-500 hover:bg-gold-600 text-surface-900 text-xs font-bold px-4 py-2 rounded-lg transition-all duration-300">
                             تصفح المنتجات والاستفادة من العرض
                           </Link>
                         </div>

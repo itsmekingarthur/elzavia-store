@@ -261,12 +261,23 @@ export default function ProductDetailPage() {
                 ✓ تمت الإضافة - إكمال الطلب
               </button>
             ) : (
-              <button
-                onClick={handleAddToCart}
-                className="w-full mt-6 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-600 to-emerald-600 text-white hover:from-primary-500 hover:to-emerald-500 shadow-primary-500/20 hover:shadow-primary-500/30"
-              >
-                أضف للسلة
-              </button>
+              <div className="mt-6 flex flex-col md:flex-row gap-3">
+                <button
+                  onClick={handleAddToCart}
+                  className="flex-1 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-white/10 text-white border border-white/20 hover:bg-white/20"
+                >
+                  أضف إلى السلة
+                </button>
+                <button
+                  onClick={() => {
+                    handleAddToCart();
+                    setTimeout(() => router.push("/cart?direct=1"), 300);
+                  }}
+                  className="flex-1 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-600 to-emerald-600 text-white hover:from-primary-500 hover:to-emerald-500 shadow-primary-500/20"
+                >
+                  اطلب الان
+                </button>
+              </div>
             )}
 
             <p className="text-center text-white/30 text-xs mt-3">

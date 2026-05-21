@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
+import { useCart } from "@/context/CartContext";
 
 interface Product {
   id: string;
@@ -51,11 +55,33 @@ function BranchOverlay() {
   );
 }
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, offerMode }: { product: Product; offerMode?: boolean }) {
   const palette = palettes[hashId(product.id) % palettes.length];
+  const router = useRouter();
+  const { addToCart } = useCart();
+
+  const handleOfferClick = () => {
+    addToCart(product.id);
+    router.push("/cart?offer=b2g1");
+  };
+
+  if (offerMode) {
+    return (
+      <div onClick={handleOfferClick} className="group block cursor-pointer">
+        <CardContent product={product} palette={palette} offerMode />
+      </div>
+    );
+  }
 
   return (
     <Link href={`/shop/${product.slug}`} className="group block">
+      <CardContent product={product} palette={palette} offerMode={false} />
+    </Link>
+  );
+}
+
+function CardContent({ product, palette, offerMode }: { product: Product; palette: typeof palettes[0]; offerMode: boolean }) {
+  return (
       <div
         className="relative bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg transition-all duration-500 hover:-translate-y-2 overflow-hidden flex flex-col h-full"
         style={{
@@ -112,15 +138,22 @@ export default function ProductCard({ product }: { product: Product }) {
             <span className="text-xl md:text-2xl font-extrabold text-primary-400">
               {formatPrice(product.price)}
             </span>
-            <span
-              className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-300 group-hover:shadow-lg"
-              style={{ backgroundColor: palette.bg, color: palette.text }}
-            >
-              أضف للسلة
-            </span>
+            {offerMode ? (
+              <span
+                className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-300 bg-gold-500/20 text-gold-400 group-hover:bg-gold-500/30 group-hover:shadow-lg group-hover:shadow-gold-500/20"
+              >
+                🎁 استفد من العرض
+              </span>
+            ) : (
+              <span
+                className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-300 group-hover:shadow-lg"
+                style={{ backgroundColor: palette.bg, color: palette.text }}
+              >
+                أضف للسلة
+              </span>
+            )}
           </div>
         </div>
       </div>
-    </Link>
   );
 }
