@@ -13,7 +13,7 @@ export async function GET() {
   const results: Record<string, string> = {};
 
   try {
-    const res = await fetch(`${supabaseUrl}/rest/v1/orders?id=gte.0`, { method: "DELETE", headers });
+    const res = await fetch(`${supabaseUrl}/rest/v1/orders?id=neq.nonexistent`, { method: "DELETE", headers });
     const text = await res.text();
     results.orders = `${res.status}: ${(text || "ok").slice(0, 100)}`;
   } catch (e: any) {
@@ -21,7 +21,7 @@ export async function GET() {
   }
 
   try {
-    const res = await fetch(`${supabaseUrl}/rest/v1/messages?id=gte.0`, { method: "DELETE", headers });
+    const res = await fetch(`${supabaseUrl}/rest/v1/messages?id=neq.nonexistent`, { method: "DELETE", headers });
     const text = await res.text();
     results.messages = `${res.status}: ${(text || "ok").slice(0, 100)}`;
   } catch (e: any) {
