@@ -290,7 +290,7 @@ export default function AccountPage() {
           </div>
 
           <div className="lg:col-span-3">
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 min-h-[400px]">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 min-h-[500px]">
               {tab === "orders" && (
                 <div>
                   <h2 className="text-lg font-bold text-white mb-4">طلباتي</h2>

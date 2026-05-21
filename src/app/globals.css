@@ -8,6 +8,7 @@
   html {
     direction: rtl;
     scroll-behavior: smooth;
+    overflow-y: scroll;
   }
 
   body {
