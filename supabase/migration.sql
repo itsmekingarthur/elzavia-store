@@ -32,6 +32,8 @@ ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "pointsUsed" INTEGER DEFAULT 
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "pointsDiscount" NUMERIC DEFAULT 0;
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "shippedAt" TIMESTAMPTZ;
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "deliveredAt" TIMESTAMPTZ;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "offerB2G1" BOOLEAN DEFAULT false;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS "offerDiscount" NUMERIC DEFAULT 0;
 
 -- 3. Add user_id + admin_reply to messages
 ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL;
