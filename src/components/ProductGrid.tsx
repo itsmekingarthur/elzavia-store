@@ -32,6 +32,7 @@ export default function ProductGrid({ limit, offerMode }: { limit?: number; offe
   }, []);
 
   const displayProducts = limit ? products.slice(0, limit) : products;
+  const filtered = offerMode ? displayProducts.filter(p => p.id === "1" || p.id === "2") : displayProducts;
 
   if (loading) {
     return <ProductGridSkeleton count={limit || 4} />;
@@ -47,7 +48,7 @@ export default function ProductGrid({ limit, offerMode }: { limit?: number; offe
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
-      {displayProducts.map((product) => (
+      {filtered.map((product) => (
         <ProductCard key={product.id} product={product} offerMode={offerMode} />
       ))}
     </div>

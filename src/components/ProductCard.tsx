@@ -62,7 +62,7 @@ export default function ProductCard({ product, offerMode }: { product: Product; 
 
   const handleOfferClick = () => {
     addToCart(product.id);
-    router.push("/cart?offer=b2g1");
+    router.push(`/offer/${product.slug}`);
   };
 
   if (offerMode) {
