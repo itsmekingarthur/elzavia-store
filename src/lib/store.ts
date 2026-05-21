@@ -22,6 +22,7 @@ export async function getOrders(userId?: string): Promise<any[]> {
 }
 
 const ORDER_COLUMNS = ["id","user_id","items","subtotal","discount","total","coupon","customer","status","createdAt"];
+const MESSAGE_COLUMNS = ["id","name","email","message","date","user_id","admin_reply","user_reply"];
 
 function sanitize(obj: Record<string, any>, allowed: string[]) {
   const result: Record<string, any> = {};
@@ -103,6 +104,7 @@ export async function getMessages(userId?: string): Promise<any[]> {
 }
 
 export async function addMessage(msg: any) {
+  const sanitized = sanitize(msg, MESSAGE_COLUMNS);
   const res = await fetch(`${supabaseUrl}/rest/v1/messages`, {
     method: "POST",
     headers: getHeaders(),
@@ -122,11 +124,17 @@ export async function deleteMessage(date: string) {
 }
 
 export async function updateMessage(date: string, updates: Record<string, any>) {
-  await fetch(`${supabaseUrl}/rest/v1/messages?date=eq.${encodeURIComponent(date)}`, {
+  const sanitized = sanitize(updates, MESSAGE_COLUMNS);
+  if (!Object.keys(sanitized).length) return;
+  const res = await fetch(`${supabaseUrl}/rest/v1/messages?date=eq.${encodeURIComponent(date)}`, {
     method: "PATCH",
     headers: getHeaders(),
-    body: JSON.stringify(updates),
+    body: JSON.stringify(sanitized),
   });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Failed to update message: ${res.status} ${text}`);
+  }
 }
 
 // ---------- Products ----------
