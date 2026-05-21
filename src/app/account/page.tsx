@@ -163,10 +163,6 @@ export default function AccountPage() {
       fetch(`/api/orders?user_id=${encodeURIComponent(userId)}`)
         .then(r => r.ok ? r.json() : [])
         .then((apiOrders: any[]) => {
-          if (apiOrders.length === 0 && localOrders.length > 0) {
-            setLocalOrders(localOrders);
-            return;
-          }
           const merged = [...apiOrders];
           const seen = new Map(apiOrders.map((o: any) => [o.id, true]));
           for (const local of localOrders) {
@@ -190,18 +186,12 @@ export default function AccountPage() {
       fetch(`/api/messages?user_id=${encodeURIComponent(userId)}`)
         .then(r => r.ok ? r.json() : [])
         .then((apiMsgs: any[]) => {
-          if (apiMsgs.length === 0 && localMsgs.length > 0) {
-            setLocalMessages(localMsgs);
-            return;
-          }
           const merged = [...apiMsgs];
           const seenDates = new Map(apiMsgs.map((m: any) => [m.date, true]));
           for (const local of localMsgs) {
             if (seenDates.has(local.date)) {
               const idx = merged.findIndex((m: any) => m.date === local.date);
               if (idx !== -1) merged[idx] = { ...merged[idx], ...local };
-            } else {
-              merged.push(local);
             }
           }
           setLocalMessages(merged);

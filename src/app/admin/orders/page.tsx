@@ -89,10 +89,6 @@ function OrdersContent() {
       const res = await fetch("/api/orders");
       if (res.ok) {
         const data = await res.json();
-        if (data.length === 0 && localOrders.length > 0) {
-          setOrders(localOrders);
-          return;
-        }
         mergeOrders(data);
         return;
       }
