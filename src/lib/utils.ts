@@ -45,13 +45,15 @@ export function ordersToExcelData(
 ): OrderRow[] {
   const rows: OrderRow[] = [];
   for (const order of orders) {
+    const itemsTotal = order.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const ratio = itemsTotal > 0 ? order.total / itemsTotal : 1;
     for (const item of order.items) {
       rows.push({
         "full name": order.customer.name,
         phone: order.customer.phone,
         address: order.customer.address,
         delivery_note: order.customer.notes || "",
-        price: item.price * item.quantity,
+        price: Math.round(item.price * item.quantity * ratio),
         sku: getProductSKU(item.name),
         qte: order.offerB2G1 ? 3 : item.quantity,
         date_order: new Date(order.createdAt).toISOString().split("T")[0],
