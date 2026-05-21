@@ -51,7 +51,7 @@ export function ordersToExcelData(
         phone: order.customer.phone,
         address: order.customer.address,
         delivery_note: order.customer.notes || "",
-        price: item.price,
+        price: item.price * item.quantity,
         sku: getProductSKU(item.name),
         qte: order.offerB2G1 ? 3 : item.quantity,
         date_order: new Date(order.createdAt).toISOString().split("T")[0],

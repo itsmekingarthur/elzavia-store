@@ -43,6 +43,7 @@ function OrdersContent() {
   const router = useRouter();
   const activeStatus = searchParams.get("status") || "";
   const [orders, setOrders] = useState<Order[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const mergeOrders = useCallback((apiOrders: Order[]) => {
     const localOrders: Order[] = JSON.parse(
@@ -54,7 +55,14 @@ function OrdersContent() {
     const merged = apiOrders.map((apiOrder) => {
       seen.add(apiOrder.id);
       const local = localMap.get(apiOrder.id);
-      if (local) return { ...apiOrder, ...local };
+      if (local) {
+        // Only add fields not in API (never overwrite API status)
+        const extra: any = {};
+        for (const key of Object.keys(local)) {
+          if ((apiOrder as any)[key] === undefined) extra[key] = (local as any)[key];
+        }
+        return { ...apiOrder, ...extra };
+      }
       return apiOrder;
     });
 
@@ -283,8 +291,17 @@ function OrdersContent() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">إدارة الطلبات</h1>
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">إدارة الطلبات</h1>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="🔍 بحث برقم الطلب..."
+            className="text-sm border border-gray-200 rounded-lg px-3 py-2 w-full md:w-64 focus:outline-none focus:border-primary-400 transition-colors"
+          />
+        </div>
         <div className="flex items-center gap-2">
           {orders.length > 0 && (
             <button
@@ -309,6 +326,33 @@ function OrdersContent() {
           </button>
         </div>
       </div>
+
+      {searchQuery.trim() && (
+        <div className="mb-6">
+          <h2 className="text-lg font-bold text-gray-800 mb-3">نتائج البحث عن: {searchQuery}</h2>
+          {(() => {
+            const results = orders.filter(o => o.id.toLowerCase().includes(searchQuery.trim().toLowerCase()));
+            if (results.length === 0) return <p className="text-gray-400 text-sm">لا توجد طلبات بهذا الرقم</p>;
+            return (
+              <div className="space-y-3">
+                {results.reverse().map((order) => {
+                  const meta = statuses.find(s => s.key === order.status) || { color: "text-gray-600", bg: "bg-gray-100", border: "border-gray-300", bar: "#6B7280" };
+                  return (
+                    <div key={order.id} className="bg-white rounded-xl p-4 shadow-sm border-r-4" style={{ borderRightColor: meta.bar }}>
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <span className="font-bold text-gray-900 text-sm">{order.id}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${meta.color} ${meta.bg}`}>{order.status}</span>
+                      </div>
+                      <p className="text-gray-600 text-sm">{order.customer?.name} — {order.customer?.phone}</p>
+                      <p className="text-gray-400 text-xs mt-1">{new Date(order.createdAt).toLocaleDateString("ar-MA")} — {formatPrice(order.total)}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
         <button
