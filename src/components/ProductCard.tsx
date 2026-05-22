@@ -60,16 +60,11 @@ export default function ProductCard({ product, offerMode }: { product: Product; 
   const router = useRouter();
   const { addToCart } = useCart();
 
-  const handleOfferClick = () => {
-    addToCart(product.id);
-    router.push(`/offer/${product.slug}`);
-  };
-
   if (offerMode) {
     return (
-      <div onClick={handleOfferClick} className="group block cursor-pointer">
+      <Link href={`/shop/${product.slug}?offer=b2g1`} className="group block">
         <CardContent product={product} palette={palette} offerMode />
-      </div>
+      </Link>
     );
   }
 

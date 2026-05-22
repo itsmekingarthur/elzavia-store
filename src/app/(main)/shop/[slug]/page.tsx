@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 
@@ -27,9 +27,19 @@ const deals = [
 ];
 
 export default function ProductDetailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-primary-950 flex items-center justify-center"><div className="text-primary-400 text-lg">جاري التحميل...</div></div>}>
+      <ProductDetailContent />
+    </Suspense>
+  );
+}
+
+function ProductDetailContent() {
   const { slug } = useParams();
   const router = useRouter();
-  const { addWithDeal } = useCart();
+  const searchParams = useSearchParams();
+  const isOffer = searchParams.get("offer") === "b2g1";
+  const { addWithDeal, addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedDeal, setSelectedDeal] = useState("رائج");
@@ -184,105 +194,131 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            <div className="space-y-3 mt-6">
-              <h3 className="text-sm font-bold text-white/40 mb-3">اختر الباقة</h3>
-              {deals.map((deal) => {
-                const finalPrice = deal.fixedPrice;
-                const dealPrice = product.price * deal.priceMultiplier;
-                const isSelected = selectedDeal === deal.label;
-
-                return (
+            {isOffer ? (
+              <div className="mt-8">
+                <div className="bg-gradient-to-r from-gold-500/10 via-primary-500/5 to-gold-500/10 border-2 border-gold-500/30 rounded-2xl p-6 md:p-8 text-center">
+                  <div className="inline-flex items-center gap-2 bg-gold-500/20 border border-gold-500/40 text-gold-400 text-xs font-bold px-4 py-1.5 rounded-full mb-4">
+                    🎁 عرض 2+1 مفعل
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-white mb-2">اشتري 2 واحصل على الثالث مجاناً</h3>
+                  <p className="text-white/50 text-sm mb-6 leading-relaxed">
+                    هذا المنتج متضمن في عرض 2+1 — اختر منتجين من الباقة واستفيد من الثالث مجاناً + توصيل مجاني
+                  </p>
                   <button
-                    key={deal.label}
-                    type="button"
-                    onClick={() => { setSelectedDeal(deal.label); setAdded(false); }}
-                    className={`w-full text-right p-4 md:p-5 rounded-2xl border-2 transition-all duration-300 ${
-                      isSelected
-                        ? `${deal.border} bg-gradient-to-br ${deal.color} shadow-lg`
-                        : "border-white/10 bg-white/5 hover:border-white/20"
-                    }`}
+                    onClick={() => {
+                      addToCart(product.id);
+                      router.push(`/offer/${product.slug}`);
+                    }}
+                    className="w-full py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl shadow-gold-500/30 bg-gradient-to-r from-gold-500 to-amber-500 text-surface-900 hover:from-gold-400 hover:to-amber-400 hover:shadow-gold-500/40 animate-pulse-gold"
                   >
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm ${
+                    🎁 استفد من العرض
+                  </button>
+                  <p className="text-gold-400/60 text-xs mt-3">الدفع عند الاستلام - توصيل مجاني</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-3 mt-6">
+                  <h3 className="text-sm font-bold text-white/40 mb-3">اختر الباقة</h3>
+                  {deals.map((deal) => {
+                    const finalPrice = deal.fixedPrice;
+                    const dealPrice = product.price * deal.priceMultiplier;
+                    const isSelected = selectedDeal === deal.label;
+
+                    return (
+                      <button
+                        key={deal.label}
+                        type="button"
+                        onClick={() => { setSelectedDeal(deal.label); setAdded(false); }}
+                        className={`w-full text-right p-4 md:p-5 rounded-2xl border-2 transition-all duration-300 ${
                           isSelected
-                            ? deal.popular ? "bg-primary-500/20 text-primary-400" : deal.pro ? "bg-gold-500/20 text-gold-400" : "bg-white/20 text-white"
-                            : "bg-white/10 text-white/60"
-                        }`}>
-                          {deal.icon}
+                            ? `${deal.border} bg-gradient-to-br ${deal.color} shadow-lg`
+                            : "border-white/10 bg-white/5 hover:border-white/20"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-extrabold text-sm ${
+                              isSelected
+                                ? deal.popular ? "bg-primary-500/20 text-primary-400" : deal.pro ? "bg-gold-500/20 text-gold-400" : "bg-white/20 text-white"
+                                : "bg-white/10 text-white/60"
+                            }`}>
+                              {deal.icon}
+                            </div>
+                            <div>
+                              <span className={`font-extrabold text-base ${
+                                isSelected
+                                  ? deal.popular ? "text-primary-400" : deal.pro ? "text-gold-400" : "text-white"
+                                  : "text-white"
+                              }`}>
+                                {deal.label}
+                              </span>
+                              <span className="text-white/40 text-xs mr-2">{deal.desc}</span>
+                            </div>
+                          </div>
+                          {deal.badge && (
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                              deal.popular ? "bg-primary-500/20 text-primary-300" : "bg-gold-500/20 text-gold-400"
+                            }`}>{deal.badge}</span>
+                          )}
                         </div>
-                        <div>
-                          <span className={`font-extrabold text-base ${
+                        <div className="flex items-baseline gap-2 mr-12">
+                          <span className={`font-extrabold text-lg ${
                             isSelected
                               ? deal.popular ? "text-primary-400" : deal.pro ? "text-gold-400" : "text-white"
                               : "text-white"
                           }`}>
-                            {deal.label}
+                            {formatDealPrice(finalPrice)}
                           </span>
-                          <span className="text-white/40 text-xs mr-2">{deal.desc}</span>
+                          {deal.discount > 0 && (
+                            <span className="text-white/30 text-xs line-through">{formatDealPrice(dealPrice)}</span>
+                          )}
                         </div>
-                      </div>
-                      {deal.badge && (
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          deal.popular ? "bg-primary-500/20 text-primary-300" : "bg-gold-500/20 text-gold-400"
-                        }`}>{deal.badge}</span>
-                      )}
-                    </div>
-                    <div className="flex items-baseline gap-2 mr-12">
-                      <span className={`font-extrabold text-lg ${
-                        isSelected
-                          ? deal.popular ? "text-primary-400" : deal.pro ? "text-gold-400" : "text-white"
-                          : "text-white"
-                      }`}>
-                        {formatDealPrice(finalPrice)}
-                      </span>
-                      {deal.discount > 0 && (
-                        <span className="text-white/30 text-xs line-through">{formatDealPrice(dealPrice)}</span>
-                      )}
-                    </div>
-                    <div className="mr-12 mt-1">
-                      <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                        </svg>
-                        توصيل مجاني
-                      </span>
-                    </div>
+                        <div className="mr-12 mt-1">
+                          <span className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                            </svg>
+                            توصيل مجاني
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {added ? (
+                  <button
+                    onClick={handleCheckout}
+                    className="w-full mt-6 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-white hover:from-primary-400 hover:to-emerald-400 shadow-primary-500/30"
+                  >
+                    ✓ تمت الإضافة - إكمال الطلب
                   </button>
-                );
-              })}
-            </div>
+                ) : (
+                  <div className="mt-6 flex flex-col md:flex-row gap-3">
+                    <button
+                      onClick={handleAddToCart}
+                      className="flex-1 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-white/10 text-white border border-white/20 hover:bg-white/20"
+                    >
+                      أضف إلى السلة
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleAddToCart();
+                        setTimeout(() => router.push("/cart?direct=1"), 300);
+                      }}
+                      className="flex-1 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-600 to-emerald-600 text-white hover:from-primary-500 hover:to-emerald-500 shadow-primary-500/20"
+                    >
+                      اطلب الان
+                    </button>
+                  </div>
+                )}
 
-            {added ? (
-              <button
-                onClick={handleCheckout}
-                className="w-full mt-6 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-white hover:from-primary-400 hover:to-emerald-400 shadow-primary-500/30"
-              >
-                ✓ تمت الإضافة - إكمال الطلب
-              </button>
-            ) : (
-              <div className="mt-6 flex flex-col md:flex-row gap-3">
-                <button
-                  onClick={handleAddToCart}
-                  className="flex-1 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-white/10 text-white border border-white/20 hover:bg-white/20"
-                >
-                  أضف إلى السلة
-                </button>
-                <button
-                  onClick={() => {
-                    handleAddToCart();
-                    setTimeout(() => router.push("/cart?direct=1"), 300);
-                  }}
-                  className="flex-1 py-4 rounded-2xl font-extrabold text-base md:text-lg transition-all duration-300 active:scale-[0.98] shadow-xl bg-gradient-to-r from-primary-600 to-emerald-600 text-white hover:from-primary-500 hover:to-emerald-500 shadow-primary-500/20"
-                >
-                  اطلب الان
-                </button>
-              </div>
+                <p className="text-center text-white/30 text-xs mt-3">
+                  الدفع عند الاستلام - توصيل لجميع المدن المغربية
+                </p>
+              </>
             )}
-
-            <p className="text-center text-white/30 text-xs mt-3">
-              الدفع عند الاستلام - توصيل لجميع المدن المغربية
-            </p>
           </div>
         </div>
       </div>

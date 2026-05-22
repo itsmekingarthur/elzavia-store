@@ -95,6 +95,7 @@ const config: Config = {
         "fade-in-up-delayed": "fade-in-up 0.7s ease-out 0.15s forwards",
         "fade-in-up-slow": "fade-in-up 1s ease-out forwards",
         "marquee": "marquee 20s linear infinite",
+        "pulse-gold": "pulse-gold 2s ease-in-out infinite",
       },
       keyframes: {
         "gradient-x": {
@@ -154,6 +155,10 @@ const config: Config = {
         "marquee": {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(-100%)" },
+        },
+        "pulse-gold": {
+          "0%, 100%": { boxShadow: "0 0 20px rgba(251,191,36,0.3), 0 0 40px rgba(251,191,36,0.1)", transform: "scale(1)" },
+          "50%": { boxShadow: "0 0 30px rgba(251,191,36,0.5), 0 0 60px rgba(251,191,36,0.2)", transform: "scale(1.02)" },
         },
       },
       backgroundSize: {
