@@ -1,4 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
+import OfferPointsBanner from "@/components/OfferPointsBanner";
 
 export default function ShopPage({
   searchParams,
@@ -25,7 +26,7 @@ export default function ShopPage({
                   <span className="gradient-text-gold">اشتري 2</span> واحصل على <span className="gradient-text-gold">الثالث مجاناً</span>
                 </h1>
                 <p className="text-white/60 text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
-                  اختر منتجين من الباقة أدناه واستمتع بالثالث مجاناً تماماً! بالإضافة إلى توصيل مجاني ونقاط خصم مع كل طلب.
+                  اختر منتجين من الباقة أدناه واستمتع بالثالث مجاناً تماماً! مع توصيل مجاني لجميع الطلبات.
                 </p>
                 <div className="flex items-center justify-center gap-4 md:gap-6 mt-6 flex-wrap">
                   <div className="flex items-center gap-2 bg-gold-500/10 border border-gold-500/20 rounded-xl px-4 py-2">
@@ -35,10 +36,6 @@ export default function ShopPage({
                   <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-2">
                     <span className="text-lg">🚚</span>
                     <span className="text-emerald-300 font-bold text-sm">توصيل مجاني</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-primary-500/10 border border-primary-500/20 rounded-xl px-4 py-2">
-                    <span className="text-lg">⭐</span>
-                    <span className="text-primary-300 font-bold text-sm">50 نقطة لكل منتج</span>
                   </div>
                 </div>
               </div>
@@ -65,6 +62,7 @@ export default function ShopPage({
           </div>
         )}
 
+        {isOffer && <OfferPointsBanner />}
         <ProductGrid offerMode={isOffer} />
       </div>
     </div>

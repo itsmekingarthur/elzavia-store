@@ -74,24 +74,26 @@ export default function Home() {
                   اشتري 2 <span className="gradient-text-gold">واحصل على الثالث مجاناً</span>
                 </h2>
                 <p className="text-white/60 text-sm md:text-base leading-relaxed mb-6">
-                  عرض حصري لفترة محدودة! بالإضافة إلى <span className="text-gold-300 font-bold">50 نقطة</span> مع كل منتج تطلبه — استخدمها كخصم في طلبك القادم.
+                  عرض حصري لفترة محدودة! اشتري منتجين واحصل على الثالث مجاناً مع توصيل مجاني.
                 </p>
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
                   <Link
-                    href="/auth/signup"
+                    href="/shop?offer=b2g1"
                     className="bg-gold-500 hover:bg-gold-600 text-surface-900 font-extrabold text-sm px-6 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-gold-500/20 inline-flex items-center gap-2"
                   >
-                    ✨ سجل واحصل على النقاط
+                    🎁 استفد من العرض
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </Link>
-                  <Link
-                    href={user ? "/shop?offer=b2g1" : "/auth/signup?offer=b2g1"}
-                    className="border border-gold-500/40 text-gold-400 hover:bg-gold-500/10 font-bold text-sm px-6 py-3 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
-                  >
-                    🎁 استفد من العرض
-                  </Link>
+                  {!user && (
+                    <Link
+                      href="/auth/signup"
+                      className="border border-gold-500/40 text-gold-400 hover:bg-gold-500/10 font-bold text-sm px-6 py-3 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      ✨ سجل واحصل على النقاط
+                    </Link>
+                  )}
                 </div>
               </div>
               <div className="flex-shrink-0">
@@ -321,7 +323,7 @@ export default function Home() {
                 </svg>
               </Link>
               <Link
-                href={user ? "/shop?offer=b2g1" : "/auth/signup?offer=b2g1"}
+                href="/shop?offer=b2g1"
                 className="border border-white/20 text-white hover:bg-white/5 font-bold text-base md:text-lg px-8 md:px-12 py-3.5 md:py-4 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
               >
                 🎁 عرض 2+1
