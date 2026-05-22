@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
+import { fbEvent } from "@/lib/fbpixel";
 
 interface Product {
   id: string;
@@ -57,11 +58,31 @@ function ProductDetailContent() {
       .catch(() => setLoading(false));
   }, [slug]);
 
+  useEffect(() => {
+    if (product) {
+      fbEvent("ViewContent", {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_category: product.category,
+        value: product.price,
+        currency: "MAD",
+      });
+    }
+  }, [product]);
+
   const handleAddToCart = () => {
     if (!product) return;
     const deal = deals.find((d) => d.label === selectedDeal);
     if (!deal) return;
     addWithDeal(product.id, deal.priceMultiplier, deal.label, deal.discount);
+    fbEvent("AddToCart", {
+      content_ids: [product.id],
+      content_name: product.name,
+      content_category: product.category,
+      value: deal.fixedPrice,
+      currency: "MAD",
+      contents: [{ id: product.id, quantity: deal.priceMultiplier, price: product.price }],
+    });
     setAdded(true);
   };
 

@@ -3,6 +3,7 @@ import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { AuthProvider } from "@/context/AuthContext";
+import FacebookPixel from "@/components/FacebookPixel";
 
 export const metadata: Metadata = {
   title: "إلزافيا | المكملات الغذائية الطبيعية",
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="ar" className="dark">
       <body className="min-h-screen bg-primary-950 flex flex-col">
+        <FacebookPixel />
         <ToastProvider>
           <AuthProvider>
             <CartProvider>{children}</CartProvider>

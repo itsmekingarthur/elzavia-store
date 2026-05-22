@@ -7,6 +7,7 @@ import { formatPrice, generateOrderId, getOrdersStorageKey } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
+import { fbEvent } from "@/lib/fbpixel";
 
 interface Coupon {
   id: string; code: string; type: "percentage" | "fixed";
@@ -168,6 +169,17 @@ export default function CartItems() {
         });
       } catch { console.warn("Points sync failed"); }
     }
+
+    fbEvent("Purchase", {
+      value: total,
+      currency: "MAD",
+      content_ids: items.map((i) => i.productId),
+      contents: items.map((i) => ({
+        id: i.productId,
+        quantity: i.quantity,
+      })),
+      num_items: items.length,
+    });
 
     clearCart();
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
