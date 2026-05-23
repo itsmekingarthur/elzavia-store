@@ -129,25 +129,25 @@ function CardContent({ product, palette, offerMode }: { product: Product; palett
             {product.description}
           </p>
 
-          <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-auto">
-            <span className="text-xl md:text-2xl font-extrabold text-primary-400">
-              {formatPrice(product.price)}
-            </span>
-            {offerMode ? (
-              <span
-                className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-300 bg-gold-500/20 text-gold-400 group-hover:bg-gold-500/30 group-hover:shadow-lg group-hover:shadow-gold-500/20"
-              >
-                🎁 استفد من العرض
+          {offerMode ? (
+            <div className="pt-3 border-t border-white/10 mt-auto">
+              <span className="block w-full text-center text-sm md:text-base font-extrabold py-3 rounded-xl transition-all duration-300 bg-gradient-to-r from-gold-500 to-amber-500 text-surface-900 group-hover:from-gold-400 group-hover:to-amber-400 group-hover:shadow-lg group-hover:shadow-gold-500/30 shadow-md shadow-gold-500/20">
+                🎁 استفد من العرض الآن
               </span>
-            ) : (
+            </div>
+          ) : (
+            <div className="flex items-center justify-between pt-3 border-t border-white/10 mt-auto">
+              <span className="text-xl md:text-2xl font-extrabold text-primary-400">
+                {formatPrice(product.price)}
+              </span>
               <span
                 className="text-xs font-bold px-3 py-1.5 rounded-lg transition-all duration-300 group-hover:shadow-lg"
                 style={{ backgroundColor: palette.bg, color: palette.text }}
               >
                 أضف للسلة
               </span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
   );
