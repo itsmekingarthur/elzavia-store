@@ -18,7 +18,7 @@ interface Product {
 
 const OFFER_PRODUCT_IDS = ["1", "2"];
 const FIXED_QTY = 2;
-const BUNDLE_DISCOUNT = 75;
+const BUNDLE_DISCOUNT = 99;
 
 export default function OfferCheckoutPage() {
   const { slug } = useParams();
@@ -80,7 +80,7 @@ export default function OfferCheckoutPage() {
       subtotal,
       discount: BUNDLE_DISCOUNT + pointsDiscount,
       total,
-      coupon: "خصم حصري 75 درهم للباقة",
+      coupon: "خصم حصري 99 درهم للباقة",
       pointsUsed: pointsToUse,
       pointsDiscount,
       offerB2G1: true,
@@ -257,7 +257,7 @@ export default function OfferCheckoutPage() {
                 <span className="font-bold">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gold-400 text-sm md:text-base">
-                <span>خصم حصري 75 درهم للباقة</span>
+                <span>خصم حصري 99 درهم للباقة</span>
                 <span className="font-bold">-{formatPrice(BUNDLE_DISCOUNT)}</span>
               </div>
               {pointsDiscount > 0 && (
