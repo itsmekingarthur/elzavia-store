@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getOrders, addOrder, updateOrder, deleteOrder } from "@/lib/store";
+import { sendPurchaseEvent } from "@/lib/fb-capi";
 
 const TELEGRAM_BOT_TOKEN = "8819995357:AAGvygoQa-UzvwCVua1LDZC3XpRJFGDzQhs";
 const TELEGRAM_CHAT_ID = "7505359725";
@@ -21,7 +22,7 @@ ${items}
 💰 المجموع: ${order.total} درهم${pointsLine}${offerLine}
 💳 الدفع: عند الاستلام
 🆔 رقم الطلب: ${order.id}
-📅 التاريخ: ${new Date(order.createdAt).toLocaleString("ar-MA")}`;
+📅 التاريخ: ${new Date(order.createdAt).toLocaleDateString("ar-MA", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}`;
 
   try {
     await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -44,14 +45,19 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log("Order received:", body.id, body.customer?.name);
     try {
       await addOrder(body);
+      console.log("Order saved to Supabase:", body.id);
     } catch (e) {
       console.error("Failed to save order to Supabase:", e);
     }
     sendTelegramNotification(body);
+    console.log("Telegram sent for:", body.id);
+    sendPurchaseEvent(body, request);
     return NextResponse.json({ success: true, id: body.id });
   } catch (e) {
+    console.error("Order POST error:", e);
     return NextResponse.json({ success: false, error: String(e) }, { status: 400 });
   }
 }

@@ -18,7 +18,7 @@ interface Product {
 
 const OFFER_PRODUCT_IDS = ["1", "2"];
 const FIXED_QTY = 2;
-const BUNDLE_DISCOUNT = 99;
+const BUNDLE_DISCOUNT = 149;
 
 export default function OfferCheckoutPage() {
   const { slug } = useParams();
@@ -80,7 +80,7 @@ export default function OfferCheckoutPage() {
       subtotal,
       discount: BUNDLE_DISCOUNT + pointsDiscount,
       total,
-      coupon: "خصم حصري 99 درهم للباقة",
+      coupon: "خصم حصري 149 درهم للباقة",
       pointsUsed: pointsToUse,
       pointsDiscount,
       offerB2G1: true,
@@ -159,7 +159,7 @@ export default function OfferCheckoutPage() {
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">لقد تم الطلب بنجاح، شكراً لطلبك</h2>
           <p className="text-white/60 max-w-md mx-auto mb-4 leading-relaxed">
-            🎁 تم تفعيل عرض 2+1 — ستحصل على الثالث مجاناً + التوصيل مجاني
+            🔥 تم تفعيل العرض — اشتريت منتجين بسعر 249 درهم + التوصيل مجاني
           </p>
           <p className="text-white/60 max-w-md mx-auto mb-8 leading-relaxed">
             بما أن الدفع يتم عند الاستلام، سيقوم فريقنا بالتواصل معك قريباً لتأكيد معلومات الطلب وتحديد موعد التوصيل.
@@ -188,7 +188,7 @@ export default function OfferCheckoutPage() {
 
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-gold-500/15 border border-gold-500/30 text-gold-400 text-sm font-bold px-5 py-2 rounded-full mb-4">
-            🎁 عرض 2+1 مفعل
+            🔥 عرض خاص: اشتري 2 بـ 249 درهم
           </div>
         </div>
 
@@ -257,7 +257,7 @@ export default function OfferCheckoutPage() {
                 <span className="font-bold">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gold-400 text-sm md:text-base">
-                <span>خصم حصري 99 درهم للباقة</span>
+                <span>خصم حصري 149 درهم للباقة</span>
                 <span className="font-bold">-{formatPrice(BUNDLE_DISCOUNT)}</span>
               </div>
               {pointsDiscount > 0 && (
@@ -272,7 +272,7 @@ export default function OfferCheckoutPage() {
               </div>
               <div className="bg-gradient-to-r from-gold-500/20 to-amber-500/10 border border-gold-500/30 rounded-xl p-4 mt-4">
                 <p className="text-gold-300 text-sm font-bold text-center leading-relaxed">
-                  🎉 اشتري 2 واحصل على الثالث مجانا + التوصيل مجاني
+                  🔥 اشتري 2 بـ 249 درهم + التوصيل مجاني (وفر 149 درهم)
                 </p>
               </div>
             </div>
@@ -331,9 +331,25 @@ export default function OfferCheckoutPage() {
               <button
                 onClick={placeOrder}
                 disabled={!form.name.trim() || !form.phone.trim() || !form.address.trim() || submitting}
-                className="btn-nature w-full text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3.5 rounded-xl font-extrabold text-sm md:text-base transition-all duration-200 active:scale-[0.98] bg-gradient-to-r from-primary-500 to-emerald-500 text-white hover:from-primary-400 hover:to-emerald-400 shadow-lg shadow-primary-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {submitting ? "جاري إرسال الطلب..." : "تأكيد الطلب (دفع عند الاستلام)"}
+                {submitting ? "جاري إرسال الطلب..." : "💳 تأكيد الطلب (دفع عند الاستلام)"}
+              </button>
+              <div className="relative flex items-center gap-3 py-2">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-white/30 text-xs">أو</span>
+                <div className="flex-1 h-px bg-white/10" />
+              </div>
+              <button
+                onClick={() => {
+                  const msg = `🛒 *طلب جديد من إلزافيا*\n\nالاسم: ${form.name}\nالهاتف: ${form.phone}\nالعنوان: ${form.address}\nالمنتج: ${product.name} (2 قطع)\nالسعر: ${formatPrice(total)}\n${form.notes ? `ملاحظات: ${form.notes}` : ""}\n\n🚚 توصيل مجاني - دفع عند الاستلام`;
+                  window.open(`https://wa.me/+21267702771?text=${encodeURIComponent(msg)}`, "_blank");
+                }}
+                disabled={!form.name.trim() || !form.phone.trim() || !form.address.trim()}
+                className="w-full py-3.5 rounded-xl font-extrabold text-sm md:text-base transition-all duration-200 active:scale-[0.98] bg-emerald-500/15 text-emerald-400 border-2 border-emerald-500/30 hover:bg-emerald-500/25 shadow-lg shadow-emerald-500/10 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                أرسل الطلب عبر واتساب
               </button>
             </div>
           </div>

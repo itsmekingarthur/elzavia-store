@@ -68,20 +68,20 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row items-center gap-8">
               <div className="flex-1 text-center lg:text-right">
                 <div className="inline-flex items-center gap-2 bg-gold-500/15 border border-gold-500/30 text-gold-400 text-xs font-bold px-4 py-1.5 rounded-full mb-4">
-                  🎁 عرض 2+1
+                  🔥 عرض خاص
                 </div>
                 <h2 className="text-2xl md:text-4xl font-extrabold text-white mb-3 leading-tight">
-                  اشتري 2 <span className="gradient-text-gold">واحصل على الثالث مجاناً</span>
+                  اشتري 2 <span className="gradient-text-gold">بـ 249 درهم فقط</span>
                 </h2>
                 <p className="text-white/60 text-sm md:text-base leading-relaxed mb-6">
-                  عرض حصري لفترة محدودة! اشتري منتجين واحصل على الثالث مجاناً مع توصيل مجاني.
+                  عرض حصري لفترة محدودة! اشتري منتجين بسعر 249 درهم فقط مع توصيل مجاني. وفر 149 درهم عن السعر الأصلي.
                 </p>
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
                   <Link
-                    href="/shop?offer=b2g1"
+                    href="/shop/golden-energy-capsules?offer=b2g1"
                     className="bg-gold-500 hover:bg-gold-600 text-surface-900 font-extrabold text-sm px-6 py-3 rounded-xl transition-all duration-300 shadow-lg shadow-gold-500/20 inline-flex items-center gap-2"
                   >
-                    🎁 استفد من العرض
+                    🔥 استفد من العرض
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -99,8 +99,8 @@ export default function Home() {
               <div className="flex-shrink-0">
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-gradient-to-br from-gold-500/20 to-amber-500/10 rounded-full flex items-center justify-center border-2 border-gold-500/30">
                   <div className="text-center">
-                    <div className="text-3xl md:text-4xl">🎁</div>
-                    <div className="text-gold-400 font-extrabold text-xs md:text-sm mt-1">2+1 مجاناً</div>
+                    <div className="text-3xl md:text-4xl">🔥</div>
+                    <div className="text-gold-400 font-extrabold text-xs md:text-sm mt-1">249 درهم</div>
                   </div>
                 </div>
               </div>
@@ -326,7 +326,7 @@ export default function Home() {
                 href="/shop?offer=b2g1"
                 className="border border-white/20 text-white hover:bg-white/5 font-bold text-base md:text-lg px-8 md:px-12 py-3.5 md:py-4 rounded-xl transition-all duration-300 inline-flex items-center gap-2"
               >
-                🎁 عرض 2+1
+                🎁 عرض 2 بـ 249
               </Link>
             </div>
           </div>

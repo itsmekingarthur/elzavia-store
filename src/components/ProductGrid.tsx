@@ -32,7 +32,7 @@ export default function ProductGrid({ limit, offerMode }: { limit?: number; offe
   }, []);
 
   const displayProducts = limit ? products.slice(0, limit) : products;
-  const filtered = offerMode ? displayProducts.filter(p => p.id === "1" || p.id === "2") : displayProducts;
+  const filtered = offerMode ? displayProducts.filter(p => p.id === "1") : displayProducts;
 
   if (loading) {
     return <ProductGridSkeleton count={limit || 4} />;

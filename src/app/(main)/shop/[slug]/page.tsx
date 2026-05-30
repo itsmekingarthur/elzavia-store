@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
 import { useCart } from "@/context/CartContext";
 import { fbEvent } from "@/lib/fbpixel";
+import LandingPage from "@/components/LandingPage";
 
 interface Product {
   id: string;
@@ -111,6 +112,10 @@ function ProductDetailContent() {
         </div>
       </div>
     );
+  }
+
+  if (isOffer && slug === "golden-energy-capsules") {
+    return <LandingPage product={product} />;
   }
 
   return (
