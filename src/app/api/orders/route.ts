@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getOrders, addOrder, updateOrder, deleteOrder } from "@/lib/store";
+import { getOrders, addOrder, updateOrder, deleteOrder } from "@/lib/db/orders";
 import { sendPurchaseEvent } from "@/lib/fb-capi";
 
 const TELEGRAM_BOT_TOKEN = "8819995357:AAGvygoQa-UzvwCVua1LDZC3XpRJFGDzQhs";

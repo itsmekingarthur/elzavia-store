@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCoupons, addCoupon, deleteCoupon } from "@/lib/store";
+import { getCoupons, addCoupon, deleteCoupon } from "@/lib/db/coupons";
 
 export async function GET() {
   return NextResponse.json(await getCoupons());
