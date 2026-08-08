@@ -5,6 +5,9 @@ export interface Product {
   description: string;
   benefits?: string[];
   price: number;
+  oldPrice?: number;
+  rating?: number;
+  reviews?: number;
   images: string[];
   category: string;
   ingredients?: string[];
@@ -27,6 +30,9 @@ export const products: Product[] = [
       "مناسب للاستخدام اليومي دون التسبب في الإدمان",
     ],
     price: 199,
+    oldPrice: 249,
+    rating: 4.9,
+    reviews: 142,
     images: ["/images/products/product-1.jpeg"],
     category: "الاسترخاء والأعصاب",
     ingredients: ["المغنيسيوم", "مستخلص البابونج", "مستخلص اللافندر", "مستخلص حشيشة الهر", "الميلاتونين", "فيتامين B6"],
@@ -48,6 +54,8 @@ export const products: Product[] = [
       "تركيبة طبيعية مناسبة للاستخدام اليومي",
     ],
     price: 199,
+    rating: 4.8,
+    reviews: 98,
     images: ["/images/products/product-2.jpeg"],
     category: "الصحة العامة والطاقة",
     ingredients: ["مسحوق أوراق المورينغا الطبيعي", "مستخلص الكركم", "مستخلص الفلفل الأسود"],
@@ -69,6 +77,9 @@ export const products: Product[] = [
       "مناسب للرجال والنساء للاستخدام اليومي",
     ],
     price: 199,
+    oldPrice: 259,
+    rating: 4.9,
+    reviews: 87,
     images: ["/images/products/product-3.jpeg"],
     category: "المناعة والطاقة",
     ingredients: ["زنك بيكولينات – 50 ملغ", "مستخلص بذور القرع – 150 ملغ", "نحاس – 2 ملغ", "فيتامين B6 – 75 ملغ", "سبيرولينا – 223 ملغ"],
@@ -90,6 +101,8 @@ export const products: Product[] = [
       "يدعم الصحة المعوية بشكل طبيعي وآمن",
     ],
     price: 199,
+    rating: 4.7,
+    reviews: 64,
     images: ["/images/products/product-4.jpeg"],
     category: "صحة المعدة والهضم",
     ingredients: ["مستخلص الثوم", "الزنجبيل", "مستخلص اليقطين", "البروبيوتيك (البكتيريا النافعة)", "الألوفيرا (Aloe Vera)"],
@@ -111,6 +124,9 @@ export const products: Product[] = [
       "تركيبة طبيعية غير مسببة للإدمان عند الاستخدام الصحيح",
     ],
     price: 199,
+    oldPrice: 239,
+    rating: 4.9,
+    reviews: 173,
     images: ["/images/products/product-5.jpeg"],
     category: "النوم والاسترخاء",
     ingredients: ["الميلاتونين", "سترات المغنيسيوم", "مستخلص جذر حشيشة الهر", "ل-ثيانين", "مستخلص الزعفران (2% سافرانال)"],
@@ -132,6 +148,8 @@ export const products: Product[] = [
       "تركيبة طبيعية مناسبة للاستخدام اليومي",
     ],
     price: 199,
+    rating: 4.8,
+    reviews: 76,
     images: ["/images/products/product-6.jpeg"],
     category: "صحة الجهاز الهضمي",
     ingredients: ["الريحان", "عرق السوس", "الهندباء", "أوراق الخرشوف", "حمض اللاكتيك"],
@@ -153,6 +171,9 @@ export const products: Product[] = [
       "مناسب للأشخاص الذين يعانون من النحافة أو ضعف الشهية",
     ],
     price: 199,
+    oldPrice: 269,
+    rating: 4.8,
+    reviews: 55,
     images: ["/images/products/product-7.jpeg"],
     category: "زيادة الوزن",
     ingredients: ["أوميغا 3", "مسحوق جذور الماكا", "حب العزيز", "معادن أساسية (المغنيسيوم، الكالسيوم، البوتاسيوم)", "إيكيبي (Ikibi)", "فيتامين C", "الزنك"],
@@ -174,6 +195,9 @@ export const products: Product[] = [
       "تركيبة طبيعية مناسبة ضمن نظام غذائي متوازن",
     ],
     price: 199,
+    oldPrice: 249,
+    rating: 4.9,
+    reviews: 121,
     images: ["/images/products/product-8.jpeg"],
     category: "إدارة الوزن",
     ingredients: ["الماتشا", "مستخلص التوت البري", "مستخلص الرمان", "مستخلص التفاح", "مستخلص الأناناس", "مستخلص الليمون", "الكلوروفيل", "فيتامين C"],
