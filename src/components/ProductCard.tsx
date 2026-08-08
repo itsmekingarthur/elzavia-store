@@ -22,7 +22,7 @@ function Stars({ rating }: { rating: number }) {
       {[1, 2, 3, 4, 5].map((i) => (
         <svg
           key={i}
-          className={`w-3.5 h-3.5 ${i <= Math.round(rating) ? "text-gold-400" : "text-white/20"}`}
+          className={`w-4 h-4 ${i <= Math.round(rating) ? "text-gold-400" : "text-white/20"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -47,20 +47,20 @@ export default function ProductCard({ product, offerMode }: { product: Product; 
   if (offerMode) {
     return (
       <Link href={`/shop/${product.slug}?offer=b2g1`} className="group block h-full">
-        <article className="relative flex flex-col h-full bg-[#0e2b1f] border border-gold-500/25 rounded-lg overflow-hidden transition-all duration-[250ms] hover:-translate-y-[3px] hover:border-gold-500/50">
+        <article className="relative flex flex-col h-full bg-[#0e2b1f] border border-gold-500/25 rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-[3px] hover:border-gold-500/50">
           <div className="relative aspect-[4/3] overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(251,191,36,0.14),transparent_72%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(251,191,36,0.16),transparent_72%)]" />
             <img
               src={product.images?.[0] || "/images/placeholder.png"}
               alt={product.name}
               loading="lazy"
-              className="w-full h-full object-contain p-3 md:p-4 transition-transform duration-[250ms] ease-out group-hover:scale-[1.03] drop-shadow-[0_10px_20px_rgba(0,0,0,0.4)]"
+              className="w-full h-full object-contain p-1.5 transition-transform duration-300 ease-out group-hover:scale-[1.03] drop-shadow-[0_12px_22px_rgba(0,0,0,0.5)]"
             />
           </div>
-          <div className="flex flex-col flex-1 p-3.5 md:p-4">
+          <div className="flex flex-col flex-1 p-3">
             <p className="text-sm font-extrabold text-white line-clamp-1">{product.name}</p>
-            <div className="mt-auto pt-3">
-              <span className="block w-full text-center text-xs md:text-sm font-extrabold py-2.5 rounded-lg transition-all duration-[250ms] bg-gradient-to-r from-gold-500 to-amber-500 text-surface-900 group-hover:from-gold-400 group-hover:to-amber-400">
+            <div className="mt-auto pt-2.5">
+              <span className="block w-full text-center text-xs font-extrabold py-2 rounded-md transition-all duration-300 bg-gradient-to-r from-gold-500 to-amber-500 text-surface-900 group-hover:from-gold-400 group-hover:to-amber-400">
                 🎁 استفد من العرض الآن
               </span>
             </div>
@@ -71,11 +71,11 @@ export default function ProductCard({ product, offerMode }: { product: Product; 
   }
 
   return (
-    <article className="group relative flex flex-col h-full bg-[#0e2b1f] border border-white/[0.08] rounded-lg overflow-hidden transition-all duration-[250ms] hover:-translate-y-[3px] hover:border-primary-400/40 hover:shadow-[0_14px_35px_-12px_rgba(0,0,0,0.6)]">
+    <article className="group relative flex flex-col h-full bg-[#0e2b1f] border border-white/[0.08] rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-[3px] hover:border-primary-400/40 hover:shadow-[0_14px_35px_-12px_rgba(0,0,0,0.6)]">
       <Link href={`/shop/${product.slug}`} className="relative block aspect-[4/3] overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(52,211,153,0.10),transparent_72%)]" />
         {discount > 0 && (
-          <span className="absolute top-2.5 right-2.5 z-10 inline-flex items-center bg-gold-500 text-emerald-950 text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-lg shadow-black/30">
+          <span className="absolute top-2 left-2 z-10 inline-flex items-center bg-gold-500 text-emerald-950 text-[11px] font-extrabold px-2 py-0.5 rounded-md shadow-lg shadow-black/30">
             خصم {discount}%
           </span>
         )}
@@ -83,13 +83,13 @@ export default function ProductCard({ product, offerMode }: { product: Product; 
           src={product.images?.[0] || "/images/placeholder.png"}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-contain p-3 md:p-4 transition-transform duration-[250ms] ease-out group-hover:scale-[1.03] drop-shadow-[0_10px_20px_rgba(0,0,0,0.4)]"
+          className="w-full h-full object-contain p-1.5 transition-transform duration-300 ease-out group-hover:scale-[1.04] drop-shadow-[0_12px_22px_rgba(0,0,0,0.5)]"
         />
       </Link>
 
-      <div className="flex flex-col flex-1 p-3.5 md:p-4">
-        <div className="flex items-center justify-between gap-2 mb-1.5">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${categoryClass}`}>
+      <div className="flex flex-col flex-1 p-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${categoryClass}`}>
             {product.category || "عام"}
           </span>
           {product.weight && (
@@ -99,31 +99,33 @@ export default function ProductCard({ product, offerMode }: { product: Product; 
 
         <Link
           href={`/shop/${product.slug}`}
-          className="text-sm md:text-[15px] font-extrabold text-white leading-snug hover:text-primary-300 transition-colors duration-[250ms] line-clamp-1"
+          className="mt-1.5 text-sm md:text-[15px] font-extrabold text-white leading-snug hover:text-primary-300 transition-colors duration-300 line-clamp-1"
         >
           {product.name}
         </Link>
 
-        <p className="mt-1 text-xs md:text-[13px] leading-relaxed text-white/50 line-clamp-2">
+        <p className="mt-0.5 text-[11px] md:text-xs leading-snug text-white/50 line-clamp-2">
           {product.description}
         </p>
 
-        <div className="mt-1.5 flex items-center gap-1.5 mb-3">
+        <div className="mt-1.5 flex items-center gap-1.5">
           <Stars rating={rating} />
           <span className="text-xs font-bold text-white/70">{rating.toFixed(1)}</span>
-          <span className="text-xs text-white/35">({reviews.toLocaleString("ar-MA")})</span>
+          <span className="text-[10px] text-white/35">({reviews.toLocaleString("ar-MA")})</span>
         </div>
 
-        <div className="mt-auto flex items-center justify-between gap-2 pt-2.5 border-t border-white/[0.07]">
+        <div className="mt-2 pt-2 flex items-center justify-between gap-2 border-t border-white/[0.07] mt-auto">
           <div className="flex flex-col leading-none min-w-0">
             {discount > 0 && (
-              <span className="text-[10px] text-white/35 line-through mb-0.5">{formatPrice(product.oldPrice!)}</span>
+              <span className="text-[9px] text-white/35 line-through">{formatPrice(product.oldPrice!)}</span>
             )}
-            <span className="text-lg md:text-xl font-extrabold text-primary-300 leading-none">{formatPrice(product.price)}</span>
+            <span className="text-base md:text-lg font-extrabold text-primary-300 leading-none whitespace-nowrap">
+              {formatPrice(product.price)}
+            </span>
           </div>
           <button
             onClick={() => addToCart(product.id)}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-bold bg-primary-500/15 text-primary-300 border border-primary-500/30 transition-all duration-[250ms] hover:bg-primary-500 hover:text-white hover:border-primary-500 active:scale-95 whitespace-nowrap"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-bold bg-primary-500/15 text-primary-300 border border-primary-500/30 transition-all duration-300 hover:bg-primary-500 hover:text-white hover:border-primary-500 active:scale-95 whitespace-nowrap"
             aria-label={`إضافة ${product.name} إلى السلة`}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

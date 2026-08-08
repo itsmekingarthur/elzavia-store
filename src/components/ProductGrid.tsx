@@ -47,7 +47,7 @@ export default function ProductGrid({ limit, offerMode }: { limit?: number; offe
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-5 items-stretch">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 md:gap-4 items-stretch">
       {filtered.map((product) => (
         <ProductCard key={product.id} product={product} offerMode={offerMode} />
       ))}
