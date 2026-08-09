@@ -29,7 +29,7 @@ export default function ProductsSection() {
         </Reveal>
 
         <Reveal delay={0.15}>
-          <ProductGrid limit={4} />
+          <ProductGrid limit={8} />
         </Reveal>
 
         <Reveal delay={0.3}>
