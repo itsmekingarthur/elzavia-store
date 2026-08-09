@@ -1,25 +1,23 @@
 "use client";
 
 import Hero from "@/components/Hero";
-import FreeDeliveryBanner from "@/components/home/FreeDeliveryBanner";
 import OffersCta from "@/components/home/OffersCta";
 import ProductsSection from "@/components/home/ProductsSection";
 import FeaturesSection from "@/components/home/FeaturesSection";
+import ProductFinder from "@/components/home/ProductFinder";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
-import TrustSection from "@/components/home/TrustSection";
-import PointsCta from "@/components/home/PointsCta";
+import FaqSection from "@/components/home/FaqSection";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <FreeDeliveryBanner />
       <OffersCta />
       <ProductsSection />
       <FeaturesSection />
+      <ProductFinder />
       <TestimonialsSection />
-      <TrustSection />
-      <PointsCta />
+      <FaqSection />
     </>
   );
 }
